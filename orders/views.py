@@ -52,13 +52,17 @@ class RegisterPaymentView(APIView):
         order = CustomerModel.objects.get(order_number=order_number.upper())
         if order.per_online_pay:
             register_data = SberInterface.payment_register(amount=order.total, order_number=order.order_number)
-            print(register_data)
             try:
-                order_id = register_data["orderId"]
-                CustomerModel.objects.filter(order_number=order_number).update(payment_uuid=order_id)
+
+                if register_data['errorCode'] == "1":
+                    return Response({ "error": "Заказ с таким номером уже обработан" })
+                else:
+                    order_id = register_data["orderId"]
+                    CustomerModel.objects.filter(order_number=order_number).update(payment_uuid=order_id)
+
             except KeyError:
                 return Response({"error": "Сервис оплаты временно не доступен"})
-            print(register_data)
+
             return Response(register_data)
         else:
             return Response({"error": "Оплата онлайн будет доступна после проверки заказа"})
@@ -83,7 +87,6 @@ class CheckOrderPaymentView(APIView):
                     order.update(online_pay=True)
                     receipt_data = DreamkasInterface.generate_receipt(serializer.data)
                     receipt_result = DreamkasInterface.receipting_dreamkas(receipt_data)
-                    print(receipt_result)
 
                     # Отправляем уведомлнеие в агент
                     payment = { "order_number": order[0].order_number, "total": order[0].total, "payment_uuid": order_id }

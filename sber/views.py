@@ -124,6 +124,8 @@ class SberMethods:
 
 """ Интерфейс для работы с эквайрингом """
 class SberInterface:
+    """ Список методов Сбера """
+    #PR: Убрать дублирование кода
 
     def payment_register(amount, order_number=None):
         try:
@@ -139,6 +141,12 @@ class SberInterface:
 
     def payment_data(order_id):
         """ Получение данных оплаты """
-        form = SberMethods.get_order_status_extended(order_id=order_id)
-        response = SberMethods.gateway(method=form['method'], payload=form['payload'])
-        return response
+        try:
+            form = SberMethods.get_order_status_extended(order_id=order_id)
+            try:
+                response = SberMethods.gateway(method=form['method'], payload=form['payload'])
+            except requests.exceptions.SSLError:
+                return { "error": "Сервис оплаты временно не доступен" }
+            return response
+        except KeyError:
+            return { "error": "Не были предоставлены данные" }
