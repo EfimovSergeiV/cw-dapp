@@ -1,0 +1,28 @@
+{
+    "ip": "109.252.61.191", 
+    "zip": "119606", 
+    "city": "Moscow", 
+    "type": "ipv4", 
+    "latitude": 55.66529846191406, 
+    "location": {
+        "is_eu": false, 
+        "capital": "Moscow", 
+        "languages": [
+            {
+                "code": "ru", 
+                "name": "Russian", 
+                "native": "Русский"
+                }], 
+            "geoname_id": 524901, 
+            "calling_code": "7", 
+            "country_flag": "https://assets.ipstack.com/flags/ru.svg", 
+            "country_flag_emoji": "FAKE LOCATION", 
+            "country_flag_emoji_unicode": "U+1F1F7 U+1F1FA"}, 
+            "longitude": 37.47774887084961, 
+            "region_code": "MOW", 
+            "region_name": "Moscow", 
+            "country_code": "RU", 
+            "country_name": "Russia", 
+            "continent_code": "AS", 
+            "continent_name": "Asia"
+        }

@@ -1,0 +1,152 @@
+1. ДЛЯ РАБОТЫ НА САЙТЕ, АККАУНТУ МАГАЗИНА ТРЕБУЕТСЯ ИМЕТЬ/ВЫДАТЬ ПРАВА ПЕРСОНАЛА
+
+================================================================================
+#ЗАПРОС ТОКЕНА, АВТОРИЗАЦИЯ
+================================================================================
+
+Запрос:
+curl -X POST -H "Content-Type: application/json" -d @verify.json http://127.0.0.1:8000/auth/
+
+Данные (verify.json):
+{"username": "TestUser", "password": "Fruit1234" }
+
+Ответ: (Токен необходим для запросов в API)
+"POST /auth/ HTTP/1.1" 200
+{"token":"Token 778cb08a4b555f01ea00517dddda60529e5f1649","userid":4,"user":"TestUser","email":""}
+
+Ошибки:
+Bad Request: /auth/
+"POST /auth/ HTTP/1.1" 400
+{"non_field_errors":["Невозможно войти с предоставленными учетными данными."]}
+
+
+================================================================================
+#РЕДАКТИРОВАНИЕ ЦЕН
+================================================================================
+
+Запрос:
+curl -X PUT -H "Content-Type: application/json" -H "Authorization: Token 778cb08a4b555f01ea00517dddda60529e5f1649" -d @data.json http://127.0.0.1:8000/s/price/
+
+Данные (data.json):
+[{
+    "shop": 1,
+    "product_vcode": "u-5",
+    "price": 30000.0,
+    "currency": "USD"
+},
+{
+    "shop": 1,
+    "product_vcode": "u-6",
+    "price": 60000.0,
+    "currency": "USD"
+},
+{
+    "shop": 3,                 (магазина не существует в базе данных)
+    "product_vcode": "u-7",
+    "price": 40000.0,
+    "currency": "RUB"
+}
+]
+
+Ответ:
+"PUT /s/price/ HTTP/1.1" 201
+{
+    "u-5":1,
+    "u-6":1,
+    "u-7":0        (0 означает что данные не были записаны)
+    }
+
+__________________________________________________________________________________
+Запрос:
+curl -X PUT -H "Content-Type: application/json" -H "Authorization: Token BADtokenBADtoken" -d @data.json http://127.0.0.1:8000/s/price/
+
+Ответ:
+Unauthorized: /s/price/
+"PUT /s/price/ HTTP/1.1" 401
+
+{
+    "detail":"Недопустимый токен."
+    }
+__________________________________________________________________________________
+Запрос: (Нет данных)
+curl -X PUT -H "Content-Type: application/json" -H "Authorization: Token 778cb08a4b555f01ea00517dddda60529e5f1649" http://127.0.0.1:8000/s/price/
+
+Ответ:
+Bad Request: /s/price/
+"PUT /s/price/ HTTP/1.1" 400
+__________________________________________________________________________________
+Запрос:
+curl -X PUT -H "Content-Type: application/json" -H "Authorization: Token 778cb08a4b555f01ea00517dddda60529e5f1649" -d @data.json http://127.0.0.1:8000/s/price/
+
+Данные (data.json):
+[{
+    "afgd": 12343,
+    "dfgsdfg": "234235234",
+    "dfgdfgdf": 234234234,
+    "dfgdfgdf": "USD"
+}]
+
+Ответ:
+Bad Request: /s/price/
+"PUT /s/price/ HTTP/1.1" 400
+__________________________________________________________________________________
+Запрос:
+curl -X PUT -H "Content-Type: application/json" -H "Authorization: Token 778cb08a4b555f01ea00517dddda60529e5f1649" -d @data.json http://127.0.0.1:8000/s/price/
+
+Данные (data.json):
+[{
+    "shop": 1,
+    "fake": "data",
+    "product_vcode": "u-5",
+    "price": 30000.0,
+    "currency": "USD"
+},
+{
+    "shop": 1,
+    "product_vcode": "u-6",
+    "price": 60000.0,
+    "fake": "data",
+    "fake2": "data1",
+    "currency": "USD"
+},
+{
+    "shop": 1,
+    "product_vcode": "u-7",
+    "price": 40000.0,
+    "currency": "RUB"
+}]
+
+Ответ:
+"PUT /s/price/ HTTP/1.1" 201
+{
+    "u-5":1,
+    "u-6":1,
+    "u-7":1}
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ИСХОДНЫЙ КОД
+
+class PriceSerializer(serializers.Serializer):
+    shop = serializers.IntegerField()
+    product_vcode = serializers.CharField(max_length=40)
+    price = serializers.FloatField()
+    currency = serializers.CharField(max_length=4)
+
+
+class PriceServiceView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def put(self, request):
+        serializer = PriceSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            result = {}
+            for data in serializer.data:
+                resp = PriceModel.objects.filter(
+                    product__vcode=data['product_vcode']
+                    ).filter(shop=data['shop']
+                    ).update(price=data['price'], currency=data['currency'])
+                result[data['product_vcode']] = resp
+            return Response(result , status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

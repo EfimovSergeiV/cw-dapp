@@ -1,0 +1,28 @@
+{
+    "ip": "91.204.138.138", 
+    "zip": "180000", 
+    "city": "Pskov", 
+    "type": "ipv4", 
+    "latitude": 57.81694030761719, 
+    "location": {
+        "is_eu": false, 
+        "capital": "Moscow", 
+        "languages": [
+            {
+                "code": "ru", 
+                "name": "Russian", 
+                "native": "Русский"
+                }], 
+                "geoname_id": 504341, 
+                "calling_code": "7", 
+                "country_flag": "https://assets.ipstack.com/flags/ru.svg", 
+                "country_flag_emoji": "FAKE LOCATION", 
+                "country_flag_emoji_unicode": "U+1F1F7 U+1F1FA"}, 
+                "longitude": 28.386669158935547, 
+                "region_code": "PSK", 
+                "region_name": "Pskov Oblast", 
+                "country_code": "RU", 
+                "country_name": "Russia", 
+                "continent_code": "AS", 
+                "continent_name": "Asia"
+            }

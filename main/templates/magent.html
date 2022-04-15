@@ -1,0 +1,20 @@
+<pre>
+Заказ {{ order_number }}
+Магазин: {{ adress }}
+Клиент: {{ person }}
+Контакты: 
+      тел. {{ phone}} 
+      email: {{ email}}
+Итог заказа: {{ total }}RUB
+Доставка: {{ delivery }}
+Адрес: {{ delivery_adress }}
+Комментарий: {{ comment }}
+{% for product in client_product %}
+*id: {{ product.id }} vcode: {{ product.vcode }} 
+{{ product.name }}
+Кол-во: {{ product.quantity }} Стоимость: {{ product.price }}
+{% endfor %}
+</pre>
+
+<a href="https://api.glsvar.ru/o/order_status/{{ uuid }}/inprocessed/">Обработка</a>
+<a href="https://api.glsvar.ru/o/order_status/{{ uuid }}/completed/">Выполнен</a>
