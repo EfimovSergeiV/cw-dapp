@@ -1,3 +1,4 @@
+from cgi import print_arguments
 import json
 import requests
 import random
@@ -12,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from catalog.models import ProductModel
 from orders.serializers import *
 from orders.notice import *
 from orders.utils import *
@@ -127,6 +129,8 @@ class OrderListViews(APIView):
         return Response(serializer.data)
 
 
+
+from serializers.catalog import ListProductsSerializer
 class OrderViews(APIView):
     """ Обработка заказов """
     serializer_class = CustomerSerializer
@@ -137,18 +141,41 @@ class OrderViews(APIView):
         region_code = data.pop('region_code')
         select_shop = data.pop('shop_id')
 
-        # Определяем стоимость товара исходя из выбранного магазина
+        # Расчитываем стоимость заказа из товаров в БД (security)
+        print('DELIVERY STAT', data['delivery'])
+        print('DELIVERY SUMM', data['delivery_summ'])
+        print('DELIVERY', data['delivery_summ'])
+
+        products = []
+        for product in data['client_product']:
+            products.append(product['id'])
+
+        products_qs = ProductModel.objects.filter(id__in=products)
+        products_serializer = ListProductsSerializer(products_qs, many=True, context={'request': request})
+        
+        actual_price = {}
+        for product in products_serializer.data:
+            for price in dict(product)['prod_price']:
+                if select_shop == price['shop']:
+                    actual_price[product['id']] = int(price['price'])
+                    break
+
         # Закидываем с ключём price в объект data
         for client_product in data['client_product']:
-            for price in client_product['prod_price']:
-                if price['shop'] == select_shop:
-                    client_product['price'] = price['price']
+            client_product['price'] = actual_price[client_product['id']]
             client_product['product_id'] = int(client_product['id'])
 
         # Присвоение кода и вычисление суммы по позициям заказа
         data['order_number'] = region_code + str(random.randrange(1000000, 1999999))
         data['position_total'] = get_position_summ(data['client_product'])
 
+        # Вычисление итога заказа
+        if data['delivery']:
+            data['total'] = data['position_total'] + data['delivery_summ']
+        else:
+            data['total'] = data['position_total']
+
+        # Создание заказа в БД
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             serializer.save()
