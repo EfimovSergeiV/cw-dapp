@@ -142,10 +142,6 @@ class OrderViews(APIView):
         select_shop = data.pop('shop_id')
 
         # Расчитываем стоимость заказа из товаров в БД (security)
-        print('DELIVERY STAT', data['delivery'])
-        print('DELIVERY SUMM', data['delivery_summ'])
-        print('DELIVERY', data['delivery_summ'])
-
         products = []
         for product in data['client_product']:
             products.append(product['id'])
