@@ -54,9 +54,9 @@ class RegisterPaymentView(APIView):
         order = CustomerModel.objects.get(order_number=order_number.upper())
         if order.per_online_pay:
             register_data = SberInterface.payment_register(amount=order.total, order_number=order.order_number)
+            print(register_data)
             try:
-
-                if register_data['errorCode'] == "1":
+                if 'errorCode' in register_data.keys():
                     return Response({ "error": "Заказ с таким номером уже обработан" })
                 else:
                     order_id = register_data["orderId"]

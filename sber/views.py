@@ -145,6 +145,7 @@ class SberInterface:
             form = SberMethods.get_order_status_extended(order_id=order_id)
             try:
                 response = SberMethods.gateway(method=form['method'], payload=form['payload'])
+                print(response)
             except requests.exceptions.SSLError:
                 return { "error": "Сервис оплаты временно не доступен" }
             return response
