@@ -29,7 +29,7 @@ from orders.utils import *
 from django.conf import settings
         
 from sber.views import SberInterface
-# from dreamkas.views import DreamkasInterface
+from dreamkas.views import DreamkasInterface
 
 
 class OrderInfoView(APIView):
