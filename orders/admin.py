@@ -26,17 +26,17 @@ class CustomerAdmin(admin.ModelAdmin):
     send_payment_mail.short_description = 'Действия'
 
         
-    list_display = ( 'order_number', 'phone', 'date_created', 'status')
-    list_display_links = ( 'order_number', 'phone', 'date_created',)
+    list_display = ('online_pay', 'order_number', 'phone', 'date_created', 'status')
+    list_display_links = ('online_pay', 'order_number', 'phone', 'date_created',)
     list_editable = ('status', )
     readonly_fields = (
         'order_number', 'date_created', 'adress', 'delivery_adress',
         'person', 'phone', 'email', 'comment', 'delivery', 'send_payment_mail',
         'company', 'legaladress', 'inn', 'kpp', 'okpo', 'bankname',
-        'currentacc', 'corresponding', 'bic',  'payment_uuid', 'uuid',
+        'currentacc', 'corresponding', 'bic', 'online_pay', 'payment_uuid', 'uuid',
         )
     fieldsets = (
-        ("Заказ", {'fields': ( 'uuid', ('status', 'date_created'), ('order_number', 'position_total', 'total',), ('send_payment_mail', 'per_online_pay',), 'seller_comm', ( 'payment_uuid',),'adress')}),
+        ("Заказ", {'fields': ( 'uuid', ('status', 'date_created'), ('order_number', 'position_total', 'total',), ('send_payment_mail', 'per_online_pay',), 'seller_comm', ('online_pay', 'payment_uuid',),'adress')}),
         ("Доставка", {'fields': ( ('delivery', 'delivery_summ',), 'delivery_adress',)}),
         ("Физическое лицо", {'fields': (('person', 'phone', 'email'), 'comment',)}),
         ("Юридическое лицо", {'fields': (
