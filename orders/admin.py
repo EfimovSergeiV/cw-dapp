@@ -36,7 +36,7 @@ class CustomerAdmin(admin.ModelAdmin):
         'currentacc', 'corresponding', 'bic', 'online_pay', 'payment_uuid', 'uuid',
         )
     fieldsets = (
-        ("Заказ", {'fields': ( 'uuid', ('status', 'date_created'), ('order_number', 'position_total', 'total',), ('send_payment_mail', 'per_online_pay',), 'seller_comm', ('online_pay', 'payment_uuid',),'adress')}),
+        ("Заказ", {'fields': ( 'uuid', ('status', 'date_created'), ('order_number', 'total',), ('send_payment_mail',), ('online_pay', 'payment_uuid',),'adress')}),
         ("Доставка", {'fields': ( ('delivery', 'delivery_summ',), 'delivery_adress',)}),
         ("Физическое лицо", {'fields': (('person', 'phone', 'email'), 'comment',)}),
         ("Юридическое лицо", {'fields': (
