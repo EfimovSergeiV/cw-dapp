@@ -29,7 +29,7 @@ from orders.utils import *
 from django.conf import settings
         
 from sber.views import SberInterface
-from dreamkas.views import DreamkasInterface
+# from dreamkas.views import DreamkasInterface
 
 
 class OrderInfoView(APIView):
@@ -89,6 +89,7 @@ class CheckOrderPaymentView(APIView):
                     order.update(online_pay=True)
                     receipt_data = DreamkasInterface.generate_receipt(serializer.data)
                     receipt_result = DreamkasInterface.receipting_dreamkas(receipt_data)
+                    # print(receipt_result)
 
                     # Отправляем уведомлнеие в агент
                     payment = { "order_number": order[0].order_number, "total": order[0].total, "payment_uuid": order_id }
