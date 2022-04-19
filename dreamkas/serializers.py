@@ -14,10 +14,8 @@ class DreamkasProductSerializer(serializers.ModelSerializer):
             'quantity',
             # 'createdAt',
             # 'updatedAt',
-            'price',
             'tax',
             'isMarked',
-            'prices',
         )
 
 
