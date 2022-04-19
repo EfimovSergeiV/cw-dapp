@@ -3,19 +3,19 @@ from django.db import models
 from django.utils import timezone
 
 
-# class AuthTokenModel(models.Model):
-#     """ Удалить и повыпиливать при обновлении приложения """
+class AuthTokenModel(models.Model):
+    """ Удалить и повыпиливать при обновлении приложения """
 
-#     activated = models.BooleanField(verbose_name="Активирован", default=False)
-#     created = models.DateTimeField(verbose_name="Дата создания", default=timezone.now)
-#     token = models.UUIDField(verbose_name="Токен сервиса",)
+    activated = models.BooleanField(verbose_name="Активирован", default=False)
+    created = models.DateTimeField(verbose_name="Дата создания", default=timezone.now)
+    token = models.UUIDField(verbose_name="Токен сервиса",)
 
-#     class Meta:
-#         verbose_name = "Токен"
-#         verbose_name_plural = "Токены"
+    class Meta:
+        verbose_name = "Токен"
+        verbose_name_plural = "Токены"
 
-#     def __str__(self) -> str:
-#         return str(self.token)
+    def __str__(self) -> str:
+        return str(self.token)
 
 
 # class DreamkasProductModel(models.Model):
