@@ -3,19 +3,19 @@ from django.db import models
 from django.utils import timezone
 
 
-# class AuthTokenModel(models.Model):
-#     """ Удалить и повыпиливать при обновлении приложения """
+class AuthTokenModel(models.Model):
+    """ Удалить и повыпиливать при обновлении приложения """
 
-#     activated = models.BooleanField(verbose_name="Активирован", default=False)
-#     created = models.DateTimeField(verbose_name="Дата создания", default=timezone.now)
-#     token = models.UUIDField(verbose_name="Токен сервиса",)
+    activated = models.BooleanField(verbose_name="Активирован", default=False)
+    created = models.DateTimeField(verbose_name="Дата создания", default=timezone.now)
+    token = models.UUIDField(verbose_name="Токен сервиса",)
 
-#     class Meta:
-#         verbose_name = "Токен"
-#         verbose_name_plural = "Токены"
+    class Meta:
+        verbose_name = "Токен"
+        verbose_name_plural = "Токены"
 
-#     def __str__(self) -> str:
-#         return str(self.token)
+    def __str__(self) -> str:
+        return str(self.token)
 
 
 class DreamkasProductModel(models.Model):
@@ -50,7 +50,7 @@ class DreamkasProductModel(models.Model):
     # meta = {},
     createdAt = models.DateTimeField(verbose_name="Дата создания", default=timezone.now)
     updatedAt = models.DateTimeField(verbose_name="Дата обновления", auto_now=True)
-    # price = models.PositiveIntegerField(verbose_name="Цена в копейках", help_text="2 последних знака будут копейками")
+    price = models.PositiveIntegerField(verbose_name="Цена в копейках", help_text="2 последних знака будут копейками")
     tax = models.CharField(verbose_name="Налог", choices=TAX_VALUES, max_length=20, default="NDS_20")
     isMarked = models.BooleanField(verbose_name="Маркерованный товар", default=False)
 
@@ -62,18 +62,18 @@ class DreamkasProductModel(models.Model):
         return str(self.name)
 
 
-# class DreamkasPriceModel(models.Model):
-#     """ Цена для каждого устройства """
-#     product = models.ForeignKey(DreamkasProductModel, related_name='prices', on_delete=models.CASCADE)
-#     deviceId = models.PositiveIntegerField(verbose_name="ID устройства")
-#     value = models.PositiveIntegerField(verbose_name="Цена в копейках")
+class DreamkasPriceModel(models.Model):
+    """ Цена для каждого устройства """
+    product = models.ForeignKey(DreamkasProductModel, related_name='prices', on_delete=models.CASCADE)
+    deviceId = models.PositiveIntegerField(verbose_name="ID устройства")
+    value = models.PositiveIntegerField(verbose_name="Цена в копейках")
 
-#     class Meta:
-#         verbose_name = "Цена"
-#         verbose_name_plural = "Цены"
+    class Meta:
+        verbose_name = "Цена"
+        verbose_name_plural = "Цены"
 
-#     def __str__(self) -> str:
-#         return str(self.product)
+    def __str__(self) -> str:
+        return str(self.product)
 
 
 class ReceiptsStatusModel(models.Model):
