@@ -1,19 +1,19 @@
 from rest_framework import serializers
-from dreamkas.models import DreamkasPriceModel, DreamkasProductModel, ReceiptsStatusModel
+from dreamkas.models import DreamkasProductModel, ReceiptsStatusModel
 
 
-class DreamkasPriceSerializer(serializers.ModelSerializer):
-    """ Серииализатор товаров """
+# class DreamkasPriceSerializer(serializers.ModelSerializer):
+#     """ Серииализатор товаров """
 
-    class Meta:
-        model = DreamkasPriceModel
-        fields = ('deviceId', 'value',)
+#     class Meta:
+#         model = DreamkasPriceModel
+#         fields = ('deviceId', 'value',)
 
 
 class DreamkasProductSerializer(serializers.ModelSerializer):
     """ Сериализатор товаров """
 
-    prices = DreamkasPriceSerializer(many=True)
+    # prices = DreamkasPriceSerializer(many=True)
 
     class Meta:
         model = DreamkasProductModel

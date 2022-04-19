@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models.signals import post_delete, post_save, pre_save
 # #Заюзать pre_save для подтигивания данных о товаре
 
-from dreamkas.models import DreamkasProductModel, DreamkasPriceModel
+from dreamkas.models import DreamkasProductModel
 from dreamkas.serializers import DreamkasProductSerializer
 
 
@@ -48,7 +48,7 @@ def create_or_update(sender, **kwargs):
         raise Exception(f'Ошибка при создании товара: {response.status_code}')
 
 
-@receiver(post_delete, sender=DreamkasPriceModel)
+@receiver(post_delete, sender=DreamkasProductModel)
 def delete(sender, **kwargs):
     """ Удаление товара в Dreamkas """
 

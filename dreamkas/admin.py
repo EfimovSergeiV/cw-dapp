@@ -6,12 +6,12 @@ from pygments.formatters import HtmlFormatter
 from csv import list_dialects
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from dreamkas.models import DreamkasPriceModel, DreamkasProductModel, ReceiptsStatusModel
+from dreamkas.models import  DreamkasProductModel, ReceiptsStatusModel   # DreamkasPriceModel,
 
 
-class PriceInlineAdmin(admin.TabularInline):
-    model = DreamkasPriceModel
-    extra = 0
+# class PriceInlineAdmin(admin.TabularInline):
+#     model = DreamkasPriceModel
+#     extra = 0
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -24,12 +24,12 @@ class ProductAdmin(admin.ModelAdmin):
                 ('name', 'association',),
                 ('id',),
                 ('type', 'quantity',),
-                ('price', 'tax',),
+                ('tax',),
                 ('createdAt', 'updatedAt',),
             )},
         ),
     )
-    inlines = (PriceInlineAdmin, )
+    # inlines = (PriceInlineAdmin, )
     # list_editable = ('association', 'name',)
     readonly_fields = ('createdAt', 'updatedAt',)
     search_fields = ('id', 'association', 'name',)
