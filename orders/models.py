@@ -18,6 +18,7 @@ class CustomerModel(models.Model):
     online_pay = models.BooleanField(verbose_name="Оплачен онлайн", default=False)
     payment_uuid = models.UUIDField(verbose_name="Идентификатор оплаты", null=True, blank=True)
     per_online_pay = models.BooleanField(verbose_name="Разрешение на оплату онлайн", default=False)
+    seller_comm = models.TextField(verbose_name="Комментарий продавца", blank=True, null=True)
 
     # Информация о доставке
     delivery = models.BooleanField(verbose_name="Доставка", default=False,)

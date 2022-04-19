@@ -259,11 +259,16 @@ def send_payment_email(request, uuid):
     """ Отправка письма об оплате """
     try:
         order = CustomerModel.objects.get(uuid=uuid)
+        products = OrderedProductModel.objects.filter(customer=order)
         html = "<html><body><h1>Письмо успешно отправлено</h1></br><a href='/a/orders/customermodel/'>Вернуться в админ панель</a></body></html>"
         html_content = render_to_string('permission_payment.html', {
                 'order_number': order.order_number,
+                'seller_comm': order.seller_comm,
+                'delivery': order.delivery,
+                'delivery_summ': order.delivery_summ,
                 'payment_link': f'{ settings.GLSVAR_FRONT }/payment?order={ order.order_number }',
                 'total': order.total,
+                'client_product': products,
         })
 
         send_mail(
@@ -282,10 +287,16 @@ def send_payment_email(request, uuid):
 # def mail_template(request):
 #     """ DEV VERSION """
 #     # order = CustomerModel.objects.filter(delivery=True)[0]
-#     order = CustomerModel.objects.get(uuid='5eed5115-51f1-481f-94d2-3ac6c4b10f1e')
+    
+#     order = CustomerModel.objects.get(uuid='5b4867d4-1862-400a-8e7c-baf8607347d7')
+#     products = OrderedProductModel.objects.filter(customer=order)
 
 #     return render(request, 'permission_payment.html', {
 #             'order_number': order.order_number,
+#             'seller_comm': order.seller_comm,
+#             'delivery': order.delivery,
+#             'delivery_summ': order.delivery_summ,
 #             'payment_link': f'https://3dsec.sberbank.ru/payment/merchants/sbersafe_sberid/payment_ru.html?mdOrder={ order.uuid }/',
 #             'total': order.total,
+#             'client_product': products,
 #         })

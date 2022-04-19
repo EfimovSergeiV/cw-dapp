@@ -5,7 +5,7 @@ from orders.models import *
 
 class OrderedProductInline(admin.TabularInline):
     model = OrderedProductModel
-    readonly_fields = ('vcode', 'name', 'product_id', 'price', 'quantity',)
+    readonly_fields = ('vcode', 'name', 'product_id', 'quantity',)
     fieldsets = (
         (None, {'fields': ('vcode', 'product_id', 'name', 'price', 'quantity',)}),
         )
@@ -30,13 +30,13 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display_links = ('online_pay', 'order_number', 'phone', 'date_created',)
     list_editable = ('status', )
     readonly_fields = (
-        'order_number', 'date_created', 'adress', 'total', 'delivery_adress', 'position_total',
-        'person', 'phone', 'email', 'comment', 'delivery', 'delivery_summ',
-        'company', 'legaladress', 'inn', 'kpp', 'okpo', 'bankname', 'send_payment_mail',
+        'order_number', 'date_created', 'adress', 'delivery_adress',
+        'person', 'phone', 'email', 'comment', 'delivery', 'send_payment_mail',
+        'company', 'legaladress', 'inn', 'kpp', 'okpo', 'bankname',
         'currentacc', 'corresponding', 'bic', 'online_pay', 'payment_uuid', 'uuid',
         )
     fieldsets = (
-        ("Заказ", {'fields': ( 'uuid', ('status', 'date_created'), ('order_number', 'position_total', 'total',), ('send_payment_mail', 'per_online_pay',), ('online_pay', 'payment_uuid',),'adress')}),
+        ("Заказ", {'fields': ( 'uuid', ('status', 'date_created'), ('order_number', 'position_total', 'total',), ('send_payment_mail', 'per_online_pay',), 'seller_comm', ('online_pay', 'payment_uuid',),'adress')}),
         ("Доставка", {'fields': ( ('delivery', 'delivery_summ',), 'delivery_adress',)}),
         ("Физическое лицо", {'fields': (('person', 'phone', 'email'), 'comment',)}),
         ("Юридическое лицо", {'fields': (

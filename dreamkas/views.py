@@ -58,6 +58,7 @@ class DreamkasInterface:
             }
         }
 
+        print(data)
         return data
 
 
