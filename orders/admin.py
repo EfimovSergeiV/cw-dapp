@@ -95,6 +95,12 @@ class RequestPriceAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'city', 'contact', 'product')
 
 
-admin.site.register(CustomerModel, CustomerAdmin)
-admin.site.register(RequestPriceModel, RequestPriceAdmin)
+admin.site.register(
+    CustomerModel, 
+    # CustomerAdmin
+    )
+admin.site.register(
+    RequestPriceModel, 
+    # RequestPriceAdmin
+    )
 # admin.site.register(ClientModel, ClientAdmin)
