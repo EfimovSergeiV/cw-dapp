@@ -3,109 +3,109 @@ from rest_framework import serializers
 from orders.models import *
 
 
-class OrderProductSerializer(serializers.ModelSerializer):
-    """ Серииализатор заказанных товаров клиента """
+# class OrderProductSerializer(serializers.ModelSerializer):
+#     """ Серииализатор заказанных товаров клиента """
 
-    class Meta:
-        model = OrderedProductModel
-        fields = '__all__'
+#     class Meta:
+#         model = OrderedProductModel
+#         fields = '__all__'
 
-class OrderListSerializer(serializers.ModelSerializer):
-    """ Сериализатор заказов клиента """
+# class OrderListSerializer(serializers.ModelSerializer):
+#     """ Сериализатор заказов клиента """
 
-    client_product = OrderProductSerializer(many=True)
-    class Meta:
-        model = CustomerModel
-        fields = (
-            'order_number',
-            'total',
-            'date_created',
-            'status',
-            'client_product',
-        )
-
-
-class QOrderListSerializer(serializers.ModelSerializer):
-    """ Сериализатор заказов клиента со всеми полями """
-
-    client_product = OrderProductSerializer(many=True)
-    class Meta:
-        model = CustomerModel
-        fields = '__all__'
+#     client_product = OrderProductSerializer(many=True)
+#     class Meta:
+#         model = CustomerModel
+#         fields = (
+#             'order_number',
+#             'total',
+#             'date_created',
+#             'status',
+#             'client_product',
+#         )
 
 
-class SmOrderListSerializer(serializers.ModelSerializer):
-    """ Сериализатор заказов клиента со всеми полями """
+# class QOrderListSerializer(serializers.ModelSerializer):
+#     """ Сериализатор заказов клиента со всеми полями """
 
-    client_product = OrderProductSerializer(many=True)
-    class Meta:
-        model = CustomerModel
-        fields = ("order_number", "status", "position_total", "total", "client_product")
-
-
-class OrderedProductSerializer(serializers.ModelSerializer):
-    """ Сериализатор товаров
-    !!! Дубль, можно удалить !!!
-    """
-
-    class Meta:
-        model = OrderedProductModel
-        fields = (
-            'id',
-            'product_id',
-            'vcode',
-            'name',
-            'price',
-            'preview_image',
-            'quantity',
-        )
+#     client_product = OrderProductSerializer(many=True)
+#     class Meta:
+#         model = CustomerModel
+#         fields = '__all__'
 
 
-class CustomerSerializer(serializers.ModelSerializer):
-    """ Сериализатор клиента """
-    client_product = OrderedProductSerializer(many=True)
+# class SmOrderListSerializer(serializers.ModelSerializer):
+#     """ Сериализатор заказов клиента со всеми полями """
 
-    class Meta:
-        model = CustomerModel
-        fields = (
-            'uuid',
-            'order_number',
-            'adress',
-            'position_total',
-            'total',
-            'delivery',
-            'delivery_adress',
-            'delivery_summ',
-            'person',
-            'phone',
-            'email',
-            'comment',
-            'company',
-            'legaladress',
-            'inn',
-            'kpp',
-            'okpo',
-            'bankname',
-            'currentacc',
-            'corresponding',
-            'bic',
-            'client_product'
-        )
-
-    def create(self, validated_data):
-        client_product_data = validated_data.pop('client_product')
-        client = CustomerModel.objects.create(**validated_data)
-        for order in client_product_data:
-            OrderedProductModel.objects.create(customer = client, **order)
-        return client
+#     client_product = OrderProductSerializer(many=True)
+#     class Meta:
+#         model = CustomerModel
+#         fields = ("order_number", "status", "position_total", "total", "client_product")
 
 
-class RequestPriceSerializer(serializers.ModelSerializer):
-    """ Сериализатор запроса на цену """
+# class OrderedProductSerializer(serializers.ModelSerializer):
+#     """ Сериализатор товаров
+#     !!! Дубль, можно удалить !!!
+#     """
 
-    class Meta:
-        model = RequestPriceModel
-        fields = '__all__'
+#     class Meta:
+#         model = OrderedProductModel
+#         fields = (
+#             'id',
+#             'product_id',
+#             'vcode',
+#             'name',
+#             'price',
+#             'preview_image',
+#             'quantity',
+#         )
+
+
+# class CustomerSerializer(serializers.ModelSerializer):
+#     """ Сериализатор клиента """
+#     client_product = OrderedProductSerializer(many=True)
+
+#     class Meta:
+#         model = CustomerModel
+#         fields = (
+#             'uuid',
+#             'order_number',
+#             'adress',
+#             'position_total',
+#             'total',
+#             'delivery',
+#             'delivery_adress',
+#             'delivery_summ',
+#             'person',
+#             'phone',
+#             'email',
+#             'comment',
+#             'company',
+#             'legaladress',
+#             'inn',
+#             'kpp',
+#             'okpo',
+#             'bankname',
+#             'currentacc',
+#             'corresponding',
+#             'bic',
+#             'client_product'
+#         )
+
+#     def create(self, validated_data):
+#         client_product_data = validated_data.pop('client_product')
+#         client = CustomerModel.objects.create(**validated_data)
+#         for order in client_product_data:
+#             OrderedProductModel.objects.create(customer = client, **order)
+#         return client
+
+
+# class RequestPriceSerializer(serializers.ModelSerializer):
+#     """ Сериализатор запроса на цену """
+
+#     class Meta:
+#         model = RequestPriceModel
+#         fields = '__all__'
 
 
 ##################################
