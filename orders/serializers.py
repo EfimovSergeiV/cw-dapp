@@ -40,7 +40,7 @@ class SmOrderListSerializer(serializers.ModelSerializer):
     client_product = OrderProductSerializer(many=True)
     class Meta:
         model = CustomerModel
-        fields = ("order_number", "status", "position_total", "total", "client_product")
+        fields = ("order_number", "status", "position_total", "delivery_summ", "total", "client_product")
 
 
 class OrderedProductSerializer(serializers.ModelSerializer):

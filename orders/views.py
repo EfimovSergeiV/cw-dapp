@@ -89,14 +89,15 @@ class CheckOrderPaymentView(APIView):
                     order.update(online_pay=True)
                     receipt_data = DreamkasInterface.generate_receipt(serializer.data)
                     receipt_result = DreamkasInterface.receipting_dreamkas(receipt_data)
-                    # print(receipt_result)
+                    print(receipt_result)
 
                     # Отправляем уведомлнеие в агент
                     payment = { "order_number": order[0].order_number, "total": order[0].total, "payment_uuid": order_id }
                     # send_alert_to_agent(payment=payment)
                     
                 else:
-                    order.update(online_pay=False)
+                    pass
+                    # order.update(online_pay=False)
 
 
             return Response(payment_data)
@@ -178,9 +179,9 @@ class OrderViews(APIView):
             serializer.save()
 
             # Логика оповещений
-            send_alert_to_agent(order=serializer.data)
+            # send_alert_to_agent(order=serializer.data)
             mail_list = [
-                'shop@glsvar.ru',
+                # 'shop@glsvar.ru',
                 ]
 
             if serializer.data['email']:

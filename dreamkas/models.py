@@ -28,7 +28,7 @@ class DreamkasProductModel(models.Model):
 
     association = models.PositiveIntegerField(verbose_name="Ассоциирован", null=True, blank=True, help_text="Ассоциация с ID товара")
 
-    id = models.UUIDField(verbose_name="UUID", primary_key=True, help_text="Из 1С (скорее всего)")
+    id = models.UUIDField(verbose_name="UUID", primary_key=True, default=uuid.uuid4, unique=True,  help_text="Из 1С (скорее всего)")
     name = models.CharField(verbose_name="Название товара", max_length=350)
     type = models.CharField(verbose_name="Тип", choices=TYPE_VALUES, max_length=20, default="COUNTABLE")
     quantity = models.PositiveIntegerField(verbose_name="Единица товара", default=1000, help_text="Пример: 1000")
@@ -51,7 +51,8 @@ class ReceiptsStatusModel(models.Model):
 
     id = models.CharField(verbose_name="id", max_length=100, null=True, blank=True)
     externalId = models.UUIDField(verbose_name="Внешний ID", default=uuid.uuid4, primary_key=True)
-    createdAt = models.DateTimeField(verbose_name="Дата создания", null=True, blank=True)
+    createdAt = models.DateTimeField(verbose_name="Дата создания", default=timezone.now)
+    updatedAt = models.DateTimeField(verbose_name="Дата обновления", auto_now=True)
     STATUS_VALUES = (
         ("PENDING", "В очереди"),
         ("IN_PROGRESS", "Выполняется"),

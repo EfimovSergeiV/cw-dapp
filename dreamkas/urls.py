@@ -6,5 +6,5 @@ from dreamkas.views import *
 
 urlpatterns = [
     # WebHoocks
-    # re_path('receipts/', UpdateReceiptsStatusWebhook.as_view())
+    re_path('receipts/', UpdateReceiptsStatusWebhook.as_view())
 ]
