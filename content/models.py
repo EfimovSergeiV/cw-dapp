@@ -59,6 +59,51 @@ class MainPromoBannerModel(AbsActivatedModel):
         return str(self.name)
 
 
+class VotesModel(models.Model):
+    """ Модель опросов """
+
+    is_active = models.BooleanField(verbose_name="Активирован", default=True)
+    vote = models.TextField(verbose_name="Текст голосований", max_length=300)
+
+    class Meta:
+        verbose_name = "Голосование"
+        verbose_name_plural = "Голосования"
+        ordering = ['-id', 'is_active', ]
+
+    def __str__(self):
+        return str(self.vote)
+
+
+class VotesAnswersModel(models.Model):
+    """ Модель вариантов на опрос """
+
+    vote = models.ForeignKey(VotesModel, related_name="answers", on_delete=models.CASCADE)
+    answer = models.CharField(verbose_name="Варианты голосов", max_length=100)
+    voted = models.IntegerField(verbose_name="Количество голосов", default=0)
+
+    class Meta:
+        verbose_name = "Варианты голования"
+        verbose_name_plural = "Варианты голосования"
+        ordering = ['-voted',]
+
+    def __str__(self):
+        return str(self.answer)
+
+
+class VotesInterviewedModel(models.Model):
+    """ Ответившие на голосование """
+
+    vote = models.ForeignKey(VotesModel, related_name="interviewed", on_delete=models.CASCADE)
+    ip_adress = models.GenericIPAddressField(verbose_name="IP адрес", default=None, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Ответившие на голосование"
+        verbose_name_plural = "Ответившие на голосование"
+        
+    def __str__(self):
+        return str(self.ip_adress)
+
+
 # Сертификаты ГС
 class FooterFileModel(models.Model):
     """ Файлы """
