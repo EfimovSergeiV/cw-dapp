@@ -21,8 +21,12 @@ class DreamkasInterface:
         for product_OrderDict in order['client_product']:
             product = dict(product_OrderDict)
 
-            # Обработать исключение при отсутствии товара в базе продуктов
-            dreamkas_product = DreamkasProductModel.objects.get(association = product['product_id'])
+            # Создаёт товар в кассе, если он остутствует, с параметрами по умолчанию
+            try:
+                dreamkas_product = DreamkasProductModel.objects.get(association = product['product_id'])
+            except DreamkasProductModel.DoesNotExist:
+                DreamkasProductModel.objects.create(association = product['product_id'], name = product['name'])
+                dreamkas_product = DreamkasProductModel.objects.get(association = product['product_id'])
 
             positions.append({
                 "remId": str(dreamkas_product.id),
