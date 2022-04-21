@@ -445,27 +445,30 @@ class NearShop(APIView):
         client_ip = get_client_ip(request)[0]
 
         if client_ip not in ['127.0.0.1', '91.204.138.138']:
-
-            # This reader object should be reused across lookups as creation of it is
-            # expensive.
-            with geoip2.database.Reader('main/geoip-db/GeoLite2-City.mmdb') as reader:
-                response = reader.city(client_ip)
-                # response = reader.city('195.218.132.1') # Проверка
-                try:
-                    city = response.city.names['ru']
-                    if city in [
-                        'Москва',           #195.218.132.1
-                        'Санкт-Петербург',  #5.101.152.110
-                        'Псков',            #91.204.138.138
-                        'Смоленск',         #88.135.63.198
-                        'Петрозаводск',     #178.19.251.89
-                        'Великие Луки',     #109.238.108.40
-                        ]:
-                        location = self.shops[city]
-                    else:
+            try:
+                # This reader object should be reused across lookups as creation of it is
+                # expensive.
+                with geoip2.database.Reader('main/geoip-db/GeoLite2-City.mmdb') as reader:
+                    response = reader.city(client_ip)
+                    # response = reader.city('195.218.132.1') # Проверка
+                    try:
+                        city = response.city.names['ru']
+                        if city in [
+                            'Москва',           #195.218.132.1
+                            'Санкт-Петербург',  #5.101.152.110
+                            'Псков',            #91.204.138.138
+                            'Смоленск',         #88.135.63.198
+                            'Петрозаводск',     #178.19.251.89
+                            'Великие Луки',     #109.238.108.40
+                            ]:
+                            location = self.shops[city]
+                        else:
+                            location = self.shops['Санкт-Петербург']
+                    except:
                         location = self.shops['Санкт-Петербург']
-                except:
-                    location = self.shops['Санкт-Петербург']
+            except FileNotFoundError:
+                location = self.shops['Санкт-Петербург']
+
         else:
             location = self.shops['Псков']
 

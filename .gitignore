@@ -3,6 +3,7 @@ files
 main/conf.py
 error/
 uploads/
+main/geoip-db/
 
 
 # Byte-compiled / optimized / DLL files
