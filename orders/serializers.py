@@ -3,6 +3,25 @@ from rest_framework import serializers
 from orders.models import *
 
 
+class OneSotfOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderedProductModel
+        fields = '__all__'
+
+
+class OneSoftOrderSerializer(serializers.ModelSerializer):
+    client_product = OneSotfOrderSerializer(many=True)
+    class Meta:
+        model = CustomerModel
+        fields = (
+            'order_number',
+            'total',
+            'date_created',
+            'status',
+            'client_product',
+        )
+
+
 class OrderProductSerializer(serializers.ModelSerializer):
     """ Серииализатор заказанных товаров клиента """
 

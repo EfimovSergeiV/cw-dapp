@@ -1,4 +1,3 @@
-from cgi import print_arguments
 import json
 import requests
 import random
@@ -27,7 +26,8 @@ from django.shortcuts import render
 
 from orders.utils import *
 from django.conf import settings
-        
+from datetime import datetime, timedelta
+
 from sber.views import SberInterface
 from dreamkas.views import DreamkasInterface
 
@@ -43,6 +43,19 @@ class OrderInfoView(APIView):
             return Response(serializer.data)
         else:
             return Response({ "error": "Заказ не найден" })
+
+
+class OneSotfOrderView(APIView):
+    """ Информация о заказе для 1С Bad decision"""
+    permission_classes = [IsAuthenticated,]
+
+    def get(self, request):
+        
+        now = datetime.now()
+        orders = CustomerModel.objects.filter(date_created__gte=now - timedelta(days=1))
+        serializer = OneSoftOrderSerializer(orders, many=True, context={'request':request})
+
+        return Response(serializer.data)
 
 
 class RegisterPaymentView(APIView):

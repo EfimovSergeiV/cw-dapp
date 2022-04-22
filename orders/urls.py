@@ -14,6 +14,9 @@ urlpatterns = [
     path('orderinfo/<slug:order>/', OrderInfoView.as_view()),
     # path('sendmail/', MailsView.as_view()),
 
+    # Предоставление данных в 1С
+    path('list-orders/', OneSotfOrderView.as_view()),
+
     # CDEK API
     path('cdek/regions/', CdekRegionView.as_view()),
     path('cdek/cities/<int:region_code>/', CdekCityView.as_view()),
