@@ -34,8 +34,7 @@ class VoteInline(admin.TabularInline):
 
     model = VotesAnswersModel
     readonly_fields = ('voted',)
-    extra = 3
-
+    extra = 0
 
 class VotesAdmin(admin.ModelAdmin):
     """ Вывод опросов в админке """
@@ -43,6 +42,8 @@ class VotesAdmin(admin.ModelAdmin):
     list_display = ('id', 'vote', 'is_active')
     list_display_links = ('id', 'vote', 'is_active')
     inlines = [VoteInline]
+
+admin.site.register(VotesInterviewedModel)
 
 
 admin.site.register(FooterFileModel)

@@ -1,6 +1,4 @@
-from os import name
 from django.db import models
-from django.db.models.fields import BLANK_CHOICE_DASH
 from main.models import *
 
 

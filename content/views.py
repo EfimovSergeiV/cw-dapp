@@ -1,3 +1,4 @@
+from cgi import print_arguments
 from urllib import response
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -38,12 +39,23 @@ class VotesView(APIView):
         serializer = VotesSerializer(votes, many=True, context={'request':request})
         return Response(serializer.data)
 
+
     def post(self, request):
-        serializer = VotesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        """ Проверяем есть ли в базе данных опрос и не отвечал ли на него пользователь """
+        id = 2
+        try:
+            latest_vote = VotesModel.objects.get(id=id)
+            interviewed = VotesInterviewedModel.objects.filter(vote=latest_vote)
+            ip_adress = '91.204.138.140'
+            if { 'ip_adress': ip_adress } not in interviewed.values('ip_adress'):
+                interviewed.create(vote=latest_vote, ip_adress=ip_adress)
+                
+                return Response({"created": "Спасибо за Ваш голос"}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"error": "Ваш голос уже существует"}, status=status.HTTP_400_BAD_REQUEST)
+
+        except VotesModel.DoesNotExist:
+            return Response({"error": "Опрос не найден"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class FooterFileView(APIView):
