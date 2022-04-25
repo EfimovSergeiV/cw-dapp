@@ -42,13 +42,15 @@ class VotesView(APIView):
 
     def post(self, request):
         """ Проверяем есть ли в базе данных опрос и не отвечал ли на него пользователь """
-        id = 2
+        id = 1 # Получить сюда ID запроса
         try:
-            latest_vote = VotesModel.objects.get(id=id)
-            interviewed = VotesInterviewedModel.objects.filter(vote=latest_vote)
-            ip_adress = '91.204.138.140'
-            if { 'ip_adress': ip_adress } not in interviewed.values('ip_adress'):
-                interviewed.create(vote=latest_vote, ip_adress=ip_adress)
+            vote = VotesModel.objects.get(id=id)
+
+            ip_adress = '91.204.138.147' # Получить сюда IP адрес пользователя
+
+            if { 'ip_adress': ip_adress } not in vote.interviewed.values('ip_adress'):
+                vote.interviewed.create(ip_adress=ip_adress)
+                vote.answers.filter(id=2).update(voted=+1)
                 
                 return Response({"created": "Спасибо за Ваш голос"}, status=status.HTTP_201_CREATED)
             else:
