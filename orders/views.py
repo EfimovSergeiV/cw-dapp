@@ -146,6 +146,7 @@ class OrderListViews(APIView):
 
 
 from serializers.catalog import ListProductsSerializer
+from catalog.utils import CustomUtils, ChangeCurrency
 class OrderViews(APIView):
     """ Обработка заказов """
     serializer_class = CustomerSerializer
@@ -164,17 +165,35 @@ class OrderViews(APIView):
         products_qs = ProductModel.objects.filter(id__in=products)
         products_serializer = ListProductsSerializer(products_qs, many=True, context={'request': request})
         
-        actual_price = {}
+
+        # Подмена стоимости товара
+        cources_dict = ChangeCurrency.now_currency(self)
+        change_data = []
         for product in products_serializer.data:
+            # Проверяем указана общая стоимасть или конкретно по магазинам
+            if product['only_price_status']:
+                product = CustomUtils.make_only_price(self, product)
+
+            change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
+            change_data.append(change_product)
+
+        # Вычисляем стоимость по магазину
+        actual_price = {}
+        for product in change_data:
             for price in dict(product)['prod_price']:
                 if select_shop == price['shop']:
                     actual_price[product['id']] = int(price['price'])
                     break
+        
 
         # Закидываем с ключём price в объект data
         for client_product in data['client_product']:
             client_product['price'] = actual_price[client_product['id']]
             client_product['product_id'] = int(client_product['id'])
+
+        # Для проверки данных после подмены стоимости
+        # print(f'\n{data["client_product"]}\n')
+        # return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # Присвоение кода и вычисление суммы по позициям заказа
         data['order_number'] = region_code + str(random.randrange(1000000, 1999999))
@@ -192,9 +211,9 @@ class OrderViews(APIView):
             serializer.save()
 
             # Логика оповещений
-            # send_alert_to_agent(order=serializer.data)
+            send_alert_to_agent(order=serializer.data)
             mail_list = [
-                # 'shop@glsvar.ru',
+                'shop@glsvar.ru',
                 ]
 
             if serializer.data['email']:
