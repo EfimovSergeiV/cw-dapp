@@ -1,12 +1,9 @@
-from cgi import print_arguments
-from urllib import response
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework import status
-import time
+from ipware import get_client_ip
 
 from serializers.content import * #PR: Перенести сюда сериализаторы
 from content.serializers import *
@@ -45,8 +42,7 @@ class VotesView(APIView):
         id = 1 # Получить сюда ID запроса
         try:
             vote = VotesModel.objects.get(id=id)
-
-            ip_adress = '91.204.138.147' # Получить сюда IP адрес пользователя
+            ip_adress = get_client_ip(request)[0]
 
             if { 'ip_adress': ip_adress } not in vote.interviewed.values('ip_adress'):
                 vote.interviewed.create(ip_adress=ip_adress)
