@@ -134,7 +134,7 @@ class ProductsPagination(PageNumberPagination):
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),
             'meta': meta,
-            'results': data,
+            'results': data, # < по идее нужно change data
         })
 
 
@@ -276,7 +276,17 @@ class RecommendView(APIView):
             qs = rec_qs
 
         serializer = self.serializer_class(qs, many=True, context={'request':request})
-        return Response(serializer.data)
+
+        cources_dict = ChangeCurrency.now_currency(self)
+        change_data = []
+        for product in serializer.data:
+            # Проверяем указана общая стоимасть или конкретно по магазинам
+            if product['only_price_status']:
+                product = CustomUtils.make_only_price(self, product)
+
+            change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
+            change_data.append(change_product)
+        return Response(change_data)
 
 
 

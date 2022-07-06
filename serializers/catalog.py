@@ -222,7 +222,7 @@ class RecommendSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductModel
-        fields = ('id', 'vcode', 'description' ,'name', 'rating', 'prod_price', 'preview_image')
+        fields = ('id', 'vcode', 'description' ,'name', 'rating', 'prod_price', 'preview_image', 'only_price', 'only_price_status', 'currency')
 
 
 # class GetZIPCitySerializer(serializers.ModelSerializer):

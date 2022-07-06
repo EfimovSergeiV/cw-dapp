@@ -1,5 +1,5 @@
 from main.models import CourceCurrency
-from main.agent import send_alert_to_agent
+# from main.agent import send_alert_to_agent
 
 class CustomUtils:
     """ Утилитки """
