@@ -302,6 +302,9 @@ class NeuesView(APIView):
         cources_dict = ChangeCurrency.now_currency(self)
         change_data = []
         for product in products:
+            # Проверяем указана общая стоимасть или конкретно по магазинам
+            if product['only_price_status']:
+                product = CustomUtils.make_only_price(self, product)
             change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
             change_data.append(change_product)
 
