@@ -1,4 +1,5 @@
 import random
+from unicodedata import category
 
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -237,7 +238,7 @@ class ProdRandomView(ListAPIView):
 
     def get_queryset(self):
         ct = self.request.query_params.get('ct')
-        queryset = ProductModel.objects.filter(activated=True)
+        queryset = ProductModel.objects.filter(activated=True).order_by("?")
 
         if ct is not None:
             qs_ct = queryset.filter(category_id__in=ct)
@@ -252,16 +253,31 @@ class ProdRandomView(ListAPIView):
         return queryset[start_list:end_list]
 
 
-class RecommendView(ListAPIView):
-    """ Рекомендуемые товары с сайта """
 
-    queryset = ProductModel.objects.filter(activated=True).filter(recommend=True)
+class RecommendView(APIView):
+    """ Рекомендуемые товары """
+    queryset = ProductModel.objects.filter(activated=True)
     serializer_class = RecommendSerializer
 
-    def list(self, request):
-        queryset = self.get_queryset()
-        serializer = RecommendSerializer(queryset, many=True, context={'request':request})
+    def get(self, request):
+        ct = self.request.query_params.get("ct")
+        if ct:
+            cat_qs = self.queryset.filter(category_id=ct).order_by("?")
+        
+        rec_qs = self.queryset.filter(recommend=True).order_by("?")
+
+        if len(rec_qs) < 8:
+            
+            cat_qs = self.queryset.order_by("?")[0:8 - len(rec_qs)]
+            qs = rec_qs | cat_qs
+
+        else:
+            rec_qs = self.queryset.filter(recommend=True).order_by("?")[0:8]
+            qs = rec_qs
+
+        serializer = self.serializer_class(qs, many=True, context={'request':request})
         return Response(serializer.data)
+
 
 
 class NeuesView(APIView):
