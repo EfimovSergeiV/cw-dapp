@@ -134,7 +134,7 @@ class ProductsPagination(PageNumberPagination):
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),
             'meta': meta,
-            'results': data, # < по идее нужно change data
+            'results': change_data, # < по идее нужно change data
         })
 
 
