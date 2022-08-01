@@ -95,8 +95,15 @@ class BrandCategoryView(APIView):
     """ Бренды находящиеся в категории """
 
     def get(self, request):
+        childs = []
         ct = self.request.query_params.get('ct')
-        queryset = ProductModel.objects.filter(category_id = ct)
+        category = CategoryModel.objects.get(id=ct)
+
+        qs_child = category.get_children()
+        for child in qs_child:
+            childs.append(child.id)
+
+        queryset = ProductModel.objects.filter(category_id__in = childs)
         unique_brand = []
 
         for qs in queryset:
