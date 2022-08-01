@@ -95,8 +95,9 @@ class BrandCategoryView(APIView):
     """ Бренды находящиеся в категории """
 
     def get(self, request):
-        childs = []
+        
         ct = self.request.query_params.get('ct')
+        childs = [ct, ]  #LETS BUGFIX
         category = CategoryModel.objects.get(id=ct)
 
         qs_child = category.get_children()
