@@ -97,8 +97,17 @@ class BrandCategoryView(APIView):
     def get(self, request):
         
         ct = self.request.query_params.get('ct')
-        childs = [ct, ]  #LETS BUGFIX
+        
+        
+        #LETS BUGFIX
+        if ct == None:
+            ct = 1
+        childs = [ct, ]
+
+
         category = CategoryModel.objects.get(id=ct)
+
+
 
         qs_child = category.get_children()
         for child in qs_child:
@@ -106,6 +115,7 @@ class BrandCategoryView(APIView):
 
         queryset = ProductModel.objects.filter(category_id__in = childs)
         unique_brand = []
+
 
         for qs in queryset:
             try:
