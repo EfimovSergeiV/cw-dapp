@@ -59,6 +59,8 @@ class FilterProducts:
     def hard_filter(self, qs, props):
         """ Фильтр по категориям и брендам """
 
+        print(f'\nHARD FILTER: {props}\n')
+
         filters = {
             'ct': 'category_id__in',
             'brnd[]': 'brand__id__in',
@@ -71,6 +73,7 @@ class FilterProducts:
                 params[filters[item[0:4]]] = props[item]
 
         qs = qs.filter(**params)
+        print(f'\nLEN QUERYSET{len(qs)}\n')
         return qs
 
     def soft_filter(self, qs, validated_props, props):

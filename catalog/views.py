@@ -169,26 +169,26 @@ class ListProductsView(ListAPIView):
 
     def get_queryset(self):
         props = dict(self.request.query_params)
-        # props = {'ct': ['8'], 'brnd[]': ['3']} Bug
-        # logs = []
-        
 
         queryset = ProductModel.objects.filter(activated=True)
         validated_props = []
 
         # Добавляем потомков категории И заполняем мету
         if 'ct' in props.keys():
+
             category = CategoryModel.objects.get(id=props['ct'][0])
             self.meta["title"] = category.name
             self.meta["description"] = category.description
             validated_props = PropsNameModel.objects.filter(category=props['ct'][0])
 
-            qs_child = category.get_children()
-            for child in qs_child:
+            qs_childs = category.get_children()
+            for child in qs_childs:
                 props['ct'].append(child.id)
+                third_childs = child.get_children()
+                for third_child in third_childs:
+                    props['ct'].append(third_child.id)
         else:
             if 'brnd' in props.keys():
-                print(props)
                 brand = BrandProductModel.objects.get(id=props['brnd'][0])
                 self.meta["title"] = brand.brand
                 self.meta["description"] = brand.description
