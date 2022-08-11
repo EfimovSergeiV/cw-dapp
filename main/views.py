@@ -3,13 +3,7 @@
 # mkdir geoip-db
 # Upload database 'GeoLite2 City' from (https://www.maxmind.com/en/accounts/639907/geoip/downloads) to geoip-db dir
 
-from ctypes import resize
-from inspect import Attribute
 import json
-from os import lseek
-from pprint import pprint
-import profile
-from tabnanny import check
 from django.contrib.auth.models import User
 from django.http import response
 from rest_framework.views import APIView

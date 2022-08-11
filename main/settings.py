@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_elasticsearch_dsl',
+    'ckeditor',
+    # 'django_elasticsearch_dsl',
     'debug_toolbar',
     'corsheaders',
     'mptt',
@@ -100,6 +101,16 @@ INSTALLED_APPS = [
 #     'BLACKLIST_AFTER_ROTATION': True, # IMPORTANT
 #     'UPDATE_LAST_LOGIN': True,
 # }
+
+# CKEditor for djanog-admin
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'fill',
+        'height': 300,
+        'width': 'fill',
+    },
+}
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',

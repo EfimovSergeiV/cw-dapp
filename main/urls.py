@@ -30,6 +30,7 @@ urlpatterns = [
     path('c/', include('content.urls')),
     path('u/', include('user.urls')),
     path('s/', include('services.urls')),
+    path('f/', include('forum.urls')),
     path('sber/', include('sber.urls')),
     path('dreamkas/', include('dreamkas.urls')),
 
