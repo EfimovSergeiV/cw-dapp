@@ -2,6 +2,7 @@ migrations
 files
 main/conf.py
 error/
+static/
 uploads/
 main/geoip-db/
 
