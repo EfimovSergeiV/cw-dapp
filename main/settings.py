@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'services.apps.ServicesConfig',
     'sber.apps.SberConfig',
     'dreamkas.apps.DreamkasConfig',
+    'forum.apps.ForumConfig',
     # Auth & social auth # THIS CRASHING SITE
     # 'django.contrib.sites',
     # "dj_rest_auth",
