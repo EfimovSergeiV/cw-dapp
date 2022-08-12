@@ -9,11 +9,12 @@ class CategoryModel(models.Model):
     name = models.CharField(verbose_name="Название категории", max_length=60)
     description = models.TextField(verbose_name="Описание категории", max_length=2000)
     position = models.PositiveIntegerField(verbose_name="Позиция", default=0)
-
-
+   
     class Meta:
         verbose_name = "Раздел"
         verbose_name_plural = "Разделы"
+        ordering = ['position',]
+
 
     def __str__(self) -> str:
         return self.name
@@ -33,6 +34,7 @@ class TopicModel(models.Model):
     class Meta:
         verbose_name = "Тема"
         verbose_name_plural = "Темы"
+        ordering = ['id',]
 
     def __str__(self) -> str:
         return self.title
@@ -50,6 +52,7 @@ class PostModel(models.Model):
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
+        ordering = ['id',]
 
 
     def __str__(self) -> str:
