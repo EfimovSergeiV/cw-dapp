@@ -37,7 +37,8 @@ class MainProductReviewSR(serializers.ModelSerializer):
 
 class ProductReviewSR(MainProductReviewSR):
     """ Сериализатор отзывов на товар"""
-    user = serializers.CharField(source='user.username', read_only=True)
+    # user = serializers.CharField(source='user.username', read_only=True)
+    pass
 
 
 class FeedBackSerializer(serializers.ModelSerializer):
