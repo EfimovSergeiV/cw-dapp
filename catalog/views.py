@@ -274,7 +274,7 @@ class ProdRandomView(ListAPIView):
 
 class RecommendView(APIView):
     """ Рекомендуемые товары """
-    queryset = ProductModel.objects.filter(activated=True)
+    queryset = ProductModel.objects.filter(recommend=True).filter(activated=True)
     serializer_class = RecommendSerializer
 
     def get(self, request):
