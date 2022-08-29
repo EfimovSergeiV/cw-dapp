@@ -5,6 +5,7 @@ error/
 static/
 uploads/
 main/geoip-db/
+main/settings.py
 
 
 # Byte-compiled / optimized / DLL files
