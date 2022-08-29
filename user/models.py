@@ -53,9 +53,10 @@ class LikeProdModel(models.Model):
 class ProductReviewModel(models.Model):
     """ Отзывы пользователей о продукте """
 
-    visible = models.BooleanField(verbose_name="Отображать", default=False)
+    visible = models.BooleanField(verbose_name="Отображать", default=True)
     product = models.ForeignKey(ProductModel, verbose_name="Продукт", related_name="comment_prod", on_delete=models.CASCADE)
-    user = models.ForeignKey(User, verbose_name="Пользователь", related_name="comment_user", on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, verbose_name="Пользователь", related_name="comment_user", on_delete=models.CASCADE)
+    user = models.CharField(verbose_name="Пользоваталь", default="Гость", max_length=80)
 
     grade = models.PositiveIntegerField(verbose_name="Оценка пользователя")
     review = models.TextField(verbose_name="Отзыв", max_length=2500, null=False, blank=False)

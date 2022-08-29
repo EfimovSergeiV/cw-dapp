@@ -113,20 +113,19 @@ class LikeProdView(APIView):
 
 class ProductReviewView(APIView):
     """ Отзывы клиентов о товарах """
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
         prod_id = self.request.query_params.get('prod_id')
         try:
             reviews = ProductReviewModel.objects.filter(visible=True, product=int(prod_id))
-            print(len(reviews))
         except ValueError and TypeError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = serializers.ProductReviewSR(reviews, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        request.data['user'] = request.user.id
+        # request.data['user'] = request.user.id   Подставлять имя из базы юзеров, если пользователь авторизован
         serializer = serializers.MainProductReviewSR(data=request.data)
         if serializer.is_valid():
             serializer.save()
