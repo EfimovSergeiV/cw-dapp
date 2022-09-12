@@ -45,6 +45,7 @@ urlpatterns = [
     path('nearshop/', NearShop.as_view()),              # Ближайший магазин
     path('version/', VersionControlView.as_view()),     # Версия фронтенд приложения
     path('myip/', ClientIpAdressView.as_view()),        # Возращает IP адрес
+    path("getsignature/", signature_generator, name='signature_generator'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

@@ -11,7 +11,6 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
 
 from django.core.mail import send_mail
-from django.template.loader import render_to_string
 from catalog.models import ProductModel
 from orders.serializers import *
 from orders.notice import *

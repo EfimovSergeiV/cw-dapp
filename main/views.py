@@ -21,6 +21,8 @@ from django.core.mail import send_mail
 import requests
 import random
 from main.settings import BASE_DIR
+from django.template.loader import render_to_string
+from django.shortcuts import render
 
 import geoip2.database
 
@@ -480,3 +482,46 @@ class ClientIpAdressView(APIView):
             client_ip = '91.204.138.138'
             
         return Response(client_ip)
+
+
+
+    
+
+from django import forms
+
+
+class NameForm(forms.Form):
+    name = forms.CharField(label='Имя Фамилия', max_length=100)
+    job = forms.CharField(label='Должность', max_length=100)
+    worker = forms.CharField(label='Рабочий телефон', max_length=40)
+    private = forms.CharField(label='Мобильный телефон', max_length=40)
+
+
+
+def signature_generator(request):
+    """ Генератор электронных подписей для сотрудников """
+    
+    if request.method == 'POST':
+        form = NameForm(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            print(data)
+            worker_link = data['worker'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "")[0: 11]
+            private_link = data['private'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "")[0: 11]
+            print(worker_link, private_link)
+
+            return render(request, 'sb.html', {
+                    'name': data['name'],
+                    'job': data['job'],
+                    'worker': data['worker'],
+                    'private': data['private'],
+                    'worker_link': worker_link,
+                    'private_link': private_link, 
+                })
+
+    else:
+        form = NameForm()
+
+
+    return render(request, 'sb-generator.html', {})
