@@ -506,10 +506,9 @@ def signature_generator(request):
 
         if form.is_valid():
             data = form.cleaned_data
-            print(data)
+
             worker_link = data['worker'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "")[0: 11]
             private_link = data['private'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "")[0: 11]
-            print(worker_link, private_link)
 
             return render(request, 'sb.html', {
                     'name': data['name'],
