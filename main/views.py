@@ -495,6 +495,8 @@ class NameForm(forms.Form):
     job = forms.CharField(label='Должность', max_length=100)
     worker = forms.CharField(label='Рабочий телефон', max_length=40)
     private = forms.CharField(label='Мобильный телефон', max_length=40)
+    telegramm = forms.CharField(label='Telegramm', max_length=40, empty_value="None")
+    whatsapp = forms.CharField(label='WhatsApp', max_length=40, empty_value="None")
 
 
 
@@ -507,8 +509,11 @@ def signature_generator(request):
         if form.is_valid():
             data = form.cleaned_data
 
-            worker_link = data['worker'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "")[0: 11]
-            private_link = data['private'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "")[0: 11]
+            worker_link = data['worker'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "").replace("-", "")[0: 11]
+            private_link = data['private'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "").replace("-", "")[0: 11]
+
+            whatsapp = data['whatsapp'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "").replace("-", "")[0: 11] if data['whatsapp'] != 'None' else private_link
+            telegramm = data['telegramm'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "").replace("-", "")[0: 11] if data['telegramm'] != 'None' else private_link
 
             return render(request, 'sb.html', {
                     'name': data['name'],
@@ -516,7 +521,9 @@ def signature_generator(request):
                     'worker': data['worker'],
                     'private': data['private'],
                     'worker_link': worker_link,
-                    'private_link': private_link, 
+                    'private_link': private_link,
+                    'whatsapp': whatsapp,
+                    'telegramm': telegramm,
                 })
 
     else:
