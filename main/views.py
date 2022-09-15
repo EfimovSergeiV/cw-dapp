@@ -499,10 +499,10 @@ class NameForm(forms.Form):
     whatsapp = forms.CharField(label='WhatsApp', max_length=40, empty_value="None")
 
 
-
+from django.http import FileResponse
 def signature_generator(request):
     """ Генератор электронных подписей для сотрудников """
-    
+
     if request.method == 'POST':
         form = NameForm(request.POST)
 
@@ -515,7 +515,7 @@ def signature_generator(request):
             whatsapp = data['whatsapp'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "").replace("-", "")[0: 11] if data['whatsapp'] != 'None' else private_link
             telegramm = data['telegramm'].replace("+", "").replace(" ", "").replace("(", "").replace(")", "").replace("-", "")[0: 11] if data['telegramm'] != 'None' else private_link
 
-            return render(request, 'sb.html', {
+            context = {
                     'name': data['name'],
                     'job': data['job'],
                     'worker': data['worker'],
@@ -524,7 +524,14 @@ def signature_generator(request):
                     'private_link': private_link,
                     'whatsapp': whatsapp,
                     'telegramm': telegramm,
-                })
+                }
+
+            signature = render_to_string('sb.html', context)
+
+            with open('files/signature.html', 'w') as static_file:
+                static_file.write(signature)
+
+            return render(request, 'sb.html', context)
 
     else:
         form = NameForm()
