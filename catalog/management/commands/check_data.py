@@ -22,14 +22,9 @@ class Command(BaseCommand):
         pass
 
 
-qs_prod = ProductModel.objects.all()
+qs_prods = ProductModel.objects.filter(activated=True)
 
+for product in qs_prods:
+    if len(product.description) < 40:
+        print(product.id, product.name)
 
-
-with open('catalog/management/commands/unparse.json') as file:
-    data = json.load(file)
-    for product in data:
-        # print(product['id'])
-
-        status = qs_prod.filter(id=product['id']).update(UID=product['uid'])
-        print(status, product['name'])
