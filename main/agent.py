@@ -59,8 +59,12 @@ def send_alert_to_agent(
 <pre>
 Клиент: { message['person'] }
 Контакты: { message['contact'] }
-Сообщение: { message['text'] }
 </pre>
+
+Сообщение: 
+{ message['text'] }
+
+---
 <a href="https://api.glsvar.ru/u/message_close/{ message['uuid'] }">Ответил</a>
 """
 
@@ -73,11 +77,15 @@ def send_alert_to_agent(
         chats_to_send_notifications = mail_contacts['channel']
         text_to_send = f"""
 <pre>
-Запрос на цену
+Запрос клиента на стоимость товара
 Контакт клиента: { pricerequest['contact'] }
 Город клиента: { pricerequest['city'] }
-Товар: { pricerequest['product'] }
 </pre>
+
+Товар: 
+{ pricerequest['product'] }
+
+---
 <a href="https://api.glsvar.ru/o/pricerequest_close/{ pricerequest['uuid'] }">Ответил</a>
 """
 
