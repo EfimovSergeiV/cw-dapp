@@ -13,7 +13,14 @@ from django.template.loader import render_to_string
 bot = Bot(token=mailagent_bot_token)
 
 
-def send_alert_to_agent(order=None, payment=None, message=None, logs=None, pricerequest=None):
+def send_alert_to_agent(
+        order=None, 
+        payment=None, 
+        message=None, 
+        logs=None, 
+        pricerequest=None,
+        status=None,
+        ):
     """ Отправка активностей в агент """
 
     if order:
@@ -71,6 +78,17 @@ def send_alert_to_agent(order=None, payment=None, message=None, logs=None, price
 Товар: { pricerequest['product'] }
 </pre>
 <a href="https://api.glsvar.ru/u/pricerequest_close/{ pricerequest['uuid'] }">Ответил</a>
+"""
+
+
+    if status:
+        chats_to_send_notifications = mail_contacts['channel']
+
+        text_to_send = f"""
+<pre>
+Заказ: { status['order'] }
+Получил статус: { status['status'] }
+</pre>
 """
 
     for chat in chats_to_send_notifications:

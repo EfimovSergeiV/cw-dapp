@@ -119,8 +119,25 @@ class CheckOrderPaymentView(APIView):
 
 """ Изменение статуса заказа отработанный или не отработанный """
 def edit_order_status(request, uuid, status):
+    # send_alert_to_agent(order=serializer.data)
+
+    ORDER_STATUS = {
+        "notprocessed": "не обработан",
+        "inprocessed": "в обработке",
+        "processed": "обработан",
+        "awaitingpayment": "ожидает оплаты",
+        "delivery": "доставка ТК",
+        "waitingclient": "ожидает клиента",
+        "completed": "выполнен",
+        "notcompleted": "не выполнен",
+    }
+
     post = "Заказ успешно помечен"
-    qs = CustomerModel.objects.filter(uuid=uuid).update(status=status)
+    qs = CustomerModel.objects.filter(uuid=uuid)
+    qs.update(status=status)
+
+    send_alert_to_agent(status = { "order": qs[0].order_number, "status": ORDER_STATUS[status] })
+
     if qs == 0:
         post = "Заказ не найден в системе"
     return render(request, 'questionclosed.html', { 'post': post})
