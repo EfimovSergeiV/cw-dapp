@@ -153,21 +153,26 @@ def edit_order_status(request, uuid, status):
 def price_request_status(request, uuid):
     qs = RequestPriceModel.objects.filter(uuid=uuid)
     
-    print(request.headers)
-    with open("requestHeaders.txt", 'w') as file:
-        file.write(str(request.headers))
+    # print(request.headers)
+    # with open("requestHeaders.txt", 'w') as file:
+    #     file.write(str(request.headers)) #
 
-    if len(qs) == 1:
-        if qs[0].completed:
-            post = f"Вопрос клиента { qs[0].contact } кто-то уже взял на себя"
+    try:
+        if len(qs) == 1 and request.headers['Cookie']:
+            if qs[0].completed:
+                post = f"Вопрос клиента { qs[0].contact } кто-то уже взял на себя"
+            else:
+                qs.update(completed=True)
+                post = f"Вопрос клиента { qs[0].contact } помечен как закрытый"
+                send_alert_to_agent(oth_status = { "client": qs[0].contact })
+    
         else:
-            qs.update(completed=True)
-            post = f"Вопрос клиента { qs[0].contact } помечен как закрытый"
-            send_alert_to_agent(oth_status = { "client": qs[0].contact })
-    else:
-        post = "Вопрос не найден в системе"
+            post = "Вопрос не найден в системе"
 
-    return render(request, 'questionclosed.html', { 'post': post })
+        return render(request, 'questionclosed.html', { 'post': post })
+    except:
+        post = "Вы не прошли проверку на работа"
+        return render(request, 'questionclosed.html', { 'post': post })
 
 
 
