@@ -20,17 +20,21 @@ from django.shortcuts import render
 def edit_message_status(request, uuid):
     qs = FeedBackModel.objects.filter(uuid=uuid)
     
-    if len(qs) == 1:
-        if qs[0].completed:
-            post = f"Вопрос клиента { qs[0].person } кто-то уже взял на себя"
+    try:
+        if len(qs) == 1 and request.headers['Cookie']:
+            if qs[0].completed:
+                post = f"Вопрос клиента { qs[0].person } кто-то уже взял на себя"
+            else:
+                qs.update(completed=True)
+                post = f"Вопрос клиента { qs[0].person } помечен как закрытый"
+                send_alert_to_agent(oth_status = { "client": qs[0].person })
         else:
-            qs.update(completed=True)
-            post = f"Вопрос клиента { qs[0].person } помечен как закрытый"
-            send_alert_to_agent(oth_status = { "client": qs[0].person })
-    else:
-        post = "Вопрос не найден в системе"
+            post = "Вопрос не найден в системе"
 
-    return render(request, 'questionclosed.html', { 'post': post })
+        return render(request, 'questionclosed.html', { 'post': post })
+    except:
+        post = "Вы не прошли проверку на работа"
+        return render(request, 'questionclosed.html', { 'post': post })
 
 
 class UserTestView(APIView):

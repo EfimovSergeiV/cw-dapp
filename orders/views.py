@@ -134,19 +134,23 @@ def edit_order_status(request, uuid, status):
 
     
     qs = CustomerModel.objects.filter(uuid=uuid)
-    if len(qs) == 1:
+    try:
+        if len(qs) == 1 and request.headers['Cookie']:
 
-        if qs[0].status == status:
-            post = f"Кто то уже дал заказу {qs[0].order_number} статус: {ORDER_STATUS[status]}"
+            if qs[0].status == status:
+                post = f"Кто то уже дал заказу {qs[0].order_number} статус: {ORDER_STATUS[status]}"
+
+            else:
+                qs.update(status=status)
+                send_alert_to_agent(status = { "order": qs[0].order_number, "status": ORDER_STATUS[status] })
+                post = f"Статус заказа {qs[0].order_number} сменён на: {ORDER_STATUS[status]}"
 
         else:
-            qs.update(status=status)
-            send_alert_to_agent(status = { "order": qs[0].order_number, "status": ORDER_STATUS[status] })
-            post = f"Статус заказа {qs[0].order_number} сменён на: {ORDER_STATUS[status]}"
-
-    else:
-        post = "Заказ не найден в системе"
-    return render(request, 'questionclosed.html', { 'post': post})
+            post = "Заказ не найден в системе"
+        return render(request, 'questionclosed.html', { 'post': post})
+    except:
+        post = "Вы не прошли проверку на работа"
+        return render(request, 'questionclosed.html', { 'post': post })
 
 
 """ Изменение статусов обработки сообщений и запросов о стоимости товаров """
