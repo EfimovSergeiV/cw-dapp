@@ -153,6 +153,10 @@ def edit_order_status(request, uuid, status):
 def price_request_status(request, uuid):
     qs = RequestPriceModel.objects.filter(uuid=uuid)
     
+    print(request.headers)
+    with open("requestHeaders.txt", 'w') as file:
+        file.write(str(request.headers))
+
     if len(qs) == 1:
         if qs[0].completed:
             post = f"Вопрос клиента { qs[0].contact } кто-то уже взял на себя"
