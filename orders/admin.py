@@ -92,7 +92,7 @@ class RequestPriceAdmin(admin.ModelAdmin):
     list_display = ('id', 'completed', 'city', 'contact', 'product')
     list_display_links = ('id', 'contact', 'product')
     list_editable = ('completed',)
-    readonly_fields = ('id', 'city', 'contact', 'product')
+    readonly_fields = ('id', 'uuid', 'city', 'contact', 'product')
 
 
 admin.site.register(

@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import status
 
-
 # from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 # from dj_rest_auth.registration.views import SocialLoginView
 # from allauth.socialaccount.providers.oauth2.client import OAuth2Client
@@ -17,12 +16,21 @@ from user.models import *
 from django.shortcuts import render
 
 
+""" Редактирование статуса сообщений пользователей """
 def edit_message_status(request, uuid):
-    post = "Вопрос помечен как закрытый"
-    qs = FeedBackModel.objects.filter(uuid=uuid).update(completed=True)
-    if qs == 0:
+    qs = FeedBackModel.objects.filter(uuid=uuid)
+    
+    if len(qs) == 1:
+        if qs[0].completed:
+            post = f"Вопрос клиента { qs[0].person } кто-то уже взял на себя"
+        else:
+            qs.update(completed=True)
+            post = f"Вопрос клиента { qs[0].person } помечен как закрытый"
+            send_alert_to_agent(oth_status = { "client": qs[0].person })
+    else:
         post = "Вопрос не найден в системе"
-    return render(request, 'questionclosed.html', { 'post': post})
+
+    return render(request, 'questionclosed.html', { 'post': post })
 
 
 class UserTestView(APIView):

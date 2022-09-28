@@ -132,15 +132,39 @@ def edit_order_status(request, uuid, status):
         "notcompleted": "не выполнен",
     }
 
-    post = "Заказ успешно помечен"
+    
     qs = CustomerModel.objects.filter(uuid=uuid)
-    qs.update(status=status)
+    if len(qs) == 1:
 
-    send_alert_to_agent(status = { "order": qs[0].order_number, "status": ORDER_STATUS[status] })
+        if qs[0].status == status:
+            post = f"Кто то уже дал заказу {qs[0].order_number} статус: {ORDER_STATUS[status]}"
 
-    if qs == 0:
+        else:
+            qs.update(status=status)
+            send_alert_to_agent(status = { "order": qs[0].order_number, "status": ORDER_STATUS[status] })
+            post = f"Статус заказа {qs[0].order_number} сменён на: {ORDER_STATUS[status]}"
+
+    else:
         post = "Заказ не найден в системе"
     return render(request, 'questionclosed.html', { 'post': post})
+
+
+""" Изменение статусов обработки сообщений и запросов о стоимости товаров """
+def price_request_status(request, uuid):
+    qs = RequestPriceModel.objects.filter(uuid=uuid)
+    
+    if len(qs) == 1:
+        if qs[0].completed:
+            post = f"Вопрос клиента { qs[0].contact } кто-то уже взял на себя"
+        else:
+            qs.update(completed=True)
+            post = f"Вопрос клиента { qs[0].contact } помечен как закрытый"
+            send_alert_to_agent(oth_status = { "client": qs[0].contact })
+    else:
+        post = "Вопрос не найден в системе"
+
+    return render(request, 'questionclosed.html', { 'post': post })
+
 
 
 class OrderListViews(APIView):
@@ -229,7 +253,7 @@ class OrderViews(APIView):
             # Логика оповещений
             send_alert_to_agent(order=serializer.data)
             mail_list = [
-                'shop@glsvar.ru',
+                # 'shop@glsvar.ru',
                 ]
 
             if serializer.data['email']:

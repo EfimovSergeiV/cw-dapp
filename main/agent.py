@@ -20,6 +20,7 @@ def send_alert_to_agent(
         logs=None, 
         pricerequest=None,
         status=None,
+        oth_status=None,
         ):
     """ Отправка активностей в агент """
 
@@ -77,7 +78,7 @@ def send_alert_to_agent(
 Город клиента: { pricerequest['city'] }
 Товар: { pricerequest['product'] }
 </pre>
-<a href="https://api.glsvar.ru/u/pricerequest_close/{ pricerequest['uuid'] }">Ответил</a>
+<a href="https://api.glsvar.ru/o/pricerequest_close/{ pricerequest['uuid'] }">Ответил</a>
 """
 
 
@@ -88,6 +89,16 @@ def send_alert_to_agent(
 <pre>
 Заказ: { status['order'] }
 Получил статус: { status['status'] }
+</pre>
+"""
+
+    if oth_status:
+        chats_to_send_notifications = mail_contacts['channel']
+
+        text_to_send = f"""
+<pre>
+Клиент: { oth_status['client'] }
+Помечен как проработанный
 </pre>
 """
 
