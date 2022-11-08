@@ -113,16 +113,23 @@ class ProductModel(AbsProductModel):
         blank=True, 
         help_text="Сюда заносим старую цену, новую пишем в цены")
 
-    """ Костыль """
+    """ Мигрируем с распределённых стоимостей товара, в единственную """
     CCY_VAL = (
         ("RUB", "RUB"),
         ("EUR", "EUR"),
         ("USD", "USD"),
         ("CNY", "CNY"),
     )
+
+    EXISTENCE = (
+        ("stock", "в наличии"),
+        ("order", "под заказ"),
+    )
+
     only_price_status = models.BooleanField(verbose_name="Общая стоимость", default=False)
     only_price = models.FloatField(verbose_name="Стоимость", default=0, null=True, blank=True)
     currency = models.CharField(verbose_name="Валюта", max_length=10, choices=CCY_VAL, default="RUB")
+    status = models.CharField(verbose_name="Наличие на складе", max_length=100, choices=EXISTENCE, default="order")
 
     class Meta:
         verbose_name = "Товар"

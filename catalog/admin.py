@@ -162,7 +162,7 @@ class ProductAdmin(admin.ModelAdmin):
         ("Информация о товаре", {'fields': (('name', 'vcode', 'UID', 'rating'), 'description', 'keywords',)}),
         ("Скидка на товар", {'fields': ('promo', 'discount',)}),
         ("Отображение на сайте", {'fields': (('activated', 'recommend',), ('category', 'brand'), ( 'preview', 'preview_image',))}),
-        ("Общая стоимость", {'fields': (('only_price', 'currency', 'only_price_status',),)}),
+        ("Общая стоимость", {'fields': (('only_price', 'currency', 'status', 'only_price_status'),)}),
         )
 
 ##### НАЗВАНИЯ СВОЙСТВ ДЛЯ ФИЛЬТРОВ
