@@ -73,6 +73,7 @@ class BrandProductModel(models.Model):
     carousel = models.BooleanField(verbose_name="Отображать", default=False)
     image = models.ImageField(verbose_name="Изображение", help_text="Разрешение изображения 1024x480", upload_to="img/c/brand/")
     description = models.TextField(verbose_name="Описание", max_length=1000, null=True, blank=True)
+    priority = models.IntegerField(verbose_name="Приоритет выдачи в каталоге", default=50)
 
     class Meta:
         verbose_name = "Бренд"

@@ -170,7 +170,7 @@ class ListProductsView(ListAPIView):
     def get_queryset(self):
         props = dict(self.request.query_params)
 
-        queryset = ProductModel.objects.filter(activated=True)
+        queryset = ProductModel.objects.filter(activated=True).order_by('brand__priority')
         validated_props = []
 
         # Добавляем потомков категории И заполняем мету
