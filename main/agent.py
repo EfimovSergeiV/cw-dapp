@@ -57,6 +57,7 @@ def send_alert_to_agent(
 
         text_to_send = f"""
 <pre>
+Город: { message['city'] }
 Клиент: { message['person'] }
 Контакты: { message['contact'] }
 </pre>

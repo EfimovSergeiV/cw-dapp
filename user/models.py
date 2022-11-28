@@ -76,6 +76,7 @@ class FeedBackModel(models.Model):
 
     completed = models.BooleanField(verbose_name="Вопрос проработан", default=False)
     uuid = models.UUIDField(verbose_name="Идентификатор", default=uuid.uuid4, editable=False)
+    city = models.CharField(verbose_name="Город", max_length=100, null=True, blank=True)
     person = models.CharField(verbose_name="Клиент", max_length=150, null=True, blank=True)
     contact = models.CharField(verbose_name="Контакт", max_length=150, null=True, blank=True)
     theme = models.CharField(verbose_name="Тематика", max_length=150, null=True, blank=True)

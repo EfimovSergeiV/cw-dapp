@@ -34,7 +34,7 @@ class ProductReviewAdmin(admin.ModelAdmin):
 
 
 class FeedBackAdmin(admin.ModelAdmin):
-    list_display = ('id' , 'completed', 'uuid','person', 'theme',)
+    list_display = ('id' , 'completed', 'city', 'uuid','person', 'theme',)
     list_display_links = ('id' , 'completed', 'person', 'theme',)
     search_fields = ('person', )
     list_filter = ('theme', )
