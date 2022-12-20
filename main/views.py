@@ -304,7 +304,7 @@ class ReturnClientLocation(APIView):
 
         try:
             # Отсеиваем свои IP и минимизируем запросы в сервис
-            if client_ip in ['127.0.0.1', '91.204.138.138']:
+            if client_ip in ['127.0.0.1', '91.204.138.138', '192.168.60.33']:
                 with open( str(BASE_DIR / 'main/location/pskov_location.json'), 'r') as file:
                     location = json.load(file) # Если IP из списка, возвращаем Псков
 
@@ -440,7 +440,7 @@ class NearShop(APIView):
     def get(self, request):
         client_ip = get_client_ip(request)[0]
 
-        if client_ip not in ['127.0.0.1', '91.204.138.138']:
+        if client_ip not in ['127.0.0.1', '91.204.138.138', '192.168.60.33']:
             try:
                 # This reader object should be reused across lookups as creation of it is
                 # expensive.
