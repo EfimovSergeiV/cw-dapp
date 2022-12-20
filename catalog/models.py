@@ -32,6 +32,7 @@ class ShopAdressModel(models.Model):
 
     first = models.BooleanField(verbose_name="Включить первым", default=False)
     position = models.PositiveIntegerField(verbose_name="Позиция в списке", default=0)
+    region_code = models.CharField(verbose_name="Код региона", default='PSK', max_length=3)
 
     city = models.CharField(verbose_name="Город", max_length=100)
     zip = models.CharField(verbose_name="Индекс", null=True, blank=True, max_length=8)
