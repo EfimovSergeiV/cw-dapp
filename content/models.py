@@ -1,5 +1,28 @@
 from django.db import models
 from main.models import *
+from easy_thumbnails.fields import ThumbnailerImageField
+
+
+class WideBannersModel(AbsActivatedModel):
+    """ Широкие баннеры для шапки сайта """
+
+    name = models.CharField(verbose_name="Название", max_length=150)
+    ordering = models.IntegerField(verbose_name="Выдача", default=1)
+    link = models.URLField(verbose_name="Внешняя ссылка", null=True, blank=True)
+    path = models.JSONField(verbose_name="Внутренняя ссылка", null=True, blank=True)
+    image = ThumbnailerImageField(
+        verbose_name = 'Изображение',
+        help_text="Расширение 1024x320",
+        resize_source=dict(size=(1024, 320)),
+        upload_to="img/c/widebaners/")
+    
+    class Meta:
+        ordering = ['-ordering', '-id', ]
+        verbose_name = "Широкий баннер"
+        verbose_name_plural = "Широкие баннеры"
+
+    def __str__(self):
+        return str(self.name)
 
 
 class MainBannerModel(AbsActivatedModel):

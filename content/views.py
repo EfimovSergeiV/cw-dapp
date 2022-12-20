@@ -10,6 +10,18 @@ from content.serializers import *
 from content.models import *
 
 
+class WideBannersView(APIView):
+    """ Широкие баннеры шапки сайта """
+
+    serializer_class = WideBannersSerializer
+    queryset = WideBannersModel.objects.filter(activated=True)
+
+    def get(self, request):
+        qs = self.queryset.all()
+        serializer = self.serializer_class(qs, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
 class MainBannerView(APIView):
     """ Карусель на главной странице """
 

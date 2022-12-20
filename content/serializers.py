@@ -2,6 +2,14 @@ from rest_framework import serializers
 from content.models import *
 
 
+class WideBannersSerializer(serializers.ModelSerializer):
+    """ Сериализатор широких баннеров """
+
+    class Meta:
+        model = WideBannersModel
+        fields = ('id', 'name', 'image', 'link', 'path', ) 
+
+
 class VotesAnswersSerializer(serializers.ModelSerializer):
     """ Сериализатор для ответов на вопросы """
 
