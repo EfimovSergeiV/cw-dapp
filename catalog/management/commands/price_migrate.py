@@ -40,6 +40,8 @@ for qs_ct in category:
     expenses.append([qs_ct.id, qs_ct.name, 'category',])
 
     for product in queryset.filter(category=qs_ct.id):
+        """ + Добавить к парсеру наличие товаров """
+        
         count += 1
 
         if product.only_price_status:
@@ -57,7 +59,7 @@ for qs_ct in category:
         expenses.append(product)
 
 
-workbook = xlsxwriter.Workbook('/home/anon/backup/prods.xlsx')
+workbook = xlsxwriter.Workbook('/home/anon/backup/prods.xlsx')   # Сменить путь для сервера
 worksheet = workbook.add_worksheet()
 
 bold = workbook.add_format({'bold': True})
