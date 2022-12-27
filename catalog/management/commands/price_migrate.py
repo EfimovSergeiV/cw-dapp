@@ -31,17 +31,17 @@ currency = {
 
 
 
+
 for product in queryset:
     count += 1
     
     if product.only_price_status:
         price = int(product.only_price * currency[product.currency])
-        # print(f"\n{ count }\nid: { product.id }\nname: { product.name }\nO: { price }")  #{ product.category_id }
+        print(f"\n{ count }\nid: { product.id }\nname: { product.name }\nO: { price } TRUE")  #{ product.category_id }
 
     else:
         price_qs = prices_qs.filter(product = product.id)
 
         price = int(price_qs[0].price * currency[price_qs[0].currency])
 
-
-        print(f"\nid: { product.id }\nname: { product.name }\nO: {price}")
+        print(f"\n{ count }\nid: { product.id }\nname: { product.name }\nO: {price}")
