@@ -16,7 +16,7 @@ import math
 class Command(BaseCommand):
     args = ''
     help = ''
-    
+
     def handle(self, *args, **options):
         pass
 
