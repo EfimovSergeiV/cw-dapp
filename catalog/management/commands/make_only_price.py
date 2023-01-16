@@ -32,7 +32,7 @@ count = 0
 
 for product in queryset:
     count += 1
-    prod = { "id": None, "name": None, "only_price": None, "price": None }
+    prod = { "id": None, "name": None, "only_price": None, "price": None, "status": None }
 
     if product.only_price_status:
         prod["id"] = product.id
@@ -48,19 +48,8 @@ for product in queryset:
         prod["only_price"] = False
 
 
-
-    print(f'{ count }/{ prod["id"] }. { prod["price"] } { prod["only_price"] } { prod["name"][0:50]}... ')
-
-    if product.only_price_status == False:
-        success = queryset.filter(id=prod["id"]).update(only_price=prod["price"], only_price_status=True)
-        print(f'Перезаписали: {prod["id"]} {success}')  
-
-
-    
-
-
-
-
-
-
+    price_qs = prices_qs.filter(product = product.id)
+    prod["status"] = price_qs[0].status
+    queryset.filter(id=prod["id"]).update(only_price=prod["price"], currency="RUB", only_price_status=True, status = prod["status"])
+    print(f'{ count }/{ prod["id"] }. { prod["price"] } { prod["only_price"] } { prod["status"] } { prod["name"][0:50]}... ')
 
