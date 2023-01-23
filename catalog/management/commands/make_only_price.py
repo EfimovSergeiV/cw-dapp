@@ -38,18 +38,27 @@ for product in queryset:
         prod["id"] = product.id
         prod["name"] = product.name
         prod["price"] = int(product.only_price * currency[product.currency])
-        prod["only_price"] = True
+        prod["only_price"] = True   #Служит только для вывода
+        prod["status"] = product.status #Узнаём какое наличие из общих цен
+        print(f'{ count }/{ prod["id"] }.\t{ prod["price"] }\t{ prod["only_price"] }\t{ prod["status"] }\t{ prod["name"][0:50]}...')
 
     else:
         price_qs = prices_qs.filter(product = product.id)
         prod["id"] = product.id
         prod["name"] = product.name
         prod["price"] = int(price_qs[0].price * currency[price_qs[0].currency])
-        prod["only_price"] = False
+        prod["only_price"] = False  #Служит только для вывода
+
+        # Узнаём наличие из первого магазина
+        price_qs = prices_qs.filter(product = product.id)
+        prod["status"] = price_qs[0].status
+        print(f'{ count }/{ prod["id"] }.\t{ prod["price"] }\t{ prod["only_price"] }\t{ prod["status"] }\t{ prod["name"][0:50]}...')
+
+    
+    while prod["price"] % 10 != 0:
+        prod["price"] += 1
 
 
-    price_qs = prices_qs.filter(product = product.id)
-    prod["status"] = price_qs[0].status
     queryset.filter(id=prod["id"]).update(only_price=prod["price"], currency="RUB", only_price_status=True, status = prod["status"])
-    print(f'{ count }/{ prod["id"] }. { prod["price"] } { prod["only_price"] } { prod["status"] } { prod["name"][0:50]}... ')
+    print(f'{ count }/{ prod["id"] }.\t{ prod["price"] }\t{ prod["only_price"] }\t{ prod["status"] }\t{ prod["name"][0:50]}...\n')
 
