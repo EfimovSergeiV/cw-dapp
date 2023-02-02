@@ -1,11 +1,11 @@
 import random
 from unicodedata import category
-
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
+from rest_framework import status
 from catalog.models import *
 from serializers.catalog import *
 from django.db.models import CharField
@@ -214,19 +214,25 @@ class ProductView(APIView):
     serializer_class = ProductSerializer
 
     def get(self, request, pk):
-        product = self.queryset.get(id=pk)
-        serializer = self.serializer_class(product, context={'request':request})
-        product = serializer.data
+        try:
+            product = self.queryset.get(id=pk)
+            print(product)
+            serializer = self.serializer_class(product, context={'request':request})
+            product = serializer.data
 
-        # Проверяем указана общая стоимасть или конкретно по магазинам
-        if product['only_price_status']:
-            product = CustomUtils.make_only_price(self, product)
+            # Проверяем указана общая стоимасть или конкретно по магазинам
+            if product['only_price_status']:
+                product = CustomUtils.make_only_price(self, product)
 
-        # Редактируем стоимость исходя из курса валют
-        cources_dict = ChangeCurrency.now_currency(self)
-        change_data = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
+            # Редактируем стоимость исходя из курса валют
+            cources_dict = ChangeCurrency.now_currency(self)
+            change_data = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
+            return Response(change_data)
+        
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-        return Response(change_data)
+        
 
 
 
