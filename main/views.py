@@ -538,3 +538,33 @@ def signature_generator(request):
 
 
     return render(request, 'sb-generator.html', {})
+
+
+from geopy.geocoders import Nominatim
+class CoordinateProcessingView(APIView):
+    """ Обработка координат браузера и определение населённого пунка пользователя """
+
+    def post(self, request):
+        """
+            1. state
+            2. county
+            3. city
+            4. village
+        """
+
+        geolocator = Nominatim(user_agent="geoapiExercises")
+        latitude = str(request.data['latitude'])
+        longitude = str(request.data['longitude'])
+        location = geolocator.reverse(latitude+","+longitude, exactly_one=True, addressdetails=True)
+        address = location.raw['address']
+
+        resp = {
+            "state": address.get('state', False),
+            "county": address.get('county', False),
+            "city": address.get('city', False),
+            "village": address.get('village', False),
+        }
+
+        adress = [i for i in resp.values() if i]
+
+        return Response(adress)

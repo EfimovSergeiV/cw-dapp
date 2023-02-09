@@ -42,6 +42,7 @@ urlpatterns = [
     path('u/reset/', RestoreUserPassword.as_view()),    # Восстановить пароль
     path('u/profile/', UserProfileView.as_view()),      # Информация о пользователе
     path('location/', ReturnClientLocation.as_view()),  # Местонахождение
+    path('coordinates/', CoordinateProcessingView.as_view()),
     path('nearshop/', NearShop.as_view()),              # Ближайший магазин
     path('version/', VersionControlView.as_view()),     # Версия фронтенд приложения
     path('myip/', ClientIpAdressView.as_view()),        # Возращает IP адрес
