@@ -1,5 +1,8 @@
 """
-    Парвер цен Сварог
+
+Парcер цен Сварог
+________________________________
+python manage.py svarogXLSparser
 
 """
 
@@ -47,7 +50,11 @@ sheet_list = xl.sheet_names  # see all sheet names
 # Бежим по разделу
 for sheet_name in sheet_list[1:2]:
     df = pd.read_excel('/home/anon/PRICES/PriceSvarog.xlsx', sheet_name=sheet_name, header=None, index_col=0)
-    print(df)
+
+
+    # Бежим по строкам, обрабатываем колонки
+    for index, row in df.iterrows():
+        print(f'{index}.\t{row[1]}\t{row[6]} \ {type(index)} {type(row[1])}\t{type(row[6])}')
 
 
 
