@@ -140,11 +140,11 @@ class ProductAdmin(admin.ModelAdmin):
     """
 
     readonly_fields = ('preview', )
-    list_display = ('id', 'vcode', 'name', 'currency', 'only_price', 'only_price_status',  'activated',) #'recommend',
+    list_display = ('id', 'vcode', 'name', 'only_price', 'currency', 'activated', 'status',) #'recommend',
     list_display_links = ('id', )
     search_fields = ('id', 'vcode', 'name', 'UID',)
     list_filter = ('brand', 'recommend', 'created_date', 'activated', 'category',)
-    list_editable = ('activated', 'only_price_status', 'only_price', 'currency',)
+    list_editable = ( 'vcode', 'name', 'activated', 'only_price', 'currency', 'status')
     ordering = ('id',)
     inlines = (
         # ProductKeywordsInline,
