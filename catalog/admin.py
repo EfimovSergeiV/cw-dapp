@@ -144,7 +144,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display_links = ('id', )
     search_fields = ('id', 'vcode', 'name', 'UID',)
     list_filter = ('brand', 'recommend', 'created_date', 'activated', 'category',)
-    list_editable = ( 'vcode', 'activated', 'only_price', 'currency', 'status')
+    list_editable = ('only_price', 'activated', 'status')
     ordering = ('id',)
     inlines = (
         # ProductKeywordsInline,
