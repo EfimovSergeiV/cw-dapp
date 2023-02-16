@@ -282,6 +282,7 @@ class SearchSerializer(serializers.ModelSerializer):
         model = ProductModel
         fields = (
             'id', 
-            'name', 
-            # 'keyword',
+            'name',
+            'only_price',
+            'preview_image',
             )
