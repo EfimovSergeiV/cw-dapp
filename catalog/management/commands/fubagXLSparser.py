@@ -59,7 +59,7 @@ document_class = ProductDocument
 
 
 search_query = 'IR 220 VRD раб.напряжение 150-240В'
-found = ''
+found = { "like": 0, "name": None }
 
 
 s = Search().using(client).query("match", name=search_query,)
@@ -92,8 +92,9 @@ for product in response:
     print(f'like: { like }/{ lenght_word_list_product },  name: { word_list(product.name) }')
 
 
-    if lenght_word_list_product - like < 1:
-        found = product.name
+    if lenght_word_list_product - like > 2 and like > found['like']:
+        found = { "like": like, "name": product.name }
 
 
-print(f'SearchQuery: { search_query }\tFound: { found }')
+print(f'SearchQuery: { search_query }\tFound: { found["name"] }')
+action = input("\nПравильно? (Y or N): ")
