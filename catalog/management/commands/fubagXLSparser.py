@@ -26,6 +26,12 @@ s = Search(using=client)
 document_class = ProductDocument
 
 
+def word_list(text):
+    """ Чистит текст запроса и возвращает список слов из запроса """
+    return text.replace('(', '').replace(')', '').replace('+', '').replace('-', '').replace('.', '').split()
+
+
+
 # # Получаем список разделов xls файла
 # xl = pd.ExcelFile(f'{BASE_DIR}/files/prices/PriceFubag.xlsx')
 # sheet_list = xl.sheet_names
@@ -68,9 +74,7 @@ search = document_class.search().query(query)
 response = search.execute()
 
 
-def word_list(text):
-    """ Чистит текст запроса и возвращает список слов из запроса """
-    return text.replace('(', '').replace(')', '').replace('+', '').replace('-', '').replace('.', '').split()
+
 
 
 # print(f'\n\nsearch query: { word_list(search_query) }\n')
