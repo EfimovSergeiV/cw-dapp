@@ -10,6 +10,11 @@ from content.serializers import *
 from content.models import *
 
 
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20
+
+
 class WideBannersView(APIView):
     """ Широкие баннеры шапки сайта """
 
@@ -74,4 +79,27 @@ class FooterFileView(APIView):
     def get(self, request):
         file_name = FooterFileModel.objects.all()
         serializer = FooterFileSerializer(file_name, many=True, context={'request':request})
+        return Response(serializer.data)
+
+
+class ReviewsView(ListAPIView):
+    """ Видео обзоры на оборудование """
+
+    queryset = ReviewsModel.objects.filter(activated=True)
+    serializer_class = ReviewsSerializer
+    pagination_class = StandardResultsSetPagination
+        
+
+
+class RandomReviewsView(APIView):
+    """ Видео обзоры на оборудование (случайная выдача) """
+
+    serializer_class = ReviewsSerializer
+    queryset = ReviewsModel.objects.filter(activated=True)
+
+    def get(self, request):
+
+        qs = self.queryset.order_by('?')[0:12]
+        serializer = self.serializer_class(qs, many=True, context={'request': request})
+
         return Response(serializer.data)

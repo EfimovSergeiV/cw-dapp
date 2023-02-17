@@ -138,3 +138,18 @@ class FooterFileModel(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class ReviewsModel(AbsDateModel, AbsActivatedModel):
+    """ Видео обзоры на оборудование """
+
+    name = models.CharField(verbose_name="Название", max_length=120)
+    link = models.JSONField(verbose_name="Ссылка на товар", help_text='{ "name": "product-id", "params": { "id": 1039 } }', null=True, blank=True)
+    video = models.URLField(verbose_name="Ссыллка на видео")
+
+    class Meta:
+        verbose_name = "Видео"
+        verbose_name_plural = "Видео"
+
+    def __str__(self):
+        return self.name

@@ -26,3 +26,10 @@ class VotesSerializer(serializers.ModelSerializer):
     class Meta:
         model = VotesModel
         fields = ('id', 'vote', 'answers')
+
+class ReviewsSerializer(serializers.ModelSerializer):
+    """ Сериализатор видео обзоров на оборудование """
+
+    class Meta:
+        model = ReviewsModel
+        fields = ('id', 'name', 'link', 'video')

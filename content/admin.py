@@ -43,9 +43,17 @@ class VotesAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'vote', 'is_active')
     inlines = [VoteInline]
 
+
+class ReviewsAdmin(admin.ModelAdmin):
+    """ Отображение обзоров на оборудование в админке """
+    list_display = ('id', 'name', 'created_date', 'activated')
+    list_editable = ('activated',)
+
+
+
 admin.site.register(VotesInterviewedModel)
 
-
+admin.site.register(ReviewsModel, ReviewsAdmin)
 admin.site.register(FooterFileModel)
 admin.site.register(MainBannerModel, MainBannerAdmin)
 admin.site.register(VotesModel, VotesAdmin)
