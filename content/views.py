@@ -99,7 +99,7 @@ class RandomReviewsView(APIView):
 
     def get(self, request):
 
-        qs = self.queryset.order_by('?')[0:12]
+        qs = self.queryset.order_by('?')[0:6]
         serializer = self.serializer_class(qs, many=True, context={'request': request})
 
         return Response(serializer.data)
