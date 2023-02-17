@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -80,6 +81,22 @@ class FooterFileView(APIView):
         file_name = FooterFileModel.objects.all()
         serializer = FooterFileSerializer(file_name, many=True, context={'request':request})
         return Response(serializer.data)
+
+
+class ReviewView(APIView):
+    """ Отдельный обзор на оборудование """
+
+    serializer_class = ReviewsSerializer
+
+    def get(self, request, pk):
+
+        try:
+            qs = ReviewsModel.objects.filter(activated=True).get(id=pk)
+            serializer = self.serializer_class(qs, context={'request': request})
+
+            return Response(serializer.data)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class ReviewsView(ListAPIView):

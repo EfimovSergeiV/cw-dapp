@@ -10,6 +10,7 @@ urlpatterns = [
     path('mpromob/', MainPromoBannerView.as_view()),
     path('certificate/', FooterFileView.as_view()),
     path('votes/', VotesView.as_view()),
-    path('random-reviews/', RandomReviewsView.as_view()),
     path('reviews/', ReviewsView.as_view()),
+    path('reviews/<int:pk>/', ReviewView.as_view()),
+    path('random-reviews/', RandomReviewsView.as_view()),
 ]
