@@ -10,6 +10,7 @@ from catalog.models import *
 from serializers.catalog import *
 from django.db.models import CharField
 from django.db.models.functions import Lower
+from django.db.models import Case, When
 
 from main.models import CourceCurrency
 from catalog.utils import *
@@ -368,16 +369,9 @@ class SearchView(APIView):
         search = self.document_class.search().query(query)[0:30]
         response = search.execute()
 
-
-        """ Костыль для отключённых товаров """
-        prods = []
-        for prod in response:
-            prods.append(prod.id)
-        qs = ProductModel.objects.filter(activated=True).filter(id__in=prods)
-
-
-
-        # print(f'Found { len(response) }/{ response.hits.total.value } hit(s) for query: "{ search_query }"')
+        prods = [prod.id for prod in response ]
+        preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(prods)])
+        qs = ProductModel.objects.filter(activated=True).filter(id__in=prods).order_by(preserved)
 
         serializer = self.serializer_class(qs, many=True, context={'request':request})
         return Response(serializer.data)
