@@ -1,5 +1,5 @@
 """
-38494 Сварочная маска FUBAG ULTIMA 9-13 Natural Color	
+
 """
 from django.core.management.base import BaseCommand
 from pathlib import Path
@@ -22,13 +22,10 @@ class Command(BaseCommand):
 
         with open(f"{ BASE_DIR }/files/output.json", 'r') as file:
             data = json.load(file)
-
             counter = 0
 
             for product in data:
                 counter += 1
-
-                print(f'\n{counter}.\t{product}')
 
                 product_qs = self.queryset.filter(id = product["id"])
                 
@@ -36,7 +33,7 @@ class Command(BaseCommand):
                 if  product["vcode"]:
                     writed_data["vcode"] = str(product["vcode"])
 
-                if product["rename"]:
+                if product["name"]:
                     writed_data["name"] = product["name"]
 
                 if product["price"]:
@@ -45,7 +42,10 @@ class Command(BaseCommand):
                 if product["dissable"]:
                     writed_data["activated"] = False
 
+                print(f'\n{counter}.\t{product}\n{writed_data}')
                 product_qs.update(**writed_data)
+
+                
 
 
 
