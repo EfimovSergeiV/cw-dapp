@@ -26,7 +26,7 @@ CharField.register_lookup(Lower)
 
 class ResultsSetPagination(PageNumberPagination):
     """Ограничение пагинации"""
-    page_size = 20
+    page_size = 36
 
 
 class CategoryView(APIView):
@@ -134,7 +134,7 @@ class ProductsPagination(PageNumberPagination):
     """
 
     page = 1
-    page_size = 20
+    page_size = 36
 
     def get_paginated_response(self, data):
         meta = ListProductsView.meta
