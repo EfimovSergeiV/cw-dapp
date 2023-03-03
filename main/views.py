@@ -315,20 +315,26 @@ class ReturnClientLocation(APIView):
                 response = requests.get(url_service)
 
                 # Возвращаем Москву, если нет магазина по местоположению пользователя
-                if response.json()['region_code'] in [
-                                                # "182100", # Великие луки
-                                                "PSK", # Псков
-                                                "MOW", # Москва
-                                                "SPE", # Санкт-Петербург
-                                                "KR", # Петрозаводск
-                                                "SMO", # Смоленск
-                                                ]:
+                try:
+                    if response.json()['region_code'] in [
+                                                    # "182100", # Великие луки
+                                                    "PSK", # Псков
+                                                    "MOW", # Москва
+                                                    "SPE", # Санкт-Петербург
+                                                    "KR", # Петрозаводск
+                                                    "SMO", # Смоленск
+                                                    ]:
 
-                    location = response.json()
+                        location = response.json()
 
-                else:
+                    else:
+                        with open( str(BASE_DIR / 'main/location/moscow_location.json'), 'r') as file:
+                            location = json.load(file) # Если всё плохо, возвращаем Москву
+                
+                except KeyError:    # BUGFIX
                     with open( str(BASE_DIR / 'main/location/moscow_location.json'), 'r') as file:
                         location = json.load(file) # Если всё плохо, возвращаем Москву
+        
         except Exception as err:
             
             with open(str(BASE_DIR / 'logs/location_err.log'), 'w') as err_file:
