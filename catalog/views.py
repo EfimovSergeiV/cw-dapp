@@ -165,7 +165,8 @@ class ListProductsView(ListAPIView):
     
     meta = { 
         "title": str(),
-        "description": str()
+        "description": str(),
+        "inserted": None
         }
 
     def get_queryset(self):
@@ -178,11 +179,22 @@ class ListProductsView(ListAPIView):
         if 'ct' in props.keys():
 
             category = CategoryModel.objects.get(id=props['ct'][0])
+            qs_childs = category.get_children()
+
             self.meta["title"] = category.name
             self.meta["description"] = category.description
+            
+            # Вложенные категории только тут добавляем в мету
+            # Очищаем мету, если потомков нет. Потому что хэшируется
+            if len(qs_childs) > 0:
+                self.meta["inserted"] = [{ "id": child.id, "name": child.name } for child in category.get_children()]
+            else:
+                self.meta["inserted"] = None
+
+
             validated_props = PropsNameModel.objects.filter(category=props['ct'][0])
 
-            qs_childs = category.get_children()
+            # qs_childs = category.get_children()
             for child in qs_childs:
                 props['ct'].append(child.id)
                 third_childs = child.get_children()
