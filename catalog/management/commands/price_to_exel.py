@@ -28,25 +28,41 @@ status_translator = {
 }
 
 
-print(f'{BASE_DIR}/files/')
 expenses = []
 
 for category in [4, 14, 35, 34, 31, 28, 25 , 18, 32, 29, 23, 33, 30, 27]:
     ct_qs = cts_qs.get(id=category)
 
     print(f'\n{ct_qs.id} {ct_qs.name}')
+
+    if category in [4, 14, 18, 23,]:
+        product = ['', '', '', '', '']
+        expenses.append(product)
+
+    product = [
+        f'{ct_qs.id}',
+        '',
+        f'{ct_qs.name}', 
+        '',
+        ''
+    ]
+    expenses.append(product)
     
     for ct_prods_qs in prods_qs.filter(category=category):
         status = status_translator[ct_prods_qs.status]
 
         product = [
-            ct_prods_qs.id, 
-            ct_prods_qs.name, 
-            ct_prods_qs.only_price
+            str(ct_prods_qs.id),
+            str(ct_prods_qs.vcode),
+            ct_prods_qs.name,
+            str(int(ct_prods_qs.only_price)),
+            status
         ]
 
         expenses.append(product)
         print(f'{ ct_prods_qs.id }.\t{ ct_prods_qs.only_price } RUB\t{ status }\t{ ct_prods_qs.name }')
+
+
 
 
 workbook = xlsxwriter.Workbook(f'{BASE_DIR}/files/xlsx/prods-ct-4.xlsx')
@@ -55,18 +71,22 @@ worksheet = workbook.add_worksheet()
 bold = workbook.add_format({'bold': True})
 name = workbook.add_format()
 
-worksheet.set_column(0, 0, 10)
-worksheet.set_column(1, 1, 120)
-worksheet.set_column(2, 2, 10)
+worksheet.set_column(0, 0, 8)
+worksheet.set_column(1, 1, 14)
+worksheet.set_column(2, 2, 120)
+worksheet.set_column(3, 3, 14)
+worksheet.set_column(4, 4, 14)
 
 worksheet.write('A1', 'id', bold)
-worksheet.write('B1', 'Название', bold)
-worksheet.write('C1', 'Стоимость', bold)
+worksheet.write('B1', 'Артикул', bold)
+worksheet.write('C1', 'Название', bold)
+worksheet.write('D1', 'Стоимость', bold)
+worksheet.write('E1', 'Наличие', bold)
 
 row = 1
 col = 0
 
-for id, name, price in (expenses):
+for id, vcode, name, price, status in (expenses):
     if price == 'category':
         row += 2
 
@@ -75,8 +95,10 @@ for id, name, price in (expenses):
 
     else:
         worksheet.write(row, col, id, )
-        worksheet.write(row, col + 1, name)
-        worksheet.write(row, col + 2, price)
+        worksheet.write(row, col + 1, vcode)
+        worksheet.write(row, col + 2, name)
+        worksheet.write(row, col + 3, price)
+        worksheet.write(row, col + 4, status)
     row += 1
 
 workbook.close()
