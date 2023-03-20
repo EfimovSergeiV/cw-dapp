@@ -106,8 +106,8 @@ class FilterProducts:
         """
         ordering = {
             'Date'      : '-id',
-            'LowPrice'  : 'prod_price__price',
-            'HighPrice' : '-prod_price__price',
+            'LowPrice'  : 'only_price',
+            'HighPrice' : '-only_price',
             'Rating'    : '-rating',
         }
 

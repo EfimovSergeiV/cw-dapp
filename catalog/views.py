@@ -138,22 +138,22 @@ class ProductsPagination(PageNumberPagination):
 
     def get_paginated_response(self, data):
         meta = ListProductsView.meta
-        cources_dict = ChangeCurrency.now_currency(self)
-        change_data = []
-        for product in data:
-            # Проверяем указана общая стоимасть или конкретно по магазинам
-            if product['only_price_status']:
-                product = CustomUtils.make_only_price(self, product)
+        # cources_dict = ChangeCurrency.now_currency(self)
+        # change_data = []
+        # for product in data:
+        #     # Проверяем указана общая стоимасть или конкретно по магазинам
+        #     if product['only_price_status']:
+        #         product = CustomUtils.make_only_price(self, product)
 
-            change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
-            change_data.append(change_product)
+        #     change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
+        #     change_data.append(change_product)
 
         return Response({
             'count': self.page.paginator.count,
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),
             'meta': meta,
-            'results': change_data, # < по идее нужно change data
+            'results': data
         })
 
 
@@ -231,16 +231,16 @@ class ProductView(APIView):
             product = self.queryset.get(id=pk)
             print(product)
             serializer = self.serializer_class(product, context={'request':request})
-            product = serializer.data
+            # product = serializer.data
 
             # Проверяем указана общая стоимасть или конкретно по магазинам
-            if product['only_price_status']:
-                product = CustomUtils.make_only_price(self, product)
+            # if product['only_price_status']:
+            #     product = CustomUtils.make_only_price(self, product)
 
             # Редактируем стоимость исходя из курса валют
-            cources_dict = ChangeCurrency.now_currency(self)
-            change_data = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
-            return Response(change_data)
+            # cources_dict = ChangeCurrency.now_currency(self)
+            # change_data = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
+            return Response(serializer.data)
         
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -314,16 +314,16 @@ class RecommendView(APIView):
 
         serializer = self.serializer_class(qs, many=True, context={'request':request})
 
-        cources_dict = ChangeCurrency.now_currency(self)
-        change_data = []
-        for product in serializer.data:
-            # Проверяем указана общая стоимасть или конкретно по магазинам
-            if product['only_price_status']:
-                product = CustomUtils.make_only_price(self, product)
+        # cources_dict = ChangeCurrency.now_currency(self)
+        # change_data = []
+        # for product in serializer.data:
+        #     # Проверяем указана общая стоимасть или конкретно по магазинам
+        #     if product['only_price_status']:
+        #         product = CustomUtils.make_only_price(self, product)
 
-            change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
-            change_data.append(change_product)
-        return Response(change_data)
+        #     change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
+        #     change_data.append(change_product)
+        return Response(serializer.data)
 
 
 
@@ -334,18 +334,18 @@ class NeuesView(APIView):
         products = ProductModel.objects.filter(activated=True).order_by('-id')[:12]
         serializer = RecommendSerializer(products, many=True, context={'request':request})
 
-        products = serializer.data
+        # products = serializer.data
 
-        cources_dict = ChangeCurrency.now_currency(self)
-        change_data = []
-        for product in products:
-            # Проверяем указана общая стоимасть или конкретно по магазинам
-            if product['only_price_status']:
-                product = CustomUtils.make_only_price(self, product)
-            change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
-            change_data.append(change_product)
+        # cources_dict = ChangeCurrency.now_currency(self)
+        # change_data = []
+        # for product in products:
+        #     # Проверяем указана общая стоимасть или конкретно по магазинам
+        #     if product['only_price_status']:
+        #         product = CustomUtils.make_only_price(self, product)
+        #     change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
+        #     change_data.append(change_product)
 
-        return Response(change_data)
+        return Response(serializer.data)
 
 
 class SaleView(APIView):

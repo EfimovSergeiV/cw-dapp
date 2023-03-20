@@ -200,6 +200,8 @@ class OrderListViews(APIView):
 
 from serializers.catalog import ListProductsSerializer
 from catalog.utils import CustomUtils, ChangeCurrency
+from rest_framework.utils.serializer_helpers import ReturnDict
+from django.core.exceptions import ObjectDoesNotExist
 class OrderViews(APIView):
     """ Обработка заказов """
     serializer_class = CustomerSerializer
@@ -208,63 +210,35 @@ class OrderViews(APIView):
         """ Извлечение данных и структурирование заказа """
         data=request.data
         region_code = data.pop('region_code')
-        select_shop = data.pop('shop_id')
-
-        # Расчитываем стоимость заказа из товаров в БД (security)
-        products = []
-        for product in data['client_product']:
-            products.append(product['id'])
-
-        products_qs = ProductModel.objects.filter(id__in=products)
-        products_serializer = ListProductsSerializer(products_qs, many=True, context={'request': request})
         
-
-        # Подмена стоимости товара
-        cources_dict = ChangeCurrency.now_currency(self)
-        change_data = []
-        for product in products_serializer.data:
-            # Проверяем указана общая стоимасть или конкретно по магазинам
-            if product['only_price_status']:
-                product = CustomUtils.make_only_price(self, product)
-
-            change_product = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
-            change_data.append(change_product)
-
-        # Вычисляем стоимость по магазину
-        actual_price = {}
-        for product in change_data:
-            for price in dict(product)['prod_price']:
-                if select_shop == price['shop']:
-                    actual_price[product['id']] = int(price['price'])
-                    break
-        
-
-        # Закидываем с ключём price в объект data
-        for client_product in data['client_product']:
-            client_product['price'] = actual_price[client_product['id']]
-            client_product['product_id'] = int(client_product['id'])
-
-        # Для проверки данных после подмены стоимости
-        # print(f'\n{data["client_product"]}\n')
-        # return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        prods_id = [product['id'] for product in data['client_product']]
+        products_qs = ProductModel.objects.filter(id__in=prods_id)#.values()
 
         # Присвоение кода и вычисление суммы по позициям заказа
         data['order_number'] = region_code + str(random.randrange(1000000, 1999999))
         data['position_total'] = get_position_summ(data['client_product'])
 
-        # Вычисление итога заказа
-        if data['delivery']:
-            data['total'] = data['position_total'] + data['delivery_summ']
-        else:
-            data['total'] = data['position_total']
+        products = data.pop('client_product')
+        for product in products:
+            try:
+                price_from_db = products_qs.get(id= product['id'])
+                product['product_id'] = product['id']
+                product["price"] = int(price_from_db.only_price)
+                product["only_price"] = int(price_from_db.only_price)           
+            
+            except ObjectDoesNotExist:
+                product["price"] = "ERROR DETECT"
+                pass
 
-        # Создание заказа в БД
+        data['client_product'] = products
+
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             serializer.save()
 
             # Логика оповещений
             send_alert_to_agent(order=serializer.data)
+
             mail_list = [
                 # 'shop@glsvar.ru',
                 ]

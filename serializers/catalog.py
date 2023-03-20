@@ -130,7 +130,7 @@ class ExternalLinkSerializer(serializers.ModelSerializer):
 """Сериализация продуктов """
 class ListProductsSerializer(serializers.ModelSerializer):
     """Список продуктов"""
-    prod_price = PriceSerializer(many=True)
+    # prod_price = PriceSerializer(many=True)
     # prod_available = AvailableSerializer(many=True)
     product_comp = ProductCompSerializer(many=True)
     brand = BrandProductSerializer()
@@ -147,7 +147,7 @@ class ListProductsSerializer(serializers.ModelSerializer):
             'discount',
             'rating',  
             'preview_image',
-            'prod_price',
+            # 'prod_price',
             'only_price_status',
             'only_price',
             'currency',
@@ -160,7 +160,7 @@ class ListProductsSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     """Выбранный продукт"""
-    prod_price = PriceSerializer(many=True)
+    # prod_price = PriceSerializer(many=True)
     # prod_available = AvailableSerializer(many=True)
     propstrmodel = PropStrSerializer(many=True)
     category = CategorySerializer()
@@ -182,7 +182,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'rating',
             'promo',
             'discount',
-            'prod_price',
+            # 'prod_price',
             'only_price_status',
             'only_price',
             'currency',

@@ -7,7 +7,7 @@ def get_position_summ(products):
     """ Вычисление суммы по позициям заказа """
     total = 0
     for product in products:
-        total += product['price'] * product['quantity']
+        total += product['only_price'] * product['quantity']
     return total
 
 # class OrdersData():
