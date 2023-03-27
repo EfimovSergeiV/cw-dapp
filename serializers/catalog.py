@@ -220,11 +220,11 @@ class OneSPriceSerializer(serializers.ModelSerializer):
 
 class RecommendSerializer(serializers.ModelSerializer):
     """ Рекомендованные товары"""
-    # prod_price = PriceSerializer(many=True)
+    propstrmodel = PropStrSerializer(many=True)
 
     class Meta:
         model = ProductModel
-        fields = ('id', 'vcode', 'description' ,'name', 'rating', 'preview_image', 'only_price', 'only_price_status', 'currency')
+        fields = ('id', 'vcode', 'description' ,'name', 'rating', 'preview_image', 'only_price', 'only_price_status', 'currency', 'propstrmodel')
 
 
 # class GetZIPCitySerializer(serializers.ModelSerializer):
