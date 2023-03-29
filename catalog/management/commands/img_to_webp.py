@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from catalog.models import *
+from catalog.models import ProductModel
 from content.models import WideBannersModel
 from pathlib import Path
 import os
@@ -17,21 +17,28 @@ class Command(BaseCommand):
         pass
 
 
-banners_qs = WideBannersModel.objects.all()
+products_qs = ProductModel.objects.filter(activated=True)
 
-for qs in banners_qs:
 
-    source = f'{ BASE_DIR }/files/{ qs.image }'
-    destination = f"{ source.replace('.jpg', '.webp') }"
+for qs in  products_qs:
 
-    # Convert image
-    image = Image.open(source)
-    image.save(destination, format="webp")
+    file = f'{qs.preview_image}'.replace('.jpg', '.webp').replace('.png', '.webp')
 
-    # Update data
-    new_path = destination.replace(f'{ BASE_DIR }/files/', '')
-    banners_qs.filter(id=qs.id).update(image=new_path)
+    print(file)
 
-    print(f'\n{source}\n{destination}')
+# for qs in products_qs:
 
-    os.remove(source)
+#     source = f'{ BASE_DIR }/files/{ qs.preview_image }'
+#     destination = f"{ BASE_DIR }/{ file }"
+
+#     # Convert image
+#     image = Image.open(source)
+#     image.save(destination, format="webp")
+
+#     # Update data
+#     new_path = destination.replace(f'{ BASE_DIR }/files/', '')
+#     banners_qs.filter(id=qs.id).update(preview_image=new_path)
+
+#     print(f'\n{source}\n{destination}')
+
+#     os.remove(source)
