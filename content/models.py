@@ -1,5 +1,6 @@
 from django.db import models
 from main.models import *
+from django_resized import ResizedImageField
 from easy_thumbnails.fields import ThumbnailerImageField
 
 
@@ -10,11 +11,14 @@ class WideBannersModel(AbsActivatedModel):
     ordering = models.IntegerField(verbose_name="Выдача", default=1)
     link = models.URLField(verbose_name="Внешняя ссылка", null=True, blank=True)
     path = models.JSONField(verbose_name="Внутренняя ссылка", null=True, blank=True)
-    image = ThumbnailerImageField(
-        verbose_name = 'Изображение',
-        help_text="Расширение 1024x320",
-        resize_source=dict(size=(1024, 320)),
-        upload_to="img/c/widebaners/")
+
+    image = ResizedImageField(
+        size = [1024, 320],
+        crop = ['middle', 'center'],
+        upload_to='img/c/widebaners/',
+        quality=100,
+        force_format='WEBP',
+    )
     
     class Meta:
         ordering = ['-ordering', '-id', ]
