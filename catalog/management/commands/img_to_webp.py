@@ -20,25 +20,21 @@ class Command(BaseCommand):
 products_qs = ProductModel.objects.filter(activated=True)
 
 
-for qs in  products_qs:
+for qs in products_qs:
 
-    file = f'{qs.preview_image}'.replace('.jpg', '.webp').replace('.png', '.webp')
+    webp_img = f'{ qs.preview_image }'.replace('.jpg', '.webp').replace('.png', '.webp')
 
-    print(file)
+    source = f'{ BASE_DIR }/files/{ qs.preview_image }'
+    destination = f"{ BASE_DIR }/files/{ webp_img }"
 
-# for qs in products_qs:
+    # Convert image
+    image = Image.open(source)
+    image.save(destination, format="webp")
 
-#     source = f'{ BASE_DIR }/files/{ qs.preview_image }'
-#     destination = f"{ BASE_DIR }/{ file }"
+    # Update data
+    new_path = destination.replace(f'{ BASE_DIR }/files/', '')
+    products_qs.filter(id=qs.id).update(preview_image=new_path)
 
-#     # Convert image
-#     image = Image.open(source)
-#     image.save(destination, format="webp")
+    print(f'\n{source}\n{destination}')
 
-#     # Update data
-#     new_path = destination.replace(f'{ BASE_DIR }/files/', '')
-#     banners_qs.filter(id=qs.id).update(preview_image=new_path)
-
-#     print(f'\n{source}\n{destination}')
-
-#     os.remove(source)
+    os.remove(source)
