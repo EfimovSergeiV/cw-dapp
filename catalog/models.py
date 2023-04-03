@@ -29,8 +29,10 @@ class CityModel(models.Model):
 class ShopAdressModel(models.Model):
     UID = models.CharField(verbose_name="Идентификатор 1С", null=True, blank=True, max_length=100)
     email = models.EmailField(verbose_name="Электронный адрес")
+    telegram = models.CharField(verbose_name="Телеграмм", max_length=100, null=True, blank=True)
+    whatsapp = models.CharField(verbose_name="WhatsApp", max_length=100, null=True, blank=True)
+    viber = models.CharField(verbose_name="Viber", max_length=100, null=True, blank=True)
 
-    first = models.BooleanField(verbose_name="Включить первым", default=False)
     position = models.PositiveIntegerField(verbose_name="Позиция в списке", default=0)
     region_code = models.CharField(verbose_name="Код региона", default='PSK', max_length=3)
 
@@ -47,6 +49,7 @@ class ShopAdressModel(models.Model):
     class Meta:
         verbose_name = "Магазин"
         verbose_name_plural = "Магазины"
+        ordering = ['position',]
 
     def __str__(self):
         return self.adress

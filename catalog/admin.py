@@ -24,7 +24,8 @@ class BrandProductAdmin(admin.ModelAdmin):
 
 class ShopArdessAdmin(admin.ModelAdmin):
     list_display = ('position', 'adress', 'phone')
-    list_display_links = ('position', 'adress', 'phone')
+    list_display_links = ( 'adress', 'phone')
+    list_editable = ('position',)
     ordering = ('position',)
 
 

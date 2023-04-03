@@ -262,7 +262,7 @@ class ShopAdressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShopAdressModel
-        fields = ('id', 'first', 'city', 'region_code', 'adress', 'phone', 'maps', 'google_maps', 'wday', 'wend')
+        fields = '__all__'
 
 
 # Поиск по сайту
