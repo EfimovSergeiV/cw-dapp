@@ -36,6 +36,9 @@ class ShopAdressModel(models.Model):
     position = models.PositiveIntegerField(verbose_name="Позиция в списке", default=0)
     region_code = models.CharField(verbose_name="Код региона", default='PSK', max_length=3)
 
+    delivery_inside = models.CharField(verbose_name="Доставка по городу", max_length=250, null=True, blank=True)
+    delivery_outside = models.CharField(verbose_name="Доставка за городом", max_length=250, null=True, blank=True)
+
     city = models.CharField(verbose_name="Город", max_length=100)
     zip = models.CharField(verbose_name="Индекс", null=True, blank=True, max_length=8)
     adress = models.TextField(verbose_name="Адрес", max_length=500)
