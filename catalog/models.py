@@ -115,7 +115,7 @@ class ProductModel(AbsProductModel):
         verbose_name="Ключевые слова", max_length=500, null=True, blank=True,
         help_text="Ключевые слова для поиска, лучше через запятую."
     )
-    related = models.ManyToManyField(CategoryModel, verbose_name="Категории", related_name="related_ct")
+    related = models.ManyToManyField(CategoryModel, null=True, blank=True, verbose_name="Категории", related_name="related_ct")
 
     promo = models.BooleanField(default=False, verbose_name="Скидка")
     promo_code = models.CharField(verbose_name="Промокод", null=True, blank=True, max_length=100)
