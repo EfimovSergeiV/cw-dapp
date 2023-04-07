@@ -26,7 +26,7 @@ class CustomerModel(models.Model):
     delivery_summ  = models.PositiveIntegerField(verbose_name="Расчитанная сумма доставки", null=True, blank=True)
 
     person = models.CharField(verbose_name="Клиент", max_length=150, null=True, blank=True)
-    phone = models.CharField(verbose_name="Телефон клиента", max_length=40)
+    phone = models.CharField(verbose_name="Телефон клиента", null=True, blank=True, max_length=40)
     email = models.EmailField(verbose_name="Электронная почта", null=True, blank=True)
     comment = models.TextField(verbose_name="Комментарий к заказу", null=True, max_length=2500)
 

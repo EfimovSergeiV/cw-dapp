@@ -182,7 +182,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'rating',
             'promo',
             'discount',
-            # 'prod_price',
+            'related',
             'only_price_status',
             'only_price',
             'currency',

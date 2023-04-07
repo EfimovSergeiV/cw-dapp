@@ -229,7 +229,6 @@ class ProductView(APIView):
     def get(self, request, pk):
         try:
             product = self.queryset.get(id=pk)
-            print(product)
             serializer = self.serializer_class(product, context={'request':request})
             # product = serializer.data
 
@@ -289,6 +288,23 @@ class ProdRandomView(ListAPIView):
 
         return queryset[start_list:end_list]
 
+
+class OneRandomProductView(APIView):
+    """ Возвращает один случайный товар из запрошенных категорий """
+
+    serializer_class = ProductSerializer
+    queryset = ProductModel.objects.filter(activated=True)
+
+    def get(self, request):
+        try:
+            cts = dict(self.request.query_params)
+            prods = []
+            for ct in cts['ct']:
+                prods.append(self.queryset.filter(category_id=ct).order_by("?")[0])
+            serializer = self.serializer_class(prods, many=True, context={'request': request})
+            return Response(serializer.data)
+        except KeyError:
+            return Response([])
 
 
 class RecommendView(APIView):

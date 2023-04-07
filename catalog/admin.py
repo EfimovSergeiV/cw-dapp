@@ -39,9 +39,6 @@ class AvailableInline(admin.TabularInline):
     model = AvailableModel
     extra = 0
 
-class ProductPriceInline(admin.TabularInline):
-    model = PriceModel
-    extra = 0
 
 class ProductDocumentInline(admin.TabularInline):
     model = DocumentModel
@@ -149,10 +146,9 @@ class ProductAdmin(admin.ModelAdmin):
     ordering = ('id',)
     inlines = (
         # ProductKeywordsInline,
-        ProductPriceInline, 
         # AvailableInline, 
         # ProductSetInline, 
-        ProdCompInline, 
+        # ProdCompInline, 
         ProductImageInline, 
         PropStrInline, 
         ProductDocumentInline, 
@@ -160,10 +156,10 @@ class ProductAdmin(admin.ModelAdmin):
         )
     sortable_by = ('id')
     fieldsets = (
-        ("Информация о товаре", {'fields': (('name', 'vcode', 'UID', 'rating'), 'description', 'keywords',)}),
-        ("Скидка на товар", {'fields': ('promo', 'discount',)}),
         ("Отображение на сайте", {'fields': (('activated', 'recommend',), ('category', 'brand'), ( 'preview', 'preview_image',))}),
-        ("Общая стоимость", {'fields': (('only_price', 'currency', 'status', 'only_price_status'),)}),
+        ("Информация о товаре", {'fields': (('name', 'vcode', 'UID', 'rating'), 'description', 'keywords',)}),
+        ("Стоимость и наличие", {'fields': (('only_price_status', 'promo'), ('only_price', 'currency', 'status', ), ('discount',),)}),
+        ("Сопутствующие категории", {'fields': (('related',),)}),
         )
 
 ##### НАЗВАНИЯ СВОЙСТВ ДЛЯ ФИЛЬТРОВ
