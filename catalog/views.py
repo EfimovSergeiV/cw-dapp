@@ -311,7 +311,7 @@ class OneRandomProductView(APIView):
                 for third_child_qs in second_child_qs:
                     all_categories += [third_child.id for third_child in third_child_qs.get_children()]
 
-            prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
+                prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
             serializer = self.serializer_class(prods, many=True, context={'request': request})
             
             return Response(serializer.data)
