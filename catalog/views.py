@@ -312,9 +312,10 @@ class OneRandomProductView(APIView):
                     all_categories += [third_child.id for third_child in third_child_qs.get_children()]
 
             prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
-
             serializer = self.serializer_class(prods, many=True, context={'request': request})
+            
             return Response(serializer.data)
+        
         except KeyError:
             return Response([])
         
