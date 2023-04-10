@@ -1,8 +1,6 @@
 """
 
-Мигрирование цен товаров в единое поле
-
-1. Экспорт цен в таблицу с разбором стоимости валюты и общей цены
+1. СВАРОГ - ПОВЫШЕНИЕ ЦЕН НА 7%
 
 """
 
@@ -21,25 +19,20 @@ class Command(BaseCommand):
         pass
 
 
+PROCENT = 7
+
 count = 0
-
-category = CategoryModel.objects.all()
 queryset = ProductModel.objects.filter(activated=True)
-prices_qs = PriceModel.objects.all()
-
 
 for prod_qs in queryset.filter(brand=9).order_by('id'):
     count += 1
-    new_price = (prod_qs.only_price / 100) * 10 + prod_qs.only_price
+    new_price = int((prod_qs.only_price / 100) * PROCENT + prod_qs.only_price)
 
     price = new_price
 
-    while price % 50 != 0:
+    while price % 10 != 0:
         price += 1
 
-    print(f'{ prod_qs.id }. { prod_qs.only_price } > { new_price } > { price } { prod_qs.name }')
-
+    print(f'{count}. { prod_qs.id }: { prod_qs.only_price } > { price } { prod_qs.name }')
 
     queryset.filter(id=prod_qs.id).update(only_price = price)
-
-    print(f'Новая: { prod_qs.only_price }')
