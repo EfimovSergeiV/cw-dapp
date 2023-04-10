@@ -1,7 +1,8 @@
 from os import name
 from django.db import models
 from django.db.models.base import Model, ModelState
-from easy_thumbnails.fields import ThumbnailerImageField
+from django_resized import ResizedImageField
+from easy_thumbnails.fields import ThumbnailerImageField  # Migrate to ResizedImageField
 from main.models import AbsDateModel, AbsActivatedModel, AbsProductModel
 from mptt.models import MPTTModel, TreeForeignKey
 from content.models import *
@@ -95,12 +96,17 @@ class ProductModel(AbsProductModel):
     category = models.ForeignKey(CategoryModel, related_name='product_category', verbose_name="Категория" , null=True, blank=True, on_delete=models.SET_NULL)
     brand = models.ForeignKey(BrandProductModel, related_name="brand_product", verbose_name="Бренд", null=True, blank=True, on_delete=models.SET_NULL)
 
-    preview_image = ThumbnailerImageField(
+    preview_image = ResizedImageField(
+        size = [235, 177],
         verbose_name="",
-        resize_source=dict(size=(235, 177)),
-        help_text="Миниатира товара ( 235x177 px)", 
-        blank=True, 
-        null=True, upload_to="img/c/preview/")
+        crop = ['middle', 'center'],
+        upload_to='img/c/preview/',
+        help_text="Миниатира товара (235x177 px)",
+        quality=100,
+        default='img/c/preview/noimage.webp',
+        force_format='WEBP',
+    )
+
     recommend = models.BooleanField(verbose_name="Рекомендуемый", default=False)
     rating = models.DecimalField(verbose_name="Рейтинг", default=3, max_digits=3, decimal_places=1)
 

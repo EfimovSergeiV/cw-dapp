@@ -4,6 +4,7 @@ from content.models import WideBannersModel
 from pathlib import Path
 import os
 from PIL import Image
+from time import sleep
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -17,24 +18,30 @@ class Command(BaseCommand):
         pass
 
 
-products_qs = ProductModel.objects.filter(activated=True)
+products_qs = ProductModel.objects.all()
 
-
+counter = 0
 for qs in products_qs:
+    counter += 1
 
     webp_img = f'{ qs.preview_image }'.replace('.jpg', '.webp').replace('.png', '.webp')
 
     source = f'{ BASE_DIR }/files/{ qs.preview_image }'
     destination = f"{ BASE_DIR }/files/{ webp_img }"
+    new_path = destination.replace(f'{ BASE_DIR }/files/', '') # Remove absolute path
 
-    # Convert image
-    image = Image.open(source)
-    image.save(destination, format="webp")
+    try:
+        # Convert image
+        image = Image.open(source)
+        image.save(destination, format="webp")
 
-    # Update data
-    new_path = destination.replace(f'{ BASE_DIR }/files/', '')
-    products_qs.filter(id=qs.id).update(preview_image=new_path)
+        # Update data
+        print(f'{qs.preview_image} => {new_path}')
+        products_qs.filter(id=qs.id).update(preview_image=new_path)
+        os.remove(source)
+    
+    except FileNotFoundError:
+        products_qs.filter(id=qs.id).update(preview_image=new_path)
 
-    print(f'\n{source}\n{destination}')
-
-    os.remove(source)
+    except IsADirectoryError:
+        print(f'[ERR {qs.id}]:\t{source} => {destination}')

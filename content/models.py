@@ -1,7 +1,6 @@
 from django.db import models
 from main.models import *
 from django_resized import ResizedImageField
-from easy_thumbnails.fields import ThumbnailerImageField
 
 
 class WideBannersModel(AbsActivatedModel):
