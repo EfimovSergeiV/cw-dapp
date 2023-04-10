@@ -18,9 +18,10 @@ class Command(BaseCommand):
         pass
 
 
-products_qs = ProductModel.objects.all()
+products_qs = ProductModel.objects.filter(activated=True)#all()
 
 counter = 0
+
 for qs in products_qs:
     counter += 1
 
@@ -36,12 +37,15 @@ for qs in products_qs:
         image.save(destination, format="webp")
 
         # Update data
-        print(f'{qs.preview_image} => {new_path}')
+        print(f'[OK:FileChange] {qs.id}\t{qs.preview_image} => {new_path}')
         products_qs.filter(id=qs.id).update(preview_image=new_path)
-        os.remove(source)
+        
+        if qs.preview_image:
+            os.remove(source)
     
     except FileNotFoundError:
+        print(f'[ERR:FileNotFoundError] {qs.id}\t{source} => {destination}')
         products_qs.filter(id=qs.id).update(preview_image=new_path)
 
     except IsADirectoryError:
-        print(f'[ERR {qs.id}]:\t{source} => {destination}')
+        print(f'[ERR:IsADirectoryError] {qs.id}\t{source} => {destination}')
