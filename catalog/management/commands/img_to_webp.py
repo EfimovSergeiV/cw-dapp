@@ -18,7 +18,7 @@ class Command(BaseCommand):
         pass
 
 
-products_qs = ProductModel.objects.filter(activated=True)#all()
+products_qs = ProductModel.objects.all()
 
 counter = 0
 
