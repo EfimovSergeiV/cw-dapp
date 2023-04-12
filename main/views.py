@@ -551,26 +551,45 @@ class CoordinateProcessingView(APIView):
     """ Обработка координат браузера и определение населённого пунка пользователя """
 
     def post(self, request):
-        """
-            1. state
-            2. county
-            3. city
-            4. village
-        """
 
         geolocator = Nominatim(user_agent="geoapiExercises")
-        latitude = str(request.data['latitude'])
-        longitude = str(request.data['longitude'])
-        location = geolocator.reverse(latitude+","+longitude, exactly_one=True, addressdetails=True)
-        address = location.raw['address']
 
-        resp = {
-            "state": address.get('state', False),
-            "county": address.get('county', False),
-            "city": address.get('city', False),
-            "village": address.get('village', False),
-        }
 
-        adress = [i for i in resp.values() if i]
+        lat = str(request.data['latitude'])
+        long = str(request.data['longitude'])
 
-        return Response(adress)
+        coordinates = [
+            { 'region': ['Псковская область', 'Псков'], 'latitude': { 'min': 57.295816, 'max': 58.580942 }, 'longitude': { 'min': 27.065731, 'max': 30.439579 }, },
+            { 'region': ['Псковская область', 'Великие Луки'], 'latitude': { 'min': 55.636335, 'max': 56.984099 }, 'longitude': { 'min': 29.678037, 'max': 31.846215 }, },
+            { 'region': ['Московская область', 'Москва'], 'latitude': { 'min': 54.350850, 'max': 56.668995 }, 'longitude': { 'min': 35.021428, 'max': 39.765798 }, },
+            { 'region': ['Ленинградская область', 'Санкт-Петербург'], 'latitude': { 'min': 58.987166, 'max': 61.680827 }, 'longitude': { 'min': 26.813700, 'max': 31.347840 }, },
+            { 'region': ['Смоленская область', 'Смоленск'], 'latitude': { 'min': 53.492103, 'max': 55.818549 }, 'longitude': { 'min': 30.610703, 'max': 35.475438 }, },
+            { 'region': ['Петрозаводская область', 'Петрозаводск'], 'latitude': { 'min': 60.674981, 'max': 63.203404 }, 'longitude': { 'min': 31.241437, 'max': 37.536864 }, },
+        ]
+
+        data = { 'latitude': float(request.data['latitude']), 'longitude': float(request.data['longitude']) }
+        region = None
+        for coordinate in coordinates:
+            latitude, longitude = False, False
+            if coordinate['latitude']['min'] < data['latitude'] < coordinate['latitude']['max']:
+                latitude = True
+            if coordinate['longitude']['min'] < data['longitude'] < coordinate['longitude']['max']:
+                longitude = True
+            if latitude and longitude:
+                region = coordinate['region']
+
+        if not region:
+            print('Not detected')
+            location = geolocator.reverse(lat+","+long, exactly_one=True, addressdetails=True)
+            address = location.raw['address']
+
+            resp = {
+                "state": address.get('state', False),
+                "county": address.get('county', False),
+                "city": address.get('city', False),
+                "village": address.get('village', False),
+            }
+
+            region = [i for i in resp.values() if i]
+
+        return Response(region)
