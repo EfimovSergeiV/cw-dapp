@@ -63,6 +63,3 @@ print(product.related.all())
 cat = cats_qs.get(id=33)
 print(cat.related_ct.all())
 
-
-for cat in cats_qs:
-    print(cat.name)
