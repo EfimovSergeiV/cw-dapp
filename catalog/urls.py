@@ -16,6 +16,8 @@ urlpatterns = [
     path('prod/<int:pk>/', ProductView.as_view()),
     
     re_path('related/', OneRandomProductView.as_view()),
+    # re_path('analogs/', OneRandomProductView.as_view()),
+
     re_path('breadcrumb/', BreadCrumbView.as_view()),
     re_path('prods/', ListProductsView.as_view()),
     re_path('props/', PropsNameView.as_view()),

@@ -296,8 +296,9 @@ class OneRandomProductView(APIView):
         try:
             cts = dict(self.request.query_params)
             prods = []
-            all_categories = []
+            
             for ct in cts['ct']:
+                all_categories = []
                 category_qs = self.cat_qs.get(id=ct)
                 children_qs = [ child.id for child in category_qs.get_children() ]
                 
@@ -308,6 +309,7 @@ class OneRandomProductView(APIView):
                     all_categories += [third_child.id for third_child in third_child_qs.get_children()]
 
                 prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
+
             serializer = self.serializer_class(prods[0:4], many=True, context={'request': request})
             
             return Response(serializer.data)
