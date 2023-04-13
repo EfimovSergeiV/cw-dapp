@@ -284,7 +284,7 @@ class ProdRandomView(ListAPIView):
 
         return queryset[start_list:end_list]
 
-
+import random
 class OneRandomProductView(APIView):
     """ Возвращает один случайный товар из запрошенных категорий """
 
@@ -310,6 +310,7 @@ class OneRandomProductView(APIView):
 
                 prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
 
+            random.shuffle(prods)
             serializer = self.serializer_class(prods[0:4], many=True, context={'request': request})
             
             return Response(serializer.data)
