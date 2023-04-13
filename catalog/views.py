@@ -229,17 +229,13 @@ class ProductView(APIView):
     def get(self, request, pk):
         try:
             product = self.queryset.get(id=pk)
+            ct = CategoryModel.objects.get(id=product.category.id)
+            related = [ct.id for ct in ct.related.all()]
             serializer = self.serializer_class(product, context={'request':request})
-            # product = serializer.data
+            data = serializer.data
+            data['related'] = related
 
-            # Проверяем указана общая стоимасть или конкретно по магазинам
-            # if product['only_price_status']:
-            #     product = CustomUtils.make_only_price(self, product)
-
-            # Редактируем стоимость исходя из курса валют
-            # cources_dict = ChangeCurrency.now_currency(self)
-            # change_data = ChangeCurrency.change_price(self, data=product, cources=cources_dict)
-            return Response(serializer.data)
+            return Response(data)
         
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

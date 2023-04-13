@@ -16,6 +16,11 @@ def gen(size=4, chars=string.ascii_lowercase + string.digits):
 class CategoryAdmin(DraggableMPTTAdmin):
     list_display = ('tree_actions', 'indented_title', 'parent','activated')
     list_editable = ('activated', )
+    fieldsets = (
+        (None, {'fields': (('parent', 'activated', ),)}),
+        (None, {'fields': ('description',)}),
+        (None, {'fields': ('related',)}),
+    )
     
 
 class BrandProductAdmin(admin.ModelAdmin):
