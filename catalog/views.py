@@ -296,7 +296,7 @@ class OneRandomProductView(APIView):
         try:
             cts = dict(self.request.query_params)
             prods = []
-            
+            print(cts['ct'], len(cts['ct']))
             for ct in cts['ct']:
                 all_categories = []
                 category_qs = self.cat_qs.get(id=ct)
@@ -308,6 +308,9 @@ class OneRandomProductView(APIView):
                 for third_child_qs in second_child_qs:
                     all_categories += [third_child.id for third_child in third_child_qs.get_children()]
 
+                prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
+            
+            while len(prods) < 4:
                 prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
 
             random.shuffle(prods)
