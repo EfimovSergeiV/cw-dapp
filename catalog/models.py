@@ -44,6 +44,7 @@ class ShopAdressModel(models.Model):
     zip = models.CharField(verbose_name="Индекс", null=True, blank=True, max_length=8)
     adress = models.TextField(verbose_name="Адрес", max_length=500)
     phone = models.CharField(verbose_name="Телефон", max_length=60)
+    mobile = models.CharField(verbose_name="Моб. телефон", max_length=60, null=True, blank=True)
     maps = models.URLField(verbose_name="Ссылка на YandexMaps")
     google_maps = models.CharField(verbose_name="Ссылка на Google Maps", max_length=500, null=True)
     wday = models.CharField(verbose_name="График по будням", null=True, blank=True, max_length=60)
