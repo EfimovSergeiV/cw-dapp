@@ -32,4 +32,4 @@ class ReviewsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReviewsModel
-        fields = ('id', 'name', 'link', 'video')
+        fields = ('id', 'name', 'link', 'video', 'image', 'show_image', 'static_image')

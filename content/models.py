@@ -143,12 +143,35 @@ class FooterFileModel(models.Model):
         return self.name
     
 
+from django.core.validators import FileExtensionValidator
+from django.conf import settings
 class ReviewsModel(AbsDateModel, AbsActivatedModel):
     """ Видео обзоры на оборудование """
+
+    file_extension_validator = FileExtensionValidator(
+        allowed_extensions=['webp'],
+        message='Загрузите анимацию в формате .WEBP'
+    )
 
     name = models.CharField(verbose_name="Название", max_length=120)
     link = models.JSONField(verbose_name="Ссылка на товар", help_text='{ "name": "product-id", "params": { "id": 1039 } }', null=True, blank=True)
     video = models.URLField(verbose_name="Ссыллка на видео")
+
+    image = models.ImageField(verbose_name="Превью видеоролика", validators=[file_extension_validator], upload_to='img/c/reviews/', null=True, blank=True)
+
+    def static_image(self):
+        try:
+            image = f'http://192.168.60.201:8080{self.image.url}' #f'https:api.glsvar.ru{self.image.url}'
+            return f'{ image.replace(".webp", "-static.webp")}'
+        except ValueError:
+            return None
+        
+    def show_image(self):
+        try:
+            image = f'http://192.168.60.201:8080{self.image.url}' #f'https://api.glsvar.ru{self.image.url}'
+            return f'{ image.replace(".webp", "-static.webp")}'
+        except ValueError:
+            return None
 
     class Meta:
         verbose_name = "Видео"

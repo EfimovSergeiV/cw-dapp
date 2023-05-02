@@ -9,6 +9,7 @@ from ipware import get_client_ip
 from serializers.content import * #PR: Перенести сюда сериализаторы
 from content.serializers import *
 from content.models import *
+from content.signals import *
 
 
 
