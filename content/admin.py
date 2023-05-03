@@ -1,5 +1,6 @@
 from django.contrib import admin
 from content.models import *
+from ckeditor.widgets import CKEditorWidget
 
 
 class MainBannerAdmin(admin.ModelAdmin):
@@ -51,7 +52,23 @@ class ReviewsAdmin(admin.ModelAdmin):
 
 
 
+from django import forms
+class ArticleAdminForm(forms.ModelForm):
+    text = forms.CharField(label='Текст', widget=CKEditorWidget())
+    class Meta:
+        model = ArticleModel
+        fields = '__all__'
+    
+
+class ArticleAdmin(admin.ModelAdmin):
+    form = ArticleAdminForm
+    list_display = ('id', 'title',)
+
+
+
+
 admin.site.register(VotesInterviewedModel)
+admin.site.register(ArticleModel, ArticleAdmin)
 
 admin.site.register(ReviewsModel, ReviewsAdmin)
 admin.site.register(FooterFileModel)

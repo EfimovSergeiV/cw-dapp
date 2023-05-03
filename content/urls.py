@@ -13,4 +13,5 @@ urlpatterns = [
     path('reviews/', ReviewsView.as_view()),
     path('reviews/<int:pk>/', ReviewView.as_view()),
     path('random-reviews/', RandomReviewsView.as_view()),
+    path('article/<int:pk>/', ArticleView.as_view()),
 ]

@@ -121,3 +121,13 @@ class RandomReviewsView(APIView):
         serializer = self.serializer_class(qs, many=True, context={'request': request})
 
         return Response(serializer.data)
+    
+
+class ArticleView(APIView):
+    """ Статья """
+
+    def get(self, request, pk):
+        qs = ArticleModel.objects.get(id=1)
+        serializer = ArticleSerializer(qs, context={'request': request})
+
+        return Response(serializer.data)

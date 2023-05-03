@@ -179,3 +179,17 @@ class ReviewsModel(AbsDateModel, AbsActivatedModel):
 
     def __str__(self):
         return self.name
+    
+
+class ArticleModel(models.Model):
+    """ Модель статей """
+
+    title = models.CharField(verbose_name="Заголовок", max_length=300)
+    text = models.TextField(verbose_name="Текст статьи", max_length=10000)
+
+    class Meta:
+        verbose_name = "Статья"
+        verbose_name_plural = "Статьи"
+
+    def __str__(self):
+        return self.title

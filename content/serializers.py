@@ -33,3 +33,11 @@ class ReviewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewsModel
         fields = ('id', 'name', 'link', 'video', 'image', 'show_image', 'static_image')
+
+
+class ArticleSerializer(serializers.ModelSerializer):
+    """ Сериализатор статей """
+
+    class Meta:
+        model = ArticleModel
+        fields = ('id', 'title', 'text',)
