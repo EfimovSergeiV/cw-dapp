@@ -161,14 +161,14 @@ class ReviewsModel(AbsDateModel, AbsActivatedModel):
 
     def static_image(self):
         try:
-            image = f'http://127.0.0.1:8000{self.image.url}' #f'https:api.glsvar.ru{self.image.url}'
+            image = f'https://api.glsvar.ru{self.image.url}' #f'https:api.glsvar.ru{self.image.url}'
             return f'{ image.replace(".webp", "-static.webp")}'
         except ValueError:
             return None
         
     def show_image(self):
         try:
-            image = f'http://127.0.0.1:8000{self.image.url}' #f'https://api.glsvar.ru{self.image.url}'
+            image = f'https://api.glsvar.ru{self.image.url}' #f'https://api.glsvar.ru{self.image.url}'
             return f'{ image.replace(".webp", "-static.webp")}'
         except ValueError:
             return None
