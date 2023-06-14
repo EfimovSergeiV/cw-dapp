@@ -70,7 +70,7 @@ class ArticleAdmin(admin.ModelAdmin):
 admin.site.register(VotesInterviewedModel)
 admin.site.register(ArticleModel, ArticleAdmin)
 
-admin.site.register(ReviewsModel, ReviewsAdmin)
+admin.site.register(ReviewsModel, ) #ReviewsAdmin
 admin.site.register(FooterFileModel)
 admin.site.register(MainBannerModel, MainBannerAdmin)
 admin.site.register(VotesModel, VotesAdmin)
