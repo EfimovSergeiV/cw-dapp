@@ -209,6 +209,7 @@ class OrderViews(APIView):
     def post(self, request, format=None):
         """ Извлечение данных и структурирование заказа """
         data=request.data
+        print(data)
         region_code = data.pop('region_code')
         
         prods_id = [product['id'] for product in data['client_product']]
@@ -217,6 +218,7 @@ class OrderViews(APIView):
         # Присвоение кода и вычисление суммы по позициям заказа
         data['order_number'] = region_code + str(random.randrange(1000000, 1999999))
         data['position_total'] = get_position_summ(data['client_product'])
+        data['total'] = get_position_summ(data['client_product'])
 
         products = data.pop('client_product')
         for product in products:
