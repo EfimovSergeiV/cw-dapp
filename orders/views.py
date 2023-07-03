@@ -218,7 +218,7 @@ class OrderViews(APIView):
         # Присвоение кода и вычисление суммы по позициям заказа
         data['order_number'] = region_code + str(random.randrange(1000000, 1999999))
         data['position_total'] = get_position_summ(data['client_product'])
-        data['total'] = get_position_summ(data['client_product'])
+        data['total'] = get_position_summ(data['client_product']) # прибавить сюда ещё суммму доставки
 
         products = data.pop('client_product')
         for product in products:
