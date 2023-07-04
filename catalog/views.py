@@ -32,6 +32,7 @@ class ResultsSetPagination(PageNumberPagination):
 class CategoryView(APIView):
     """ Категории товаров """
     def get(self, request):
+
         cts = CategoryModel.objects.filter(level=0).filter(activated=True)
         serializer = CategoryRecursiveSerializer(cts, many=True)
         return Response(serializer.data)
