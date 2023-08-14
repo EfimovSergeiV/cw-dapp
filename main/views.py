@@ -299,8 +299,8 @@ class ReturnClientLocation(APIView):
         Игнорируем запросы, со своего IP.
         """
 
-        client_ip = get_client_ip(request)[0]
-
+        # client_ip = get_client_ip(request)[0]
+        client_ip = '94.25.235.96'
 
         try:
             # Отсеиваем свои IP и минимизируем запросы в сервис

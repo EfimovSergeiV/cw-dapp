@@ -1,6 +1,6 @@
 """
 
-1. СВАРОГ - ПОВЫШЕНИЕ ЦЕН НА 7%
+1. СВАРОГ - ПОВЫШЕНИЕ ЦЕН НА X%
 
 """
 
@@ -19,7 +19,7 @@ class Command(BaseCommand):
         pass
 
 
-PROCENT = 7
+PROCENT = 10
 
 count = 0
 queryset = ProductModel.objects.filter(activated=True)
