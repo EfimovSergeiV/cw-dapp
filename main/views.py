@@ -74,6 +74,11 @@ class AuthTokenView(ObtainAuthToken):
             'user': user.username,
             'email': user.email,
             })
+    
+
+class LogoutView(APIView):
+    def post(self, request):
+        return Response(status=status.HTTP_200_OK)
 
 
 class SignUpView(APIView):

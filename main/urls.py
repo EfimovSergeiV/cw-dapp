@@ -36,6 +36,7 @@ urlpatterns = [
 
     # Main logic
     path('auth/', AuthTokenView.as_view()),             # Авторизация
+    path('logout/', LogoutView.as_view()),             # Авторизация
     path('signup/', SignUpView.as_view()),              # Подробная регистрация
     path('subscriebe/', SubscriebeUserView.as_view()),  # Быстрая регистрация
     # path('u/change/', ChangeUserView.as_view()),      # Изменить инфо пользователя
