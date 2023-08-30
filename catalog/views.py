@@ -94,37 +94,34 @@ class PropsNameView(ListAPIView):
 
 
 class BrandCategoryView(APIView):
-    """ Бренды находящиеся в категории """
+    """ 
+    Бренды находящиеся в категории 
+    Эту логику возложить на класс выдачи товаров, в данные меты
+    """
 
-    def get(self, request):
-        
+    def get(self, request):        
         ct = self.request.query_params.get('ct')
-        
-        
-        #LETS BUGFIX
-        if ct == None:
-            ct = 1
-        childs = [ct, ]
-
-
-        category = CategoryModel.objects.get(id=ct)
-
-
-
-        qs_child = category.get_children()
-        for child in qs_child:
-            childs.append(child.id)
-
-        queryset = ProductModel.objects.filter(activated=True).filter(category_id__in = childs)
         unique_brand = []
 
+        if ct:
+            # Получаем всех потомков категории
+            all_categories = [ct,]
+            ct_qs = CategoryModel.objects.get(id=ct)
+            childs_qs = ct_qs.get_children()
+            all_categories += ([ ct.id for ct in childs_qs])
 
-        for qs in queryset:
-            try:
-                if { 'id': qs.brand.id, 'brand': qs.brand.brand } not in unique_brand:
-                    unique_brand.append({ 'id': qs.brand.id, 'brand': qs.brand.brand })
-            except:
-                pass
+            for third_child in childs_qs:
+                all_categories += ([ ct.id for ct in third_child.get_children()])
+
+            queryset = ProductModel.objects.filter(activated=True).filter(category_id__in = all_categories)
+
+            for qs in queryset:
+                try:
+                    # НЕ ПОМНЮ НАХУЯ ТУТ try pass
+                    if { 'id': qs.brand.id, 'brand': qs.brand.brand } not in unique_brand:
+                        unique_brand.append({ 'id': qs.brand.id, 'brand': qs.brand.brand })
+                except:
+                    pass
 
         return Response(unique_brand)
 
