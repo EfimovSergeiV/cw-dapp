@@ -115,7 +115,7 @@ class BrandCategoryView(APIView):
         for child in qs_child:
             childs.append(child.id)
 
-        queryset = ProductModel.objects.filter(category_id__in = childs)
+        queryset = ProductModel.objects.filter(activated=True).filter(category_id__in = childs)
         unique_brand = []
 
 
