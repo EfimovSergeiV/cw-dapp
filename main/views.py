@@ -305,7 +305,7 @@ class ReturnClientLocation(APIView):
         """
 
         # client_ip = get_client_ip(request)[0]
-        client_ip = '94.25.235.96'
+        client_ip = '78.36.247.189'
 
         try:
             # Отсеиваем свои IP и минимизируем запросы в сервис
@@ -347,7 +347,7 @@ class ReturnClientLocation(APIView):
             
             with open( str(BASE_DIR / 'main/location/pskov_location.json'), 'r') as file:
                 location = json.load(file) # Если всё плохо, возвращаем Москву
-
+        print(location)
         return Response(location)
 
 
