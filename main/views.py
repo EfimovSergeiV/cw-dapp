@@ -584,17 +584,6 @@ class CoordinateProcessingView(APIView):
                 region = coordinate['region']
 
         if not region:
-            region = ['Московская область', 'Москва'] #service down
-            # location = geolocator.reverse(lat+","+long, exactly_one=True, addressdetails=True)
-            # address = location.raw['address']
-
-            # resp = {
-            #     "state": address.get('state', False),
-            #     "county": address.get('county', False),
-            #     "city": address.get('city', False),
-            #     "village": address.get('village', False),
-            # }
-
-            # region = [i for i in resp.values() if i]
+            region = ['Московская область', 'Москва'] # service down
 
         return Response(region)

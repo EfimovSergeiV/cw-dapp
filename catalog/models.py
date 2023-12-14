@@ -1,4 +1,3 @@
-from os import name
 from django.db import models
 from django.db.models.base import Model, ModelState
 from django_resized import ResizedImageField
@@ -111,6 +110,7 @@ class ProductModel(AbsProductModel):
     )
 
     recommend = models.BooleanField(verbose_name="Рекомендуемый", default=False)
+    show_more = models.BooleanField(verbose_name="Показывать чаще", default=False)
     rating = models.DecimalField(verbose_name="Рейтинг", default=3, max_digits=3, decimal_places=1)
 
     UID = models.CharField(

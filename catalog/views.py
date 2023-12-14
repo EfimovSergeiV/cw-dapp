@@ -311,9 +311,16 @@ class OneRandomProductView(APIView):
             while len(prods) < 4:
                 prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
 
+
+            # Продвигаемые товары из категории WARNING!
+            show_more = self.queryset.filter(category_id__in=all_categories, show_more=True).order_by("?")
+            for prod in show_more:
+                prods.append(prod)
             random.shuffle(prods)
+
+
             serializer = self.serializer_class(prods[0:4], many=True, context={'request': request})
-            
+
             return Response(serializer.data)
         
         except KeyError:

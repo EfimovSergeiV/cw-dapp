@@ -146,13 +146,13 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'vcode', 'name', 'only_price', 'currency', 'activated', 'status',) #'recommend',
     list_display_links = ('id', )
     search_fields = ('id', 'vcode', 'name', 'UID',)
-    list_filter = ('brand', 'recommend', 'created_date', 'activated', 'category',)
+    list_filter = ('brand', 'show_more', 'recommend', 'created_date', 'activated', 'category',)
     list_editable = ('only_price', 'activated', 'status')
     ordering = ('id',)
     inlines = (
         # ProductKeywordsInline,
-        # AvailableInline, 
-        # ProductSetInline, 
+        # AvailableInline,
+        # ProductSetInline,
         # ProdCompInline, 
         ProductImageInline, 
         PropStrInline, 
@@ -161,7 +161,7 @@ class ProductAdmin(admin.ModelAdmin):
         )
     sortable_by = ('id')
     fieldsets = (
-        ("Отображение на сайте", {'fields': (('activated', 'recommend',), ('category', 'brand'), ( 'preview', 'preview_image',))}),
+        ("Отображение на сайте", {'fields': (('activated', 'show_more', 'recommend',), ('category', 'brand'), ( 'preview', 'preview_image',))}),
         ("Информация о товаре", {'fields': (('name', 'vcode', 'UID', 'rating'), 'description', 'keywords',)}),
         ("Стоимость и наличие", {'fields': (('only_price_status', 'promo'), ('only_price', 'currency', 'status', ), ('discount',),)}),
         ("Сопутствующие категории", {'fields': (('related',),)}),
