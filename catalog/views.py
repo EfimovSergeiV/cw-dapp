@@ -284,7 +284,7 @@ class ProdRandomView(ListAPIView):
 
 import random
 class OneRandomProductView(APIView):
-    """ Возвращает один случайный товар из запрошенных категорий """
+    """ Возвращает четыре случайных товара из запрошенных категорий, если передано меньше четырёх категорий. """
 
     serializer_class = ProductSerializer
     queryset = ProductModel.objects.filter(activated=True)
@@ -295,24 +295,23 @@ class OneRandomProductView(APIView):
             cts = dict(self.request.query_params)
             prods = []
 
+            # Добавляем в выдачу по одному случайному товару из указанной категории
             for ct in cts['ct']:
-                all_categories = []
-                category_qs = self.cat_qs.get(id=ct)
-                children_qs = [ child.id for child in category_qs.get_children() ]
-                
-                all_categories.append(int(ct))
-                second_child_qs = self.cat_qs.filter(id__in=children_qs)
-                all_categories += [ second_category.id for second_category in second_child_qs ]
-                for third_child_qs in second_child_qs:
-                    all_categories += [third_child.id for third_child in third_child_qs.get_children()]
+                descendants = [ child.id for child in self.cat_qs.get(id=ct).get_descendants(include_self=True) ]
+                prods.append(self.queryset.filter(category_id__in=descendants).order_by("?")[0])
 
-                prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
-            
+            # Если в списке меньше черырёх, дозабиваем, что бы на фронте было что показать.
+            all_categories = []
             while len(prods) < 4:
-                prods.append(self.queryset.filter(category_id__in=all_categories).order_by("?")[0])
+                for ct in cts['ct']:
+                    descendants = [ child.id for child in self.cat_qs.get(id=ct).get_descendants(include_self=True) ]
+                    all_categories += descendants
+                    prod = self.queryset.filter(category_id__in=descendants).order_by("?")[0]
+                    
+                    if prod not in prods:
+                        prods.append(prod)
 
-
-            # Продвигаемые товары из категории WARNING!
+            # Продвигаемые товары из запрошенных категорий
             show_more = self.queryset.filter(category_id__in=all_categories, show_more=True).order_by("?")
             for prod in show_more:
                 if prod not in prods:
@@ -320,7 +319,15 @@ class OneRandomProductView(APIView):
 
             random.shuffle(prods)
 
+            # print('\n')
+            # for prod in prods:
+            #     print(prod)
+
             serializer = self.serializer_class(prods[0:4], many=True, context={'request': request})
+            
+            print('\n')
+            for prod in serializer.data:
+                print(prod["name"])
 
             return Response(serializer.data)
         
