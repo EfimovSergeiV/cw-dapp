@@ -294,7 +294,7 @@ class OneRandomProductView(APIView):
         try:
             cts = dict(self.request.query_params)
             prods = []
-            print(cts['ct'], len(cts['ct']))
+
             for ct in cts['ct']:
                 all_categories = []
                 category_qs = self.cat_qs.get(id=ct)
@@ -315,9 +315,10 @@ class OneRandomProductView(APIView):
             # Продвигаемые товары из категории WARNING!
             show_more = self.queryset.filter(category_id__in=all_categories, show_more=True).order_by("?")
             for prod in show_more:
-                prods.append(prod)
-            random.shuffle(prods)
+                if prod not in prods:
+                    prods.append(prod)
 
+            random.shuffle(prods)
 
             serializer = self.serializer_class(prods[0:4], many=True, context={'request': request})
 
