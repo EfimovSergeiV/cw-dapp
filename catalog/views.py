@@ -283,8 +283,29 @@ class ProdRandomView(ListAPIView):
         return queryset[start_list:end_list]
 
 import random
+# def shuffle_with_probability(list1, list2, probability=0.8):
+#     """ Перемешиваание списка с вероятностью """
+
+#     num_to_shuffle = int(len(list2) * probability)
+#     shuffled_elements = random.sample(list2, num_to_shuffle)
+#     result = shuffled_elements + [ x for x in list1 if x not in shuffled_elements ]
+
+#     return result
+
+
+""" Дано:
+
+список товаров которые показывать чаще
+список товаров которые нужно выдать
+процент вероятности отображения
+
+
+
+"""
+
+
 class OneRandomProductView(APIView):
-    """ Возвращает четыре случайных товара из запрошенных категорий, если передано меньше четырёх категорий. """
+    """ Возвращает случайный товар из запрошенных категорий, если передано меньше четырёх категорий, добавляет до четырёх. """
 
     serializer_class = ProductSerializer
     queryset = ProductModel.objects.filter(activated=True)
@@ -312,22 +333,18 @@ class OneRandomProductView(APIView):
                         prods.append(prod)
 
             # Продвигаемые товары из запрошенных категорий
-            show_more = self.queryset.filter(category_id__in=all_categories, show_more=True).order_by("?")
-            for prod in show_more:
-                if prod not in prods:
-                    prods.append(prod)
+            show_more = [ qs for qs in self.queryset.filter(category_id__in=all_categories, show_more=True).order_by("?") ]
 
             random.shuffle(prods)
 
-            # print('\n')
-            # for prod in prods:
-            #     print(prod)
+            probability = 0.7
+            if random.random() < probability:
+                prods = show_more + [ x for x in prods if x not in show_more ]
+                start, end = prods[:2], prods[2:]
+                random.shuffle(start)
+                prods = start + end
 
             serializer = self.serializer_class(prods[0:4], many=True, context={'request': request})
-            
-            print('\n')
-            for prod in serializer.data:
-                print(prod["name"])
 
             return Response(serializer.data)
         
