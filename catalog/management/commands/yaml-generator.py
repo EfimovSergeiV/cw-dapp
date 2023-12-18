@@ -23,6 +23,7 @@ offer_template = """\n      <offer id="{id}">
         <currencyId>RUB</currencyId>
         <categoryId>{ct_id}</categoryId>
         <picture>https://api.glsvar.ru/files/{picture}</picture>
+        <delivery>false</delivery>
         <description>
           <![CDATA[          
             <p>{description}</p>
