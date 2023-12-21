@@ -1,8 +1,10 @@
 from django.contrib import admin
+from django import forms
 from django.utils.safestring import mark_safe
 from mptt.admin import DraggableMPTTAdmin
 from catalog.models import *
-
+from mptt.admin import TreeRelatedFieldListFilter
+from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
 
 # Генератор
 import string
@@ -68,7 +70,7 @@ class ProductImageInline(admin.TabularInline):
 
     readonly_fields = ('preview', )
     def preview(self, obj):
-        return mark_safe('<img style="margin-right: -10vh" src="/files/%s" alt="Нет изображения" width="160" height="auto" />' % (obj.image))
+        return mark_safe('<img style="margin-right:-10vh; background-color: white; padding: 15px; border-radius: 5px;" src="/files/%s" alt="Нет изображения" width="120" height="auto" />' % (obj.image))
     preview.short_description = 'Изображение'
     fieldsets = (
         (None, {'fields': ('preview', 'image')}),
@@ -126,10 +128,18 @@ class ProductKeywordsInline(admin.TabularInline):
 
 
 ##### ОСНОВНЫЕ НАСТРОЙКИ ТОВАРОВ
+class ProductAdminForm(forms.ModelForm):
+    category = TreeNodeChoiceField(queryset=CategoryModel.objects.all(), label= 'Категория')
+    
+    class Meta:
+        model = ProductModel
+        fields = '__all__'
+
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductAdminForm
 
     def preview(self, obj):
-        return mark_safe('<img style="margin-right: -10vh" src="/files/%s" alt="Нет изображения" width="160" height="auto" />' % (obj.preview_image))
+        return mark_safe('<img style="margin-right:-10vh; background-color: white; padding: 15px; border-radius: 5px;" src="/files/%s" alt="Нет изображения" width="100" height="auto" />' % (obj.preview_image))
     preview.short_description = 'Изображение'
 
     """
@@ -146,7 +156,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'vcode', 'name', 'only_price', 'currency', 'activated', 'status',) #'recommend',
     list_display_links = ('id', )
     search_fields = ('id', 'vcode', 'name', 'UID',)
-    list_filter = ('brand', 'show_more', 'recommend', 'created_date', 'activated', 'category',)
+    list_filter = ('brand', 'show_more', 'recommend', 'created_date', 'activated', ('category', TreeRelatedFieldListFilter),)
     list_editable = ('only_price', 'activated', 'status')
     ordering = ('id',)
     inlines = (

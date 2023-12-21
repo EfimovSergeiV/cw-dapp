@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from catalog.models import ProductModel
 from django.shortcuts import render
+from datetime import datetime
 
 class Command(BaseCommand):
     args = ''
@@ -10,7 +11,9 @@ class Command(BaseCommand):
         pass
 
 
-products = ProductModel.objects.filter(id__in = [ 312, 313, 314, 315, 316, 317, 318, 319 ])
+products = ProductModel.objects.filter(brand__id = 33)
+current_datetime = datetime.now()
+formatted_date = current_datetime.strftime("%Y-%m-%dT%H:%M:%S")
 
 
 offers = ''
@@ -44,15 +47,17 @@ for product in products:
         picture = product.preview_image,
         description = product.description,
     )
-    offers += offer
-    print(offer)
+
+    if int(product.only_price) > 0:
+      offers += offer
+      print(offer)
 
 
 # print(offers)
 
 
 yml_template = """<?xml version="1.0" encoding="UTF-8"?>
-  <yml_catalog date="2023-12-15T12:00:00+03:00">
+  <yml_catalog date="{current_date}+03:00">
   <shop>
     <name>Главный Сварщик</name>
     <company>Главный Сварщик</company>
@@ -62,7 +67,10 @@ yml_template = """<?xml version="1.0" encoding="UTF-8"?>
       <currency id="RUB" rate="1"></currency>
     </currencies>
     <categories>
-      <category id="31">Сварочные электроды</category>
+      <category id="8">Сварочные аппараты MMA</category>
+      <category id="9">Сварочные полуавтоматы MIG/MAG</category>
+      <category id="11">Аргонодуговая сварка TIG</category>
+      <category id="12">Воздушно-плазменная резка CUT</category>
     </categories>
     <offers>
 {offers}
@@ -73,9 +81,10 @@ yml_template = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 
-with open(f'./esab-elektrods.xml', 'w' ) as file:
+with open(f'./grovers.xml', 'w' ) as file:
     file.write(
         yml_template.format(
+            current_date = formatted_date,
             offers = offers
         )
     )
