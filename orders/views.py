@@ -316,6 +316,14 @@ class MailsView(APIView):
         return Response('Письмо отправлено')
 
 
+class PromocodeView(APIView):
+    """ Проверка активного промокода """
+
+    def post(self, request):
+        promocode = 'С 23 ФеВрАлЯ'
+        promocode_status = PromocodeModel.objects.filter(promocode=promocode).exists()
+        return Response({ "status": promocode_status })
+
 
 @login_required
 def send_payment_email(request, uuid):
@@ -345,6 +353,9 @@ def send_payment_email(request, uuid):
         return HttpResponse(html)
     except CustomerModel.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+
+
 
 
 # def mail_template(request):

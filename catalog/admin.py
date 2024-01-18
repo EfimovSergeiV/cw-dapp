@@ -19,6 +19,7 @@ class CategoryAdmin(DraggableMPTTAdmin):
     list_display = ('tree_actions', 'indented_title', 'parent','activated')
     list_editable = ('activated', )
     fieldsets = (
+        (None, {'fields': (('name', ),)}),
         (None, {'fields': (('parent', 'activated', ),)}),
         (None, {'fields': ('description',)}),
         (None, {'fields': ('related',)}),

@@ -12,6 +12,7 @@ urlpatterns = [
     path('request-price/', RequestPriceViews.as_view()),
     path('order-status/', OrderStatusViews.as_view()),
     path('orderinfo/<slug:order>/', OrderInfoView.as_view()),
+    path('check-promo/', PromocodeView.as_view()),
     # path('sendmail/', MailsView.as_view()),
 
     # Предоставление данных в 1С

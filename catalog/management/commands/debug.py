@@ -21,7 +21,14 @@ class Command(BaseCommand):
         pass
 
 
-qss = ReviewsModel.objects.all()
+# props = PropStrModel.objects.all()
+props = PropStrModel.objects.all()
 
-for qs in qss:
-    print(f'{qs.id}. {qs.name} {qs.image}')
+
+
+for prop in props:
+
+    if ',' in prop.value or prop.qvalue:
+
+        qvalue = prop.qvalue if prop.qvalue is None else prop.qvalue.replace(",", ".")
+        print(f'{ prop.name } - { prop.value.replace(",", ".") } \ { prop.qname } - { qvalue }')

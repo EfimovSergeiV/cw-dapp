@@ -16,16 +16,17 @@ class Command(BaseCommand):
 
 target = "@AoLG-JRaQb24KBu3ZwI"
 
-f = {'file data': open('./img.jpg', 'rb')}
-h = { "token": mailagent_bot_token, "chatId": target, } 
+# f = {'file data': open('./img.jpg', 'rb')}
+# h = { "token": mailagent_bot_token, "chatId": target, }
 
 
 bot = Bot(token=mailagent_bot_token)
 
 
-def image_cb():
+def image_cb(file_path):
     bot.send_file(
         chat_id= target,
-        file = open('./img.jpg', 'rb')
+        file = open(file_path, 'rb')
     )
-image_cb()
+
+image_cb(file_path='./img.jpg')

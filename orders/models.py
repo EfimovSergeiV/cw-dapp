@@ -167,3 +167,26 @@ class OrderedGoodsModel(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class PromocodeModel(models.Model):
+    """ Промокоды для скидок """
+
+    MODS = (
+        ("ct", "Категории товаров"),
+        ("prod", "Идентификаторы товаров"),
+    )
+
+    promocode = models.CharField(verbose_name="Промокод", max_length=30, null=True, blank=True)
+    value = models.PositiveIntegerField(verbose_name="Размер скидки, %", default=0)
+    mod = models.CharField(verbose_name='Модификатор', max_length=10, choices=MODS, default="ct")
+    products = models.CharField(verbose_name="Список товаров", max_length=5000, help_text="Идентификаторы товаров или категорий товаров через запятую", null=True, blank=True)
+    start_date = models.DateTimeField(verbose_name="Начало действия")
+    end_date = models.DateTimeField(verbose_name="Окончание действия")
+
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'
+
+    def __str__(self) -> str:
+        return str(self.promocode)

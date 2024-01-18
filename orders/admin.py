@@ -95,12 +95,19 @@ class RequestPriceAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'uuid', 'city', 'contact', 'product')
 
 
-admin.site.register(
-    CustomerModel, 
-    CustomerAdmin
+class PromocodeAdmin(admin.ModelAdmin):
+    """ Промокоды """
+    
+    list_display = ('id', 'value', 'promocode', 'start_date', 'end_date')
+    list_display_links = ('id', 'promocode', 'start_date', 'end_date')
+
+    fieldsets = (
+        ("Параметры промокода", {'fields': ( ('promocode', 'value', ), ('mod', 'products', ), )}),
+        ("Срок действия промокода", {'fields': ( ('start_date', 'end_date',), )}),
     )
-admin.site.register(
-    RequestPriceModel, 
-    RequestPriceAdmin
-    )
-# admin.site.register(ClientModel, ClientAdmin)
+
+
+
+admin.site.register(CustomerModel, CustomerAdmin)
+admin.site.register(RequestPriceModel, RequestPriceAdmin)
+admin.site.register(PromocodeModel, PromocodeAdmin)
