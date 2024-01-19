@@ -323,7 +323,13 @@ class OneRandomProductView(APIView):
 
             # Если в списке меньше черырёх, дозабиваем, что бы на фронте было что показать.
             all_categories = []
+
+            if len(self.queryset.filter(category_id__in=cts['ct'])) < 4:
+                # Если в категории меньше 4 товаров, то пропускаем WHILE
+                return Response([])
+
             while len(prods) < 4:
+                print('Im problem')
                 for ct in cts['ct']:
                     descendants = [ child.id for child in self.cat_qs.get(id=ct).get_descendants(include_self=True) ]
                     all_categories += descendants
