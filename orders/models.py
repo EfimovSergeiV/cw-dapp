@@ -15,6 +15,8 @@ class CustomerModel(models.Model):
     adress = models.CharField(verbose_name="Адрес магазина", max_length=150)
     position_total = models.PositiveIntegerField(verbose_name="Сумма по позициям", default=0)
     total = models.PositiveIntegerField(verbose_name="Итог заказа", default=0)
+    promocode = models.CharField(verbose_name="Промокод", max_length=120, null=True, blank=True)
+
     online_pay = models.BooleanField(verbose_name="Оплачен онлайн", default=False)
     payment_uuid = models.UUIDField(verbose_name="Идентификатор оплаты", null=True, blank=True)
     per_online_pay = models.BooleanField(verbose_name="Разрешение на оплату онлайн", default=False)

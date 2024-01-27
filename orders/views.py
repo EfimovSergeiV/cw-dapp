@@ -209,7 +209,6 @@ class OrderViews(APIView):
     def post(self, request, format=None):
         """ Извлечение данных и структурирование заказа """
         data=request.data
-        print(data)
         region_code = data.pop('region_code')
         
         prods_id = [product['id'] for product in data['client_product']]
@@ -220,13 +219,16 @@ class OrderViews(APIView):
         data['position_total'] = get_position_summ(data['client_product'])
         data['total'] = get_position_summ(data['client_product']) # прибавить сюда ещё суммму доставки
 
+        print(data['promocode'])
+
+
         products = data.pop('client_product')
         for product in products:
             try:
                 price_from_db = products_qs.get(id= product['id'])
                 product['product_id'] = product['id']
                 product["price"] = int(price_from_db.only_price)
-                product["only_price"] = int(price_from_db.only_price)           
+                product["only_price"] = int(price_from_db.only_price)
             
             except ObjectDoesNotExist:
                 product["price"] = "ERROR DETECT"
@@ -288,41 +290,58 @@ class RequestPriceViews(APIView):
 
 
 
+
+
 class MailsView(APIView):
     """ """
     def get(self, request):
-        mail = False
+        mail = True
         count = 0
         if mail:
-            html_content = render_to_string('neuesJahr.html',)
+            html_content = render_to_string('action.html',)
 
             with open('list.txt') as file:
                 mail_adress = file.read().lower().splitlines()
 
             for mail in mail_adress:
+                print(f'send to mail: { mail }')
                 
                 count += 1
                 send_mail(
-                    'ООО Техносвар КС поздравляет Вас с новым годом!',
+                    'Главный сварщик поздравляет с 23 февраля!',
                     message=html_content,
-                    from_email= 'market1@tehnosvar.ru',
-                    recipient_list= [f'{mail}',],
+                    from_email= 'zakaz@glsvar.ru',
+                    recipient_list= [f'{ str(mail) }',],
                     fail_silently=False,
                     html_message=html_content
                     )
-                print(count, mail)
-                time.sleep(random.randrange(10, 20)) # Пробуем обойти спам
+                # print(count, mail)
+                # time.sleep(random.randrange(10, 20)) # Пробуем обойти спам
 
         return Response('Письмо отправлено')
+
+
+
+
 
 
 class PromocodeView(APIView):
     """ Проверка активного промокода """
 
+    #  { "promo": "23Февраля" }
+
     def post(self, request):
-        promocode = 'С 23 ФеВрАлЯ'
-        promocode_status = PromocodeModel.objects.filter(promocode=promocode).exists()
-        return Response({ "status": promocode_status })
+
+        data = request.data
+        promocode = data.get('promo')
+        promo = PromocodeModel.objects.filter(promocode=promocode)
+
+        if promo:
+            return Response({ "discount": promo[0].value, "prods": promo[0].products.replace(' ', '').split(',') })
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 
 
 @login_required
@@ -353,9 +372,6 @@ def send_payment_email(request, uuid):
         return HttpResponse(html)
     except CustomerModel.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
-
-
 
 
 # def mail_template(request):

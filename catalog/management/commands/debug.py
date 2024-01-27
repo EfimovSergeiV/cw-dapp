@@ -26,9 +26,39 @@ props = PropStrModel.objects.all()
 
 
 
-for prop in props:
+# for prop in props:
 
-    if ',' in prop.value or prop.qvalue:
+#     if ',' in prop.value or prop.qvalue:
 
-        qvalue = prop.qvalue if prop.qvalue is None else prop.qvalue.replace(",", ".")
-        print(f'{ prop.name } - { prop.value.replace(",", ".") } \ { prop.qname } - { qvalue }')
+#         qvalue = prop.qvalue if prop.qvalue is None else prop.qvalue.replace(",", ".")
+#         print(f'{ prop.name } - { prop.value.replace(",", ".") } \ { prop.qname } - { qvalue }')
+
+
+
+# for
+
+# from orders.models import *
+
+
+# qs = RequestPriceModel.objects.all()
+
+# print('hallo')
+# for client in qs:
+#     if '@' in client.contact:
+#         print(client.contact)
+
+arr_clients = []
+
+with open('clients.txt', 'r') as file:
+    clients = file.readlines()
+
+    for client in clients:
+        if client not in arr_clients:
+            arr_clients.append(client)
+            print(client)
+
+
+with open('clear_client.txt', 'w') as file:
+    for cl in arr_clients:
+    
+        file.write(cl)

@@ -92,6 +92,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             'adress',
             'position_total',
             'total',
+            'promocode',
             'delivery',
             'delivery_adress',
             'delivery_summ',

@@ -34,6 +34,7 @@ def send_alert_to_agent(
             'phone': order['phone'],
             'email': order['email'],
             'total': order['total'],
+            'promocode': order['promocode'],
             'delivery': order['delivery'],
             'delivery_adress': order['delivery_adress'],
             'comment': order['comment'],

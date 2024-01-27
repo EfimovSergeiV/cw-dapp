@@ -13,7 +13,7 @@ urlpatterns = [
     path('order-status/', OrderStatusViews.as_view()),
     path('orderinfo/<slug:order>/', OrderInfoView.as_view()),
     path('check-promo/', PromocodeView.as_view()),
-    # path('sendmail/', MailsView.as_view()),
+    path('sendmail/', MailsView.as_view()),
 
     # Предоставление данных в 1С
     path('list-orders/', OneSotfOrderView.as_view()),
@@ -25,7 +25,8 @@ urlpatterns = [
     path('order_status/<slug:uuid>/<slug:status>/', edit_order_status, name='edit_order_status'),
     path('pricerequest_close/<slug:uuid>/', price_request_status, name='edit_price_request_status'),
     path('sent_payment_email/<slug:uuid>/', send_payment_email, name='send_payment_email'),
-    # path('mail_template/', mail_template, name='mail_template'),
+
+
     # path('glsvar-bot/', glsvar_bot, name='mail_template'),
     
 
