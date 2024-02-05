@@ -11,7 +11,7 @@ class Command(BaseCommand):
         pass
 
 
-products = ProductModel.objects.filter(brand__id = 33)
+products = ProductModel.objects.filter(id__in = [1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 2004, 2003,])
 current_datetime = datetime.now()
 formatted_date = current_datetime.strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -53,8 +53,6 @@ for product in products:
       print(offer)
 
 
-# print(offers)
-
 
 yml_template = """<?xml version="1.0" encoding="UTF-8"?>
   <yml_catalog date="{current_date}+03:00">
@@ -67,10 +65,8 @@ yml_template = """<?xml version="1.0" encoding="UTF-8"?>
       <currency id="RUB" rate="1"></currency>
     </currencies>
     <categories>
-      <category id="8">Сварочные аппараты MMA</category>
-      <category id="9">Сварочные полуавтоматы MIG/MAG</category>
-      <category id="11">Аргонодуговая сварка TIG</category>
-      <category id="12">Воздушно-плазменная резка CUT</category>
+      <category id="109">Сварочные краги и перчатки</category>
+      <category id="110">Акции главного сварщика</category>
     </categories>
     <offers>
 {offers}
@@ -81,7 +77,7 @@ yml_template = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 
-with open(f'./grovers.xml', 'w' ) as file:
+with open(f'./glsvar-krags.xml', 'w' ) as file:
     file.write(
         yml_template.format(
             current_date = formatted_date,

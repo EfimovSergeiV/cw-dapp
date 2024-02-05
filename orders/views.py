@@ -208,7 +208,11 @@ class OrderViews(APIView):
 
     def post(self, request, format=None):
         """ Извлечение данных и структурирование заказа """
+
         data=request.data
+
+        print(data)
+
         region_code = data.pop('region_code')
         
         prods_id = [product['id'] for product in data['client_product']]
@@ -221,11 +225,11 @@ class OrderViews(APIView):
 
         print(data['promocode'])
 
-
+        # Перерасчёт стоимостей товаров
         products = data.pop('client_product')
         for product in products:
             try:
-                price_from_db = products_qs.get(id= product['id'])
+                price_from_db = products_qs.get(id = product['id'])
                 product['product_id'] = product['id']
                 product["price"] = int(price_from_db.only_price)
                 product["only_price"] = int(price_from_db.only_price)
@@ -237,7 +241,10 @@ class OrderViews(APIView):
         data['client_product'] = products
 
         serializer = self.serializer_class(data=data)
+
+
         if serializer.is_valid():
+
             serializer.save()
 
             # Логика оповещений
@@ -251,6 +258,9 @@ class OrderViews(APIView):
                 mail_list.append(serializer.data['email'])
 
             OrderMails.send_notice(email=mail_list, data=serializer.data)
+            
+            
+            # return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             return Response({ 'order': data['order_number'] })
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
