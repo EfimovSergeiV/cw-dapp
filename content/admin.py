@@ -65,7 +65,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display = ('id', 'title',)
 
 class WideBannersAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'activated')
+    list_display = ('id', 'name', 'image', 'activated')
     list_display_links = ('id', 'name',)
 
     list_editable = ('activated',)
