@@ -120,7 +120,7 @@ class ProductModel(AbsProductModel):
         unique=True, 
         max_length=100)
 
-    keywords = models.TextField(
+    keywords = models.CharField(
         verbose_name="Ключевые слова", max_length=500, null=True, blank=True,
         help_text="Ключевые слова для поиска, лучше через запятую."
     )
@@ -148,7 +148,7 @@ class ProductModel(AbsProductModel):
     )
 
     only_price_status = models.BooleanField(verbose_name="Общая стоимость", default=False)
-    only_price = models.FloatField(verbose_name="Стоимость", default=0, null=True, blank=True)
+    only_price = models.IntegerField(verbose_name="Стоимость", default=0, null=True, blank=True)
     currency = models.CharField(verbose_name="Валюта", max_length=10, choices=CCY_VAL, default="RUB")
     status = models.CharField(verbose_name="Наличие на складе", max_length=100, choices=EXISTENCE, default="order")
 

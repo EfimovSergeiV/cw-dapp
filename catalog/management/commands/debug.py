@@ -8,9 +8,6 @@ import pandas as pd
 from time import sleep
 
 
-from content.models import ReviewsModel
-
-
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
 class Command(BaseCommand):
@@ -20,55 +17,54 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         pass
 
+product_qs = ProductModel.objects.all()
 
-# props = PropStrModel.objects.all()
-# props = PropStrModel.objects.all()
+shops = {
+    "d5af83ae-68e6-11e5-8261-c48e8f4373aa": "Петрозаводск Розница",
+    "647af975-60ab-11e2-8971-10bf4871e437": "В.Луки Розница",
+    "958632c1-846a-11e5-806e-0021855f216f": "Псков Алмазная",
+    "96dd9447-8fcf-11e3-aa79-0c84dcd0233a": "Смоленск Тихвинка",
+    "e37a0bbb-f47f-11e4-aec3-208984863fbe": "Санкт-Петербург",
+    "3445c227-7efc-11e5-be77-24fd52940c70": "Псков Шоссейная",
+    "d5af83ae-68e6-11e5-8261-c48e8f4373aa": "Петрозаводск Розница",
+    "ae56cf28-bd24-11e2-b408-1c6f652af6ec": "Смоленск Розница",
+    "1d162cd3-886a-11e5-96e1-14dae9ee1802": "Псков Неелово",
+}
 
+with open('new-1c-data.json', 'r') as file:
+    data = json.load(file)
 
+    for cursor in data:
+        related_product = product_qs.filter(UID=cursor['prod_UID'])
 
-# for prop in props:
+        # Return one object from the QuerySet
+        if len(related_product) > 0:
+            related_product = related_product[0]
 
-#     if ',' in prop.value or prop.qvalue:
-
-#         qvalue = prop.qvalue if prop.qvalue is None else prop.qvalue.replace(",", ".")
-#         print(f'{ prop.name } - { prop.value.replace(",", ".") } \ { prop.qname } - { qvalue }')
-
-
-
-# for
-
-# from orders.models import *
-
-
-# qs = RequestPriceModel.objects.all()
-
-# print('hallo')
-# for client in qs:
-#     if '@' in client.contact:
-#         print(client.contact)
-
-# arr_clients = []
-
-# with open('clients.txt', 'r') as file:
-#     clients = file.readlines()
-
-#     for client in clients:
-#         if client not in arr_clients:
-#             arr_clients.append(client)
-#             print(client)
-
-
-# with open('clear_client.txt', 'w') as file:
-#     for cl in arr_clients:
-    
-#         file.write(cl)
+        shop = shops.get(cursor['shop_UID'])
+        print(f"{related_product} Стоимость: {int(cursor['price'])}руб. Наличие: {cursor['quantity']} {shop}")
 
 
 
 
-url = "http://127.0.0.1:8000/o/order/"
-data = {'shop_id': 1, 'region_code': 'SPE', 'person': 'Иван Иванов', 'phone': '+79116965424', 'email': None, 'comment': 'Тестовый заказ', 'delivery': False, 'adress': 'Санкт-Петербург, шоссе Революции, д.84, литера Е', 'total': 16700, 'promocode': None, 'company': None, 'legaladress': None, 'inn': None, 'kpp': None, 'okpo': None, 'bankname': None, 'currentacc': None, 'corresponding': None, 'bic': None, 'client_product': [{'id': 1694, 'vcode': '51MS705', 'name': 'Маска сварщика хамелеон АСФ 705', 'rating': '5.0', 'only_price': 4500, 'status': 'stock', 'preview_image': 'http://127.0.0.1:8000/files/img/c/preview/3.webp', 'propstrmodel': [{'id': 9959, 'name': 'Размер, см', 'qname': None, 'value': '52-65'}, {'id': 9960, 'name': 'Сроки хранения, мес', 'qname': None, 'value': '60'}, {'id': 9961, 'name': 'Срок эксплуатации, мес', 'qname': None, 'value': '12'}, {'id': 9962, 'name': 'Страна изготовитель', 'qname': None, 'value': 'Россия'}, {'id': 9975, 'name': 'Оптический класс светофильтра', 'qname': None, 'value': '1/1/1/2'}, {'id': 9976, 'name': 'Поле зрения, мм', 'qname': None, 'value': '100х53'}, {'id': 9977, 'name': 'Затемнение в светлом состоянии', 'qname': None, 'value': 'DIN 4'}, {'id': 9978, 'name': 'Регулировка степени затемнения', 'qname': None, 'value': 'Плавная'}, {'id': 9979, 'name': 'Регулятор затемнения', 'qname': None, 'value': 'Наружный'}, {'id': 9980, 'name': 'Включение/ Выключение', 'qname': None, 'value': 'Автоматическое'}, {'id': 9981, 'name': 'Регулятор чувствительности', 'qname': None, 'value': 'Плавная регулировка'}, {'id': 9982, 'name': 'Защита от УФ/Ик излучения', 'qname': None, 'value': 'До13 DIN'}, {'id': 9983, 'name': 'Источник питания', 'qname': None, 'value': 'Солнечная батарея сменный элемент питания'}, {'id': 9984, 'name': 'Время срабатывания, сек', 'qname': None, 'value': '1/30000'}, {'id': 9985, 'name': 'Время задержки, сек', 'qname': None, 'value': 'Плавная 0,1-1,0'}, {'id': 9986, 'name': 'Режим шлифовки', 'qname': None, 'value': 'Есть'}, {'id': 9987, 'name': 'Температура эксплуатации, С', 'qname': None, 'value': 'ОТ -5 ДО +55'}, {'id': 9988, 'name': 'Материал маски', 'qname': None, 'value': 'Ударопрочный пластик'}], 'quantity': 1}, {'id': 1695, 'vcode': '51ST201D', 'name': 'Маска сварщика BASIC', 'rating': '5.0', 'only_price': 400, 'status': 'stock', 'preview_image': 'http://127.0.0.1:8000/files/img/c/preview/5_1.webp', 'propstrmodel': [{'id': 9963, 'name': 'Размер, см', 'qname': None, 'value': '52-65'}, {'id': 9964, 'name': 'Срок хранения, мес', 'qname': None, 'value': '60'}, {'id': 9965, 'name': 'Срок эксплуатации, мес', 'qname': None, 'value': '12'}, {'id': 9966, 'name': 'Страна изготовитель', 'qname': None, 'value': 'Россия'}], 'quantity': 3}, {'id': 817, 'vcode': '991900', 'name': 'Сварочная маска FUBAG BLITZ 9-13 Visor', 'rating': '4.9', 'only_price': 11000, 'status': 'order', 'preview_image': 'http://127.0.0.1:8000/files/img/c/preview/prodd_9DddxhK.webp', 'propstrmodel': [{'id': 4639, 'name': 'Количество сенсоров', 'qname': '65gg', 'value': '4'}, {'id': 4641, 'name': 'Размер экрана, мм', 'qname': '8xs2', 'value': '97 х 62'}, {'id': 4643, 'name': 'Питание', 'qname': 'b58b', 'value': 'солн. эл. + 2 бат.'}, {'id': 4644, 'name': 'Масса, кг', 'qname': 'czsb', 'value': '0.48'}, {'id': 4640, 'name': 'Регулировка степени затемнения', 'qname': 'ewcy', 'value': 'внутренняя'}, {'id': 4637, 'name': 'Диапазон светопропускания, DIN', 'qname': 'f8yu', 'value': '9-13'}, {'id': 4633, 'name': 'Регулировка чувствительности', 'qname': 'm847', 'value': 'да'}, {'id': 4638, 'name': 'Защита от УФ/ИК-излучения, DIN', 'qname': 'q4z6', 'value': '16'}, {'id': 4642, 'name': 'Вкл/Выкл питания', 'qname': 'q9r4', 'value': 'автомат'}, {'id': 4636, 'name': 'Время переключения в тёмное состояние, сек', 'qname': 'rrax', 'value': '1/25000'}, {'id': 4635, 'name': 'Время переключения в светлое состояние, сек', 'qname': 'wdp9', 'value': '0,10 - 1,00'}, {'id': 4634, 'name': 'Световой режим, DIN', 'qname': 'z70n', 'value': '3,5'}], 'quantity': 1}]}
-
-
-resp = requests.post(url=url, data=data)
-print(resp.status_code)
+# В.Луки Розница	647af975-60ab-11e2-8971-10bf4871e437
+# Псков Алмазная	958632c1-846a-11e5-806e-0021855f216f
+# Смоленск Тихвинка	96dd9447-8fcf-11e3-aa79-0c84dcd0233a
+# Санкт-Петербург	e37a0bbb-f47f-11e4-aec3-208984863fbe
+# Оптовый	6a4a35c3-60aa-11e2-8971-10bf4871e437
+# Псков Шоссейная	3445c227-7efc-11e5-be77-24fd52940c70
+# Петрозаводск Розница	d5af83ae-68e6-11e5-8261-c48e8f4373aa
+# Рязань Яблочкова	9cb1dfc3-7a78-11e6-ae23-00269e8edcfe
+# Смоленск Розница	ae56cf28-bd24-11e2-b408-1c6f652af6ec
+# Псков Неелово	1d162cd3-886a-11e5-96e1-14dae9ee1802
+        
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 2800.0 1d162cd3-886a-11e5-96e1-14dae9ee1802
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 2600.0 d5af83ae-68e6-11e5-8261-c48e8f4373aa
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 980.0 9cb1dfc3-7a78-11e6-ae23-00269e8edcfe
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 0.0 6a4a35c3-60aa-11e2-8971-10bf4871e437
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 2500.0 96dd9447-8fcf-11e3-aa79-0c84dcd0233a
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 2800.0 958632c1-846a-11e5-806e-0021855f216f
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 2500.0 ae56cf28-bd24-11e2-b408-1c6f652af6ec
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 2800.0 3445c227-7efc-11e5-be77-24fd52940c70
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 2420.0 e37a0bbb-f47f-11e4-aec3-208984863fbe
+# <QuerySet [<ProductModel: 307) Сварочные электроды Esab OK 46.00P, 2.5x350 мм, 5.3 кг>]> 2725.0 647af975-60ab-11e2-8971-10bf4871e437

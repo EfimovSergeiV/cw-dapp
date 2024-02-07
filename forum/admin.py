@@ -37,6 +37,6 @@ class PostAdmin(admin.ModelAdmin):
 
 
 
-admin.site.register(CategoryModel)
-admin.site.register(TopicModel, TopicAdmin)
-admin.site.register(PostModel, PostAdmin)
+# admin.site.register(CategoryModel)
+# admin.site.register(TopicModel, TopicAdmin)
+# admin.site.register(PostModel, PostAdmin)

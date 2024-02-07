@@ -53,5 +53,5 @@ class ReceiptsStatusAdmin(admin.ModelAdmin):
     search_fields = ('id', 'externalId',)
 
 
-admin.site.register(DreamkasProductModel, ProductAdmin)
-admin.site.register(ReceiptsStatusModel, ReceiptsStatusAdmin)
+# admin.site.register(DreamkasProductModel, ProductAdmin)
+# admin.site.register(ReceiptsStatusModel, ReceiptsStatusAdmin)

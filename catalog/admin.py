@@ -71,7 +71,11 @@ class ProductImageInline(admin.TabularInline):
 
     readonly_fields = ('preview', )
     def preview(self, obj):
-        return mark_safe('<img style="margin-right:-10vh; background-color: white; padding: 15px; border-radius: 5px;" src="/files/%s" alt="Нет изображения" width="120" height="auto" />' % (obj.image))
+        if obj.image:
+            return mark_safe('<img style="margin-right:-10vh; background-color: white; padding: 15px; border-radius: 5px;" src="/files/%s" alt="Нет изображения" width="120" height="auto" />' % (obj.image))
+        else:
+            return mark_safe('<img style="margin-right:-10vh; background-color: white; padding: 15px; border-radius: 5px;" src="/files/img/c/preview/noimage.webp" alt="Нет изображения" width="120" height="auto" />')
+    
     preview.short_description = 'Изображение'
     fieldsets = (
         (None, {'fields': ('preview', 'image')}),
@@ -168,14 +172,14 @@ class ProductAdmin(admin.ModelAdmin):
         ProductImageInline, 
         PropStrInline, 
         ProductDocumentInline, 
-        ExternalLinkInline
+        # ExternalLinkInline
         )
     sortable_by = ('id')
     fieldsets = (
         ("Отображение на сайте", {'fields': (('activated', 'show_more', 'recommend',), ('category', 'brand'), ( 'preview', 'preview_image',))}),
         ("Информация о товаре", {'fields': (('name', 'vcode', 'UID', 'rating'), 'description', 'keywords',)}),
         ("Стоимость и наличие", {'fields': (('only_price_status', 'promo'), ('only_price', 'currency', 'status', ), ('discount',),)}),
-        ("Сопутствующие категории", {'fields': (('related',),)}),
+        # ("Сопутствующие категории", {'fields': (('related',),)}),
         )
 
 ##### НАЗВАНИЯ СВОЙСТВ ДЛЯ ФИЛЬТРОВ
@@ -259,10 +263,10 @@ class CatalogFileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BrandProductModel, BrandProductAdmin)
-admin.site.register(CityModel)
+# admin.site.register(CityModel)
 admin.site.register(CategoryModel, CategoryAdmin)
-admin.site.register(ProductSetModel, ProductSetAdmin)
-admin.site.register(ShopAdressModel, ShopArdessAdmin)
+# admin.site.register(ProductSetModel, ProductSetAdmin)
+# admin.site.register(ShopAdressModel, ShopArdessAdmin)
 admin.site.register(ProductModel, ProductAdmin)
 admin.site.register(PropsNameModel, PropNameAdmin)
 admin.site.register(CatalogFileModel, CatalogFileAdmin)

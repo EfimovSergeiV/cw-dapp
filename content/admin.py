@@ -64,17 +64,21 @@ class ArticleAdmin(admin.ModelAdmin):
     form = ArticleAdminForm
     list_display = ('id', 'title',)
 
+class WideBannersAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'activated')
+    list_display_links = ('id', 'name',)
+
+    list_editable = ('activated',)
 
 
+# admin.site.register(VotesInterviewedModel)
+# admin.site.register(ArticleModel, ArticleAdmin)
 
-admin.site.register(VotesInterviewedModel)
-admin.site.register(ArticleModel, ArticleAdmin)
-
-admin.site.register(ReviewsModel, ) #ReviewsAdmin
-admin.site.register(FooterFileModel)
+# admin.site.register(ReviewsModel, ) #ReviewsAdmin
+# admin.site.register(FooterFileModel)
 admin.site.register(MainBannerModel, MainBannerAdmin)
-admin.site.register(VotesModel, VotesAdmin)
-admin.site.register(MainPromoBannerModel, MainPromoBannerAdmin)
-admin.site.register(WideBannersModel, )
+# admin.site.register(VotesModel, VotesAdmin)
+# admin.site.register(MainPromoBannerModel, MainPromoBannerAdmin)
+admin.site.register(WideBannersModel, WideBannersAdmin)
 # admin.site.register(SecondPromoBannerModel, SecondPromoBannerAdmin)
 # admin.site.register(SecondBannerModel, SecondBannerAdmin)
