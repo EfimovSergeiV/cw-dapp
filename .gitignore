@@ -5,7 +5,6 @@ error/
 static/
 uploads/
 main/geoip-db/
-main/settings.py
 *.zip
 
 

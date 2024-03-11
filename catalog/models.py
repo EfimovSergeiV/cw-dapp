@@ -61,10 +61,21 @@ class ShopAdressModel(models.Model):
 
 class CategoryModel(MPTTModel, AbsActivatedModel):
     """Подкатегории каталога"""
+    image = ResizedImageField(
+        size = [120, 85],
+        verbose_name="",
+        crop = ['middle', 'center'],
+        upload_to='img/c/preview/',
+        help_text="Миниатира категории, только первого уровня (120x85 px)",
+        quality=100,
+        null=True,
+        blank=True,
+        force_format='WEBP',
+    )
     name = models.CharField(verbose_name="Название", max_length=100)
     description = models.TextField(verbose_name="Описание", max_length=1000, default="Нет описания", null=True, blank=True)
     parent = TreeForeignKey('self', verbose_name="Вложенность", on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    
+    visible = models.BooleanField(verbose_name="Отображать в категориях", default=True)
     related = models.ManyToManyField('self', verbose_name='Связанные категории', blank=True)
 
     class Meta:
@@ -80,14 +91,15 @@ class CategoryModel(MPTTModel, AbsActivatedModel):
 
 class BrandProductModel(models.Model):
     brand = models.CharField(verbose_name="Бренд", max_length=160)
-    carousel = models.BooleanField(verbose_name="Отображать", default=False)
-    image = models.ImageField(verbose_name="Изображение", help_text="Разрешение изображения 1024x480", upload_to="img/c/brand/")
+    carousel = models.BooleanField(verbose_name="Отображать в карусели", default=False)
+    image = models.ImageField(verbose_name="Изображение", help_text="Разрешение изображения 1024x480", null=True, blank=True, upload_to="img/c/brand/")
     description = models.TextField(verbose_name="Описание", max_length=1000, null=True, blank=True)
     priority = models.IntegerField(verbose_name="Приоритет выдачи в каталоге", default=50)
 
     class Meta:
         verbose_name = "Бренд"
         verbose_name_plural = "Бренды"
+        ordering = ['-priority',]
 
     def __str__(self):
         return self.brand

@@ -7,7 +7,12 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 from catalog.models import *
-from serializers.catalog import *
+
+from serializers.catalog import * # Мигрировать в сериализаторы ниже
+from catalog.serializers import (
+    CategoryRecursiveSerializer,
+)
+
 from django.db.models import CharField
 from django.db.models.functions import Lower
 from django.db.models import Case, When
@@ -31,10 +36,10 @@ class ResultsSetPagination(PageNumberPagination):
 
 class CategoryView(APIView):
     """ Категории товаров """
+    
     def get(self, request):
-
         cts = CategoryModel.objects.filter(level=0).filter(activated=True)
-        serializer = CategoryRecursiveSerializer(cts, many=True)
+        serializer = CategoryRecursiveSerializer(cts, many=True, context={'request':request})
         return Response(serializer.data)
 
 
@@ -329,7 +334,7 @@ class OneRandomProductView(APIView):
                 return Response([])
 
             while len(prods) < 4:
-                print('Im problem')
+
                 for ct in cts['ct']:
                     descendants = [ child.id for child in self.cat_qs.get(id=ct).get_descendants(include_self=True) ]
                     all_categories += descendants

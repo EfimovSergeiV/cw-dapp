@@ -1,6 +1,7 @@
 from re import search
 from warnings import filters
 from django.contrib import admin
+from django.template.loader import render_to_string
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
@@ -41,9 +42,46 @@ class FeedBackAdmin(admin.ModelAdmin):
     readonly_fields = ('person', 'theme', 'contact', 'text',)
 
 
+from catalog.models import ProductModel
+from django.db.models import Case, When
+class UserWatcherAdmin(admin.ModelAdmin):
+
+    def preserved(self, prods):
+        return Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(prods)])
+
+    def parse_prods(self, instance):
+        products = instance.prods
+        if products:
+            qs_prods = ProductModel.objects.filter(id__in = products["viewed"] + products["like"] + products["comp"])
+            
+            data = render_to_string('admin_prods.html', {
+                "viewed": qs_prods.filter(id__in = products["viewed"]).order_by(self.preserved(products["viewed"])),
+                "like": qs_prods.filter(id__in = products["like"]).order_by(self.preserved(products["like"])),
+                "comp": qs_prods.filter(id__in = products["comp"]).order_by(self.preserved(products["comp"])),
+                
+            })
+            return data
+        else:
+            return 'В истории ничего нет'
+    
+    parse_prods.short_description = 'Товары в сессии'
+
+
+    list_display = ('id', 'tmp_id', 'createdAt', 'updatedAt', )
+    list_display_links = ('id', 'tmp_id', 'createdAt', 'updatedAt',  )
+    readonly_fields = ('prods', 'parse_prods',  'createdAt', 'updatedAt', )
+    fieldsets = (
+        ("Активность", {'fields': (( 'createdAt', 'updatedAt', ),)}),
+        ("Сессия", {'fields': (('parse_prods'),)}),
+        )
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(SubscriberModel)
 admin.site.register(FeedBackModel, FeedBackAdmin)
+
+admin.site.register(UserWatcherModel, UserWatcherAdmin)
+
 # admin.site.register(LikeProdModel, LikeProdAdmin)
 # admin.site.register(ProductReviewModel, ProductReviewAdmin)

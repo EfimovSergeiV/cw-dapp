@@ -1,12 +1,10 @@
-import email
-from pyexpat import model
-from statistics import mode
-from tabnanny import verbose
+import uuid
+
 from django.db import models
-from django.forms import model_to_dict
+from django.utils import timezone
 from catalog.models import ProductModel
 from django.contrib.auth.models import User
-import uuid
+
 
 class ProfileModel(models.Model):
     """ Дополнительная информация о пользователе """
@@ -88,3 +86,26 @@ class FeedBackModel(models.Model):
 
     def __str__(self):
         return str(self.person)
+    
+
+def get_structure():
+    return dict( comp = [], like= [], viewed=[] )
+
+def user_extra_structure():
+    return dict( orders = [], )
+
+class UserWatcherModel(models.Model):
+    """ Смотрим за поведением пользователей """
+
+    tmp_id = models.UUIDField(verbose_name="Идентификатор сессии", default=uuid.uuid4, unique=True) # unique_for_month=timezone.now() 
+    prods = models.JSONField(verbose_name="Товары в сессии", null=True, blank=True, ) # default=get_structure
+
+    createdAt = models.DateTimeField(verbose_name="Дата создания", default=timezone.now)
+    updatedAt = models.DateTimeField(verbose_name="Дата обновления", auto_now=True)
+
+    class Meta:
+        verbose_name = "Сессия пользователя"
+        verbose_name_plural = "Сессии пользователей (статистика)"
+
+    def __str__(self):
+        return f'{ self.tmp_id }'

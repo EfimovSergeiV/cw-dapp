@@ -19,7 +19,7 @@ class BearerAuthentication(authentication.TokenAuthentication):
 
 
 class AbsDateModel(models.Model):
-    """Астрактная модель даты"""
+    """ Астрактная модель даты """
     created_date = models.DateField(verbose_name="Дата создания", default=timezone.now)
 
     class Meta:

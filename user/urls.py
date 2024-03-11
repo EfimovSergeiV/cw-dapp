@@ -5,8 +5,7 @@ from user.views import *
 urlpatterns = [
     path('', UserInfoView.as_view()),
     path('feedback/', FeedbackView.as_view()),
-    # path('google/', GoogleLoginView.as_view(), name='google_login'),
-    # path('test/', UserTestView.as_view()),
+    path('uwatch/', UserWatcherView.as_view()),
     path('likes/', LikeProdView.as_view()), ### DEVELOPMENT
     path('subcriebe/', SubscriberView.as_view()),
     re_path('reviews/', ProductReviewView.as_view()),

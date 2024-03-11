@@ -10,4 +10,4 @@ class IdentificationServiceAdmin(admin.ModelAdmin):
 # admin.site.register(CourceCurrency)
 # admin.site.register(DeleviryServiceModel)
 # admin.site.register(VersionControlModel)
-# admin.site.register(UserIdentificationServiceModel, IdentificationServiceAdmin)
+admin.site.register(UserIdentificationServiceModel, IdentificationServiceAdmin)

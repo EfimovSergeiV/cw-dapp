@@ -16,19 +16,28 @@ def gen(size=4, chars=string.ascii_lowercase + string.digits):
 
 
 class CategoryAdmin(DraggableMPTTAdmin):
+    def preview(self, obj):
+        return mark_safe('<img style="margin-right:-10vh; background-color: white; padding: 15px; border-radius: 5px;" src="/files/%s" alt="Нет изображения" width="100" height="auto" />' % (obj.image))
+    preview.short_description = 'Изображение'
+
+
     list_display = ('tree_actions', 'indented_title', 'parent','activated')
     list_editable = ('activated', )
+    readonly_fields = ('preview', )
     fieldsets = (
-        (None, {'fields': (('name', ),)}),
-        (None, {'fields': (('parent', 'activated', ),)}),
+        (None, {'fields': (( 'activated', ), )}),
+        (None, {'fields': ( ('name','parent',), )}),
+        (None, {'fields': (('preview', 'image', ),)}),
         (None, {'fields': ('description',)}),
         (None, {'fields': ('related',)}),
     )
     
 
 class BrandProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'brand', 'image')
-    list_display_links = ('id', 'brand', 'image')
+    list_display = ('id', 'brand', 'priority', 'carousel', )
+    list_display_links = ('id', 'brand',)
+    list_editable = ('priority', 'carousel', )
+    
 
 class ShopArdessAdmin(admin.ModelAdmin):
     list_display = ('position', 'adress', 'phone')
@@ -266,7 +275,7 @@ admin.site.register(BrandProductModel, BrandProductAdmin)
 # admin.site.register(CityModel)
 admin.site.register(CategoryModel, CategoryAdmin)
 # admin.site.register(ProductSetModel, ProductSetAdmin)
-# admin.site.register(ShopAdressModel, ShopArdessAdmin)
+admin.site.register(ShopAdressModel, ShopArdessAdmin)
 admin.site.register(ProductModel, ProductAdmin)
 admin.site.register(PropsNameModel, PropNameAdmin)
 admin.site.register(CatalogFileModel, CatalogFileAdmin)
