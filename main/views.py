@@ -557,12 +557,6 @@ class CoordinateProcessingView(APIView):
 
     def post(self, request):
 
-        geolocator = Nominatim(user_agent="geoapiExercises")
-
-
-        lat = str(request.data['latitude'])
-        long = str(request.data['longitude'])
-
         coordinates = [
             { 'region': ['Псковская область', 'Псков'], 'latitude': { 'min': 57.295816, 'max': 58.580942 }, 'longitude': { 'min': 27.065731, 'max': 30.439579 }, },
             { 'region': ['Псковская область', 'Великие Луки'], 'latitude': { 'min': 55.636335, 'max': 56.984099 }, 'longitude': { 'min': 29.678037, 'max': 31.846215 }, },
@@ -572,7 +566,12 @@ class CoordinateProcessingView(APIView):
             { 'region': ['Петрозаводская область', 'Петрозаводск'], 'latitude': { 'min': 60.674981, 'max': 63.203404 }, 'longitude': { 'min': 31.241437, 'max': 37.536864 }, },
         ]
 
-        data = { 'latitude': float(request.data['latitude']), 'longitude': float(request.data['longitude']) }
+
+        data = { 
+            'latitude': float(request.data.get('latitude')), 
+            'longitude': float(request.data.get('longitude'))
+         }
+
         region = None
         for coordinate in coordinates:
             latitude, longitude = False, False
