@@ -34,9 +34,9 @@ class CategoryAdmin(DraggableMPTTAdmin):
     
 
 class BrandProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'brand', 'priority', 'carousel', )
+    list_display = ('id', 'brand', 'priority', 'image', 'carousel', )
     list_display_links = ('id', 'brand',)
-    list_editable = ('priority', 'carousel', )
+    list_editable = ('priority', 'carousel', 'image', )
     
 
 class ShopArdessAdmin(admin.ModelAdmin):

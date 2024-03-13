@@ -92,7 +92,17 @@ class CategoryModel(MPTTModel, AbsActivatedModel):
 class BrandProductModel(models.Model):
     brand = models.CharField(verbose_name="Бренд", max_length=160)
     carousel = models.BooleanField(verbose_name="Отображать в карусели", default=False)
-    image = models.ImageField(verbose_name="Изображение", help_text="Разрешение изображения 1024x480", null=True, blank=True, upload_to="img/c/brand/")
+    image = ResizedImageField(
+        size = [206, 80],
+        verbose_name="",
+        crop = ['middle', 'center'],
+        upload_to='img/c/brand/',
+        help_text="Размеры логотипа (206x80 px)",
+        quality=100,
+        null=True,
+        blank=True,
+        force_format='WEBP',
+    )
     description = models.TextField(verbose_name="Описание", max_length=1000, null=True, blank=True)
     priority = models.IntegerField(verbose_name="Приоритет выдачи в каталоге", default=50)
 
