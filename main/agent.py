@@ -54,7 +54,7 @@ def send_alert_to_agent(
 """
 
     if message:
-        chats_to_send_notifications = mail_contacts['channel']
+        chats_to_send_notifications = mail_contacts['admins']
 
         text_to_send = f"""
 <pre>
@@ -76,7 +76,7 @@ def send_alert_to_agent(
         text_to_send = f"{ logs }"
 
     if pricerequest:
-        chats_to_send_notifications = mail_contacts['channel']
+        chats_to_send_notifications = mail_contacts['admins']
         text_to_send = f"""
 <pre>
 Запрос клиента на стоимость товара
@@ -93,7 +93,7 @@ def send_alert_to_agent(
 
 
     if status:
-        chats_to_send_notifications = mail_contacts['channel']
+        chats_to_send_notifications = mail_contacts['admins']
 
         text_to_send = f"""
 <pre>
@@ -103,7 +103,7 @@ def send_alert_to_agent(
 """
 
     if oth_status:
-        chats_to_send_notifications = mail_contacts['channel']
+        chats_to_send_notifications = mail_contacts['admins']
 
         text_to_send = f"""
 <pre>
