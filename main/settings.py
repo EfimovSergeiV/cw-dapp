@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ckeditor',
-    # 'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl',
     'debug_toolbar',
     'corsheaders',
     'mptt',

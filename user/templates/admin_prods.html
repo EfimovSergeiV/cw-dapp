@@ -1,0 +1,19 @@
+<p>Просмотренные:</p>
+
+{% for prod in viewed %}
+    <p style="margin-left: 20px;"><span style="margin-right: 10px;">{{ prod.id }}.</span>{{ prod.name }}</p>
+{% endfor %}
+
+
+<p>В избранном:</p>
+
+{% for prod in like %}
+    <p style="margin-left: 20px;"><span style="margin-right: 10px;">{{ prod.id }}.</span>{{ prod.name }}</p>
+{% endfor %}
+
+
+<p>В сравнении:</p>
+
+{% for prod in comp %}
+    <p style="margin-left: 20px;"><span style="margin-right: 10px;">{{ prod.id }}.</span>{{ prod.name }}</p>
+{% endfor %}
