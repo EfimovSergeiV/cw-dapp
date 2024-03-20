@@ -67,8 +67,8 @@ class UserWatcherAdmin(admin.ModelAdmin):
     parse_prods.short_description = 'Товары в сессии'
 
 
-    list_display = ('id', 'tmp_id', 'createdAt', 'updatedAt', )
-    list_display_links = ('id', 'tmp_id', 'createdAt', 'updatedAt',  )
+    list_display = ('tmp_id', 'createdAt', 'updatedAt', )
+    list_display_links = ('tmp_id', 'createdAt', 'updatedAt',  )
     readonly_fields = ('prods', 'parse_prods',  'createdAt', 'updatedAt', )
     fieldsets = (
         ("Активность", {'fields': (( 'createdAt', 'updatedAt', ),)}),
