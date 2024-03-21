@@ -175,6 +175,8 @@ class ListProductsView(ListAPIView):
     def get_queryset(self):
         props = dict(self.request.query_params)
 
+        print(props)
+
         queryset = ProductModel.objects.filter(activated=True).order_by('brand__priority')
         validated_props = []
 
@@ -209,16 +211,19 @@ class ListProductsView(ListAPIView):
                 self.meta["title"] = brand.brand
                 self.meta["description"] = brand.description
 
+        # По требованию яндекса, если не валидный фильтр, то возвращаем 404 Not Found
+        # Удаляем из props ct, brnd, page
+        filter_props = { key: value for key, value in props.items() if key not in ['ct', 'brnd', 'page', 'by'] }
+
+        # Проверяем наличие filter_props в validated_props
+        for prop in filter_props:
+            exist = validated_props.filter(prop_alias=prop).exists()
+            if not exist:
+                queryset = queryset.none()
 
         queryset = FilterProducts.hard_filter(self, qs=queryset, props=props)
-        # logs.append(len(queryset))
         queryset = FilterProducts.soft_filter(self, qs=queryset, validated_props=validated_props, props=props)
-        # logs.append(len(queryset))
         queryset = FilterProducts.ordering(self, qs=queryset, props=props)
-        # logs.append(len(queryset))
-        # send_alert_to_agent(logs=f"'This debug:', { logs }")
-        # Фильтруем верхний и нижний порог стоимости
-        # .filter(prod_price__price__range=[price_min[0], price_max[0]])
 
         return queryset
 
