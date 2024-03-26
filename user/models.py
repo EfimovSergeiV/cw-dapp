@@ -109,3 +109,23 @@ class UserWatcherModel(models.Model):
 
     def __str__(self):
         return f'{ self.tmp_id }'
+    
+
+class GoogleUserModel(models.Model):
+    """ Пользователи, авторизованные через Google """
+
+    uuid = models.UUIDField(verbose_name="Идентификатор", null=True, blank=True)
+    email = models.EmailField(verbose_name="email", unique=True)
+    email_verified = models.BooleanField(verbose_name="email подтверждён", default=False)
+    family_name = models.CharField(verbose_name="Фамилия", max_length=100)
+    given_name = models.CharField(verbose_name="Имя", max_length=100)
+    google_id = models.CharField(verbose_name="ID", max_length=100, unique=True)
+    name = models.CharField(verbose_name="Имя пользователя", max_length=100)
+    picture = models.URLField(verbose_name="Фото", max_length=1000)
+
+    class Meta:
+        verbose_name = "Google пользователь"
+        verbose_name_plural = "Google пользователи"
+
+    def __str__(self):
+        return self.name

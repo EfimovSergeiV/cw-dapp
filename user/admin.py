@@ -76,11 +76,18 @@ class UserWatcherAdmin(admin.ModelAdmin):
         )
 
 
+class GoogleUserAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email', 'name')
+    list_display_links = ('id', 'email', 'name')
+    search_fields = ('email', 'name',)
+    # readonly_fields = ('uuid', 'email', 'email_verified', 'name', 'picture', 'given_name', 'family_name', 'google_id',)
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(SubscriberModel)
 admin.site.register(FeedBackModel, FeedBackAdmin)
-
+admin.site.register(GoogleUserModel, GoogleUserAdmin)
 admin.site.register(UserWatcherModel, UserWatcherAdmin)
 
 # admin.site.register(LikeProdModel, LikeProdAdmin)

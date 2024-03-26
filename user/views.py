@@ -214,13 +214,17 @@ class UserWatcherView(APIView):
         """ Обновляем информацию о просмотренных товарах """
 
         if request.headers.get('Authorization'):
-            qs = UserWatcherModel.objects.filter(tmp_id=request.headers.get('Authorization'))
 
-            if qs:  # Если tmp_id был удалён в активной сессии вручную, то в текущей сессии ошибка
-                for key in request.data.keys():
-                    current_data = qs[0].prods if qs[0].prods else { "comp": [], "like": [], "viewed": [] }
-                    current_data[key] = [request.data.get(key),] + current_data[key][0:11] if request.data.get(key) not in current_data[key] else current_data[key]
-                    qs.update(updatedAt=timezone.now(), prods=current_data)
+            try:
+                qs = UserWatcherModel.objects.filter(tmp_id=request.headers.get('Authorization'))
+                
+                if qs:  # Если tmp_id был удалён в активной сессии вручную, то в текущей сессии ошибка
+                    for key in request.data.keys():
+                        current_data = qs[0].prods if qs[0].prods else { "comp": [], "like": [], "viewed": [] }
+                        current_data[key] = [request.data.get(key),] + current_data[key][0:11] if request.data.get(key) not in current_data[key] else current_data[key]
+                        qs.update(updatedAt=timezone.now(), prods=current_data)
+            except:
+                pass
 
         return Response(status=status.HTTP_201_CREATED)
     
@@ -307,3 +311,35 @@ class DataUserOrdersView(APIView):
             return Response(sr.data)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
+
+class GoogleUserView(APIView):
+    """ Авторизация через Google """
+
+    def post(self, request):
+
+        data = {
+            "uuid": request.data.get('uuid'),
+            "email": request.data.get('email'),
+            "email_verified": request.data.get('email_verified'),
+            "family_name": request.data.get('family_name'),
+            "given_name": request.data.get('given_name'),
+            "name": request.data.get('name'),
+            "picture": request.data.get('picture'),
+            "google_id": request.data.get('id'),
+        }
+
+        user = GoogleUserModel.objects.filter(google_id=request.data.get('id'))
+
+        serializer = serializers.GoogleUserSerializer(data=data)
+
+        if not user.exists():
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                print(serializer.errors)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            serializer.update(instance=user[0] ,validated_data=data)
+            return Response(status=status.HTTP_200_OK)

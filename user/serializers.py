@@ -71,3 +71,11 @@ class DataUserOrdersSerializer(serializers.Serializer):
     """ История заказов пользователя """
 
     userdata = serializers.JSONField()
+
+
+class GoogleUserSerializer(serializers.ModelSerializer):
+    """ Пользователи авторизованные через Google """
+
+    class Meta:
+        model = GoogleUserModel
+        fields = '__all__'

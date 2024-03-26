@@ -11,4 +11,5 @@ urlpatterns = [
     re_path('reviews/', ProductReviewView.as_view()),
     path('message_close/<slug:uuid>/', edit_message_status, name='edit_message_status'),
     # path('product/vcode<int:vcode>', ProductView.as_view()),
+    path('google-user/', GoogleUserView.as_view()),
 ]
