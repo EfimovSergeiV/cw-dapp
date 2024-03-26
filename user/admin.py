@@ -80,7 +80,7 @@ class GoogleUserAdmin(admin.ModelAdmin):
     list_display = ('id', 'email', 'name')
     list_display_links = ('id', 'email', 'name')
     search_fields = ('email', 'name',)
-    # readonly_fields = ('uuid', 'email', 'email_verified', 'name', 'picture', 'given_name', 'family_name', 'google_id',)
+    readonly_fields = ('uuid', 'email', 'email_verified', 'name', 'picture', 'given_name', 'family_name', 'google_id',)
 
 
 admin.site.unregister(User)
