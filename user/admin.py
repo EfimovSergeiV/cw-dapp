@@ -70,6 +70,7 @@ class UserWatcherAdmin(admin.ModelAdmin):
     list_display = ('tmp_id', 'createdAt', 'updatedAt', )
     list_display_links = ('tmp_id', 'createdAt', 'updatedAt',  )
     readonly_fields = ('prods', 'parse_prods',  'createdAt', 'updatedAt', )
+    search_fields = ('tmp_id', )
     fieldsets = (
         ("Активность", {'fields': (( 'createdAt', 'updatedAt', ),)}),
         ("Сессия", {'fields': (('parse_prods'),)}),
