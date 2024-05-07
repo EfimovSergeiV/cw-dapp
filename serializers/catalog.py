@@ -284,5 +284,6 @@ class SearchSerializer(serializers.ModelSerializer):
             'id', 
             'name',
             'only_price',
+            'status',
             'preview_image',
             )
