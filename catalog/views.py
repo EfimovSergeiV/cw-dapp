@@ -175,7 +175,11 @@ class ListProductsView(ListAPIView):
     def get_queryset(self):
         props = dict(self.request.query_params)
 
-        print(props)
+        # BUGFIX для UTM-меток поисковиков
+        # Удаляем все ключи, длина которых больше 4
+        for key in list(props.keys()):
+            if len(key) > 4:
+                del props[key]
 
         queryset = ProductModel.objects.filter(activated=True).order_by('brand__priority')
         validated_props = []
@@ -196,7 +200,6 @@ class ListProductsView(ListAPIView):
             else:
                 self.meta["inserted"] = None
 
-
             validated_props = PropsNameModel.objects.filter(category=props['ct'][0])
 
             # qs_childs = category.get_children()
@@ -214,6 +217,10 @@ class ListProductsView(ListAPIView):
         # По требованию яндекса, если не валидный фильтр, то возвращаем 404 Not Found
         # Удаляем из props ct, brnd, page
         filter_props = { key: value for key, value in props.items() if key not in ['ct', 'brnd', 'page', 'by'] }
+
+
+
+
 
         # Проверяем наличие filter_props в validated_props
         for prop in filter_props:
