@@ -28,6 +28,8 @@ urlpatterns = [
 
 
     # path('glsvar-bot/', glsvar_bot, name='mail_template'),
+
+    path('oneclick/', OneClickOrderView.as_view()),
     
 
     # Роутинг для эквайринга Сбер

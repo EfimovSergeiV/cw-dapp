@@ -11,6 +11,7 @@ from catalog.models import *
 from serializers.catalog import * # Мигрировать в сериализаторы ниже
 from catalog.serializers import (
     CategoryRecursiveSerializer,
+    ExtendedProductSerializer,
 )
 
 from django.db.models import CharField
@@ -21,7 +22,7 @@ from main.models import CourceCurrency
 from catalog.utils import *
 
 from elasticsearch_dsl import Q
-from catalog.documents import ProductDocument#, ProductKeywordDocument
+from catalog.documents import ProductDocument, ExtendedProductDocument
 
 CharField.register_lookup(Lower)
 
@@ -316,8 +317,6 @@ import random
 список товаров которые нужно выдать
 процент вероятности отображения
 
-
-
 """
 
 
@@ -500,4 +499,53 @@ class ListCitiesView(APIView):
     def get(self, request):
         list_city = CityModel.objects.all()
         serializer = CitySerializer(list_city, many=True, context={'request':request})
+        return Response(serializer.data)
+
+
+
+class ExtendedProductView(APIView):
+    """ Расширенный каталог товаров """
+
+    serializer_class = ExtendedProductSerializer
+    document_class = ExtendedProductDocument
+
+    def get(self, request, id=None):
+
+        if id is None:
+            return Response(status=status.HTTP_200_OK)
+        
+        product_qs = ExtendedProductModel.objects.get(id=id)
+        serializer = ExtendedProductSerializer(product_qs, context={'request':request})
+        return Response(serializer.data)
+    
+
+    def post(self, request):
+
+        name = request.data.get('name')
+        if name == "all":
+            qs = ExtendedProductModel.objects.all()
+
+        else:
+            query = Q('multi_match', query=name,
+                    fields=[
+                        'name',
+                    ], fuzziness='auto')
+
+            search = self.document_class.search().query(query)[0:30]
+            response = search.execute()
+
+            prods = [prod.id for prod in response ]
+            preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(prods)])
+            qs = ExtendedProductModel.objects.filter(id__in=prods).order_by(preserved)
+
+        
+        if request.data.get('city') != "all":
+            qs = qs.filter(city=request.data.get('city'))
+
+        if request.data.get('shop') != "all":
+            qs = qs.filter(shop=request.data.get('shop'))
+
+        
+        serializer = self.serializer_class(qs, many=True, context={'request':request})
+
         return Response(serializer.data)

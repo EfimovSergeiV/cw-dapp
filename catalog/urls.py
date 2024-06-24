@@ -14,6 +14,11 @@ urlpatterns = [
     path('listcities/', ListCitiesView.as_view()),
     path('brands/', BrandProductView.as_view()),
     path('prod/<int:pk>/', ProductView.as_view()),
+
+
+    path('ext/<int:id>/', ExtendedProductView.as_view()),
+    re_path('ext/search/', ExtendedProductView.as_view()),
+
     
     re_path('related/', OneRandomProductView.as_view()),
     # re_path('analogs/', OneRandomProductView.as_view()),
@@ -24,6 +29,8 @@ urlpatterns = [
     re_path('ctbrand/', BrandCategoryView.as_view()),
     re_path('random/', ProdRandomView.as_view()),
     re_path('comp/', ProductCompView.as_view()),
+
+
 
     # re_path('test/', TestProperty.as_view()),
 ]

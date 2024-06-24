@@ -3,6 +3,7 @@ from rest_framework_recursive.fields import RecursiveField
 from catalog.models import (
     CategoryModel,
     ProductModel,
+    ExtendedProductModel,
 )
 
 
@@ -23,4 +24,12 @@ class ProductSerializer(serializers.ModelSerializer):
         model = ProductModel
         fields = '__all__'
 
+
+
+class ExtendedProductSerializer(serializers.ModelSerializer):
+    """ Сериализатор товаров расширенного каталога """
+    
+    class Meta:
+        model = ExtendedProductModel
+        fields = '__all__'
 

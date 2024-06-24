@@ -400,3 +400,26 @@ def send_payment_email(request, uuid):
 #             'total': order.total,
 #             'client_product': products,
 #         })
+
+
+
+class OneClickOrderView(APIView):
+    """ Оформление заказа в один клик """
+
+    def post(self, request):
+
+        prod_type = request.data.get('prod_type')
+
+        order_data = {
+            "name": request.data.get('name'),
+            "contact": request.data.get('contact'),
+            "msger": request.data.get('msger'),
+            "shop": request.data.get('shop'),
+            "comment": request.data.get('comment'),
+            "prods": request.data.get('prods'),
+        }
+
+        print('ONECLICK-ORDER: ', prod_type, order_data)
+
+
+        return Response(status=status.HTTP_200_OK)

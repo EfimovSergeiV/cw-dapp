@@ -271,6 +271,15 @@ class CatalogFileAdmin(admin.ModelAdmin):
     search_fields = ('id', 'name')
 
 
+
+class ExtendedProductAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'price', 'quantity', 'shop',)
+    list_display_links = ('id', 'name', 'price', 'quantity', 'shop',)
+    search_fields = ('id', 'name')
+    list_filter = ('city', 'shop', 'last_update')
+
+
+
 admin.site.register(BrandProductModel, BrandProductAdmin)
 # admin.site.register(CityModel)
 admin.site.register(CategoryModel, CategoryAdmin)
@@ -279,6 +288,7 @@ admin.site.register(ShopAdressModel, ShopArdessAdmin)
 admin.site.register(ProductModel, ProductAdmin)
 admin.site.register(PropsNameModel, PropNameAdmin)
 admin.site.register(CatalogFileModel, CatalogFileAdmin)
+admin.site.register(ExtendedProductModel, ExtendedProductAdmin)
 
 
 # admin.site.register(ProductFeedbackModel) ### FeedBack

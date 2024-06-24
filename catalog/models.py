@@ -489,3 +489,24 @@ class CatalogFileModel(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+class ExtendedProductModel(models.Model):
+    """ Товары для расширенного поиска (каталога) """
+
+    name = models.CharField(verbose_name="Название", max_length=200)
+    city = models.CharField(verbose_name="Город", max_length=100)
+    shop = models.CharField(verbose_name="Магазин", max_length=100)
+    card_link = models.JSONField(verbose_name="Ссылка на карточку товара", null=True, blank=True)
+    price = models.IntegerField(verbose_name="Цена", null=True, blank=True)
+    quantity = models.IntegerField(verbose_name="Количество", null=True, blank=True)
+    last_update = models.DateTimeField(verbose_name="Последнее обновление", auto_now=True)
+
+    class Meta:
+        verbose_name = "Товар расширенного каталога"
+        verbose_name_plural = "Товары расширенного каталога"
+
+    def __str__(self):
+        return self.name
+    
