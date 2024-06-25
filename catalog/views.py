@@ -520,12 +520,9 @@ class ExtendedProductView(APIView):
     
 
     def post(self, request):
-
         name = request.data.get('name')
-        if name == "all":
-            qs = ExtendedProductModel.objects.all()
 
-        else:
+        if name:
             query = Q('multi_match', query=name,
                     fields=[
                         'name',
@@ -537,6 +534,8 @@ class ExtendedProductView(APIView):
             prods = [prod.id for prod in response ]
             preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(prods)])
             qs = ExtendedProductModel.objects.filter(id__in=prods).order_by(preserved)
+        else:
+            qs = ExtendedProductModel.objects.all()
 
         
         if request.data.get('city') != "all":
