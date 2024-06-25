@@ -1,0 +1,14 @@
+<pre>
+Заказ {{ order_number }}
+Магазин: {{ shop }}
+Клиент: {{ name }}
+Контакт: {{ msger }} {{ contact}}
+
+Итог заказа: - {{ total }} RUB
+Комментарий: {{ comment }}
+</pre>
+    {% for product in prods %}
+    Название: {{ product.name }}
+    Стоимость (шт.): {{ product.price }} RUB
+    Кол-во: {{ product.quantity }} 
+    {% endfor %}

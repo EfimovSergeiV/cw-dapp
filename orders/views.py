@@ -20,7 +20,7 @@ from orders.models import *
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
-from main.agent import send_alert_to_agent
+from main.agent import send_alert_to_agent, one_click_order_to_agent
 from django.shortcuts import render
 
 from orders.utils import *
@@ -402,24 +402,41 @@ def send_payment_email(request, uuid):
 #         })
 
 
+# Сумма заказа (OneClick)
+def get_tolal(products):
+    """ Вычисление суммы по позициям заказа """
+    total = 0
+    for product in products:
+        total += product['price'] * product['quantity']
+    return total
+
 
 class OneClickOrderView(APIView):
     """ Оформление заказа в один клик """
 
     def post(self, request):
+        
+        map_region = {
+            "Псков": "PSK",
+        }
+
+        # Присвоение кода и вычисление суммы по позициям заказа
+        order_number = map_region[str(request.data.get("city"))] + str(random.randrange(1000000, 1999999))
+
+        print(request.data)
 
         prod_type = request.data.get('prod_type')
-
-        order_data = {
+        order = {
+            "order_number": order_number,
             "name": request.data.get('name'),
             "contact": request.data.get('contact'),
             "msger": request.data.get('msger'),
             "shop": request.data.get('shop'),
             "comment": request.data.get('comment'),
+            "total": get_tolal(request.data.get('prods')),
             "prods": request.data.get('prods'),
         }
 
-        print('ONECLICK-ORDER: ', prod_type, order_data)
+        one_click_order_to_agent(order)
 
-
-        return Response(status=status.HTTP_200_OK)
+        return Response({ "order": order_number})

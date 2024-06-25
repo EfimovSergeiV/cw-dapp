@@ -13,6 +13,25 @@ from django.template.loader import render_to_string
 bot = Bot(token=mailagent_bot_token)
 
 
+def one_click_order_to_agent(order=None):
+    """ Уведомление заказа в один клик """
+
+    chats_to_send_notifications = mail_contacts['admins']
+    text_to_send = render_to_string('oneclick.html', {
+        "order_number": order['order_number'],
+        "name": order['name'],
+        "contact": order['contact'],
+        "msger": order['msger'],
+        "shop": order['shop'],
+        "comment": order['comment'],
+        "total": order['total'],
+        "prods": order['prods'],
+    })
+    for chat in chats_to_send_notifications:
+        bot.send_text(chat_id=chat, text=text_to_send, parse_mode="HTML")
+
+
+
 def send_alert_to_agent(
         order=None, 
         payment=None, 
