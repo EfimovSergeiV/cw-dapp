@@ -40,10 +40,11 @@ class Command(BaseCommand):
         pass
 
 
-
+from time import sleep
+import datetime
 prods_qs = ExtendedProductModel.objects.all()
 
-with open(f'ptz-price.json', 'r') as file:
+with open(f'psk-n.json', 'r') as file:
     data = json.load(file)
 
 
@@ -53,6 +54,21 @@ for prod in data:
         name=prod["name"],
         price=prod["price"],
         quantity=prod["quantity"],
-        city="Петрозаводск",
-        shop='ул. Заводская, д. 2',
+        city="Псков",
+        shop_id = 1,
+        shop='пос. Неёлово, ул.Юбилейная д. 5ж',
     )
+
+
+
+    # prod_qs = prods_qs.filter(name=prod["name"], shop_id = 1)
+
+    # print(f"prod - {prod['name']} ({len(prod_qs)}) { prod_qs }")
+
+    # if len(prod_qs) == 1:
+    #     prod_qs.update(
+    #         price=prod["price"],
+    #         quantity=prod["quantity"],
+    #         shop_id = 1,
+    #         last_update = datetime.datetime.now()
+    #     )

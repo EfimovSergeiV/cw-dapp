@@ -497,6 +497,7 @@ class ExtendedProductModel(models.Model):
 
     name = models.CharField(verbose_name="Название", max_length=200)
     city = models.CharField(verbose_name="Город", max_length=100)
+    shop_id = models.IntegerField(verbose_name="ID магазина", null=True, blank=True)
     shop = models.CharField(verbose_name="Магазин", max_length=100)
     card_link = models.JSONField(verbose_name="Ссылка на карточку товара", null=True, blank=True)
     price = models.IntegerField(verbose_name="Цена", null=True, blank=True)
