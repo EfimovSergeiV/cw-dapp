@@ -42,7 +42,7 @@ from time import sleep
 import datetime
 prods_qs = ExtendedProductModel.objects.all()
 
-with open(f'psk-a.json', 'r') as file:
+with open(f'psk-s.json', 'r') as file:
     data = json.load(file)
 
 
@@ -55,8 +55,8 @@ for prod in data:
         price=prod["price"],
         quantity=prod["quantity"],
         city="Псков",
-        shop_id = 2,
-        shop='ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)',
+        shop_id = 3,
+        shop='ул.Шоссейная д. 3а',
     )
 
 
