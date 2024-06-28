@@ -1,6 +1,4 @@
-""" 
-
-    Парсер выгрузки товаров из 1С в расширенный каталог
+""" Парсер выгрузки товаров из 1С в расширенный каталог
 
     Псков, ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)
     Псков, ул.Шоссейная д.3а
@@ -17,12 +15,12 @@
 
     
     Магазины:
-        ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)
-        пос. Неёлово, ул.Юбилейная д. 5ж
-        ул.Шоссейная д.3а
-        проспект Ленина д.57
-        Посёлок Тихвинка 69, ТК "Город Мастеров" павильон №73
-        ул. Заводская, д. 2
+    1.    пос. Неёлово, ул.Юбилейная д. 5ж
+    2.    ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)
+    3.    ул.Шоссейная д. 3а
+    4.    проспект Ленина д.57
+    5.    Посёлок Тихвинка 69, ТК "Город Мастеров" павильон №73
+    6.    ул. Заводская, д. 2
         
 
 """
@@ -44,10 +42,12 @@ from time import sleep
 import datetime
 prods_qs = ExtendedProductModel.objects.all()
 
-with open(f'psk-n.json', 'r') as file:
+with open(f'psk-a.json', 'r') as file:
     data = json.load(file)
 
 
+
+# # CREATE NEW PRODUCTS
 for prod in data:
     print(prod["name"], prod["price"], prod["quantity"])
     prods_qs.create(
@@ -55,20 +55,22 @@ for prod in data:
         price=prod["price"],
         quantity=prod["quantity"],
         city="Псков",
-        shop_id = 1,
-        shop='пос. Неёлово, ул.Юбилейная д. 5ж',
+        shop_id = 2,
+        shop='ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)',
     )
 
 
 
-    # prod_qs = prods_qs.filter(name=prod["name"], shop_id = 1)
+# UPDATE PRODUCTS
+# for prod in data:
+#     prod_qs = prods_qs.filter(name=prod["name"], shop_id = 1)
 
-    # print(f"prod - {prod['name']} ({len(prod_qs)}) { prod_qs }")
+#     print(f"prod - {prod['name']} ({len(prod_qs)}) { prod_qs }")
 
-    # if len(prod_qs) == 1:
-    #     prod_qs.update(
-    #         price=prod["price"],
-    #         quantity=prod["quantity"],
-    #         shop_id = 1,
-    #         last_update = datetime.datetime.now()
-    #     )
+#     if len(prod_qs) == 1:
+#         prod_qs.update(
+#             price=prod["price"],
+#             quantity=prod["quantity"],
+#             shop_id = 1,
+#             last_update = datetime.datetime.now()
+#         )
