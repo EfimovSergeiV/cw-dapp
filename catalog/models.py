@@ -564,12 +564,10 @@ class ImportExtendedProductsModel(models.Model):
 
         prods_qs = ExtendedProductModel.objects.filter(shop=self.get_shop_display())
         prods_updated = []
-        print(f"Товаров в базе по магазину {self.get_shop_display()} - {prods_qs.count()}")
         
         # печатаем полный путь к файлу self.file.path
         df = pd.read_excel(f'{self.file.path}', sheet_name='TDSheet', header=None, index_col=0)
         for index, row in df.iterrows():
-            print(f'{str(index).replace("  ", "")} Стоимость: {row[12]} Наличие {row[13]}')
 
             # Обновляем или создаём товар
             price = row[12] if type(row[12]) == int else None
@@ -580,7 +578,6 @@ class ImportExtendedProductsModel(models.Model):
                 prod = prods_qs.filter(name=str(index).replace("  ", ""))
 
                 if prod.exists() and len(prod) == 1:
-                    print(f"Обновляем {prod[0].id}")
                     prod.update(
                         price=price,
                         quantity=quantity,
