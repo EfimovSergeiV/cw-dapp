@@ -52,7 +52,7 @@ class ShopAdressModel(models.Model):
 
     class Meta:
         verbose_name = "Магазин"
-        verbose_name_plural = "Магазины"
+        verbose_name_plural = "1. Магазины"
         ordering = ['position',]
 
     def __str__(self):
@@ -80,7 +80,7 @@ class CategoryModel(MPTTModel, AbsActivatedModel):
 
     class Meta:
         verbose_name = "Категория"
-        verbose_name_plural = "Категории"
+        verbose_name_plural = "3. Категории"
         
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -108,7 +108,7 @@ class BrandProductModel(models.Model):
 
     class Meta:
         verbose_name = "Бренд"
-        verbose_name_plural = "Бренды"
+        verbose_name_plural = "2. Бренды"
         ordering = ['-priority',]
 
     def __str__(self):
@@ -176,7 +176,7 @@ class ProductModel(AbsProductModel):
 
     class Meta:
         verbose_name = "Товар"
-        verbose_name_plural = "Товары"
+        verbose_name_plural = "5. Товары"
         unique_together = ['name',]
         ordering = ['name',]
 
@@ -300,7 +300,7 @@ class PropsNameModel(AbsActivatedModel):
 
     class Meta:
         verbose_name = "Свойство категории"
-        verbose_name_plural = "Свойства категорий"
+        verbose_name_plural = "4. Свойства категорий"
 
     def __str__(self):
         return self.name
@@ -485,7 +485,7 @@ class CatalogFileModel(models.Model):
 
     class Meta:
         verbose_name = "Файл"
-        verbose_name_plural = "Файлы"
+        verbose_name_plural = "7. Файлы"
 
     def __str__(self):
         return self.name
@@ -506,8 +506,105 @@ class ExtendedProductModel(models.Model):
 
     class Meta:
         verbose_name = "Товар расширенного каталога"
-        verbose_name_plural = "Товары расширенного каталога"
+        verbose_name_plural = "6. Товары расширенного каталога"
 
     def __str__(self):
         return self.name
     
+
+
+import pandas as pd
+
+class ImportExtendedProductsModel(models.Model):
+    """ Импорт товаров xls из экспорта 1С """
+
+    """ SHOPS
+        Псков, ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)
+        Псков, ул.Шоссейная д.3а
+        Великие Луки, проспект Ленина д.57    
+        Смоленск, ул. Посёлок Тихвинка 69, ТК "Город Мастеров" павильон №73
+        Петрозаводск, ул. Заводская, д. 2
+
+    """
+
+    SHOPS = (
+        ('1', 'ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)'),
+        ('2', 'ул.Шоссейная д.3а'),
+        ('3', 'пос. Неёлово, ул.Юбилейная д. 5ж'),
+        ('4', 'проспект Ленина д.57'),
+        ('5', 'ул. Посёлок Тихвинка 69, ТК "Город Мастеров" павильон №73'),
+        ('6', 'ул. Заводская, д. 2'),
+    )
+
+
+    created_date = models.DateField(verbose_name="Дата выгрузки", auto_now=True)
+    shop = models.CharField(verbose_name="Магазин", choices=SHOPS, max_length=100, null=True, blank=True)
+    file = models.FileField(verbose_name="Файл xls", upload_to='c/import-1c/')
+
+    class Meta:
+        verbose_name = "Таблица импорта с товаром"
+        verbose_name_plural = "7. Таблицы импорта с товарами"
+
+    def __str__(self):
+        # return shop value from tuple and created date
+        return self.get_shop_display() + ' - ' + str(self.created_date)
+        
+    def save(self, *args, **kwargs):
+
+        super(ImportExtendedProductsModel, self).save(*args, **kwargs)
+
+        SHOPS = {
+            "1": "Псков",
+            "2": "Псков",
+            "3": "Псков",
+            "4": "Великие Луки",
+            "5": "Смоленск",
+            "6": "Петрозаводск",
+        }
+
+        prods_qs = ExtendedProductModel.objects.filter(shop=self.get_shop_display())
+        prods_updated = []
+        print(f"Товаров в базе по магазину {self.get_shop_display()} - {prods_qs.count()}")
+        
+        # печатаем полный путь к файлу self.file.path
+        df = pd.read_excel(f'{self.file.path}', sheet_name='TDSheet', header=None, index_col=0)
+        for index, row in df.iterrows():
+            print(f'{str(index).replace("  ", "")} Стоимость: {row[12]} Наличие {row[13]}')
+
+            # Обновляем или создаём товар
+            price = row[12] if type(row[12]) == int else None
+            quantity = row[13] if type(row[13]) == int else None
+
+            if price and quantity:
+
+                prod = prods_qs.filter(name=str(index).replace("  ", ""))
+
+                if prod.exists() and len(prod) == 1:
+                    print(f"Обновляем {prod[0].id}")
+                    prod.update(
+                        price=price,
+                        quantity=quantity,
+                    )
+                    prods_updated.append(prod[0].id)
+
+                elif prod.exists() and len(prod) > 1:
+                    # Удаляем дубликаты /// !!! ПЕРЕСМОТРЕТЬ ЛОГИКУ
+                    prod.delete()
+
+                else:
+                    stat = prods_qs.create(
+                        name=str(index).replace("  ", ""),
+                        city=SHOPS[self.shop],
+                        shop_id= self.shop,
+                        shop=self.get_shop_display(),
+                        price=price,
+                        quantity=quantity,
+                    )
+
+                    prods_updated.append(stat.id)
+
+                
+        # Удаляем товары которых нет в обновлённых или созданных
+        objects_to_delete = prods_qs.exclude(id__in=prods_updated)
+        objects_to_delete.delete()
+

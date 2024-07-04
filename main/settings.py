@@ -169,3 +169,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/files/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files/')
 MPTT_ADMIN_LEVEL_INDENT = 40
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240

@@ -283,6 +283,16 @@ class ExtendedProductAdmin(admin.ModelAdmin):
     )
 
 
+class ImportExtendedProductsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'shop', 'created_date')
+    list_display_links = ('id', 'shop', 'created_date')
+    fieldsets = (
+        (' ', {'fields': ('file', 'shop', 'created_date')}),
+    )
+    readonly_fields = ('created_date', )
+
+
+
 admin.site.register(BrandProductModel, BrandProductAdmin)
 # admin.site.register(CityModel)
 admin.site.register(CategoryModel, CategoryAdmin)
@@ -292,7 +302,7 @@ admin.site.register(ProductModel, ProductAdmin)
 admin.site.register(PropsNameModel, PropNameAdmin)
 admin.site.register(CatalogFileModel, CatalogFileAdmin)
 admin.site.register(ExtendedProductModel, ExtendedProductAdmin)
-
+admin.site.register(ImportExtendedProductsModel, ImportExtendedProductsAdmin)
 
 # admin.site.register(ProductFeedbackModel) ### FeedBack
 # admin.site.register(PriceModel, PriceAdmin)
