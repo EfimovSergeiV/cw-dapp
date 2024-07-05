@@ -529,7 +529,7 @@ class ImportExtendedProductsModel(models.Model):
 
     SHOPS = (
         ('1', 'ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)'),
-        ('2', 'ул.Шоссейная д.3а'),
+        ('2', 'ул.Шоссейная д. 3а'),
         ('3', 'пос. Неёлово, ул.Юбилейная д. 5ж'),
         ('4', 'проспект Ленина д.57'),
         ('5', 'ул. Посёлок Тихвинка 69, ТК "Город Мастеров" павильон №73'),
@@ -548,11 +548,9 @@ class ImportExtendedProductsModel(models.Model):
     def __str__(self):
         # return shop value from tuple and created date
         return self.get_shop_display() + ' - ' + str(self.created_date)
-        
+
     def save(self, *args, **kwargs):
-
         super(ImportExtendedProductsModel, self).save(*args, **kwargs)
-
         SHOPS = {
             "1": "Псков",
             "2": "Псков",
