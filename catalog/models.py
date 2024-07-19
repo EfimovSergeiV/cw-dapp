@@ -485,7 +485,7 @@ class CatalogFileModel(models.Model):
 
     class Meta:
         verbose_name = "Файл"
-        verbose_name_plural = "7. Файлы"
+        verbose_name_plural = "8. Файлы"
 
     def __str__(self):
         return self.name

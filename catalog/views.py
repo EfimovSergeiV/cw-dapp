@@ -321,60 +321,109 @@ import random
 
 
 class OneRandomProductView(APIView):
-    """ Возвращает случайный товар из запрошенных категорий, если передано меньше четырёх категорий, добавляет до четырёх. """
+    """ Возвращает случайный товар из запрошенных категорий, если передано меньше четырёх категорий, добавляет до четырёх. 
+    
+        ОСТАВЛЯЕМ НА ВРЕМЯ ДЛЯ ОБРАТНОЙ СОВМЕСТИМОСТИ   
+    
+    """
 
     serializer_class = ProductSerializer
     queryset = ProductModel.objects.filter(activated=True)
-    cat_qs = CategoryModel.objects.all()#filter(activated=True)
+    cat_qs = CategoryModel.objects.filter(activated=True)
 
     def get(self, request):
-        try:
-            cts = dict(self.request.query_params)
+        cts = dict(self.request.query_params).get('ct')
+        print(cts)
+        
+        if cts:
+            categories_qs = self.cat_qs.filter(id__in=cts)
             prods = []
 
-            # Добавляем в выдачу по одному случайному товару из указанной категории
-            for ct in cts['ct']:
-                descendants = [ child.id for child in self.cat_qs.get(id=ct).get_descendants(include_self=True) ]
+            for ct_qs in categories_qs:
+                descendants = [ child.id for child in self.cat_qs.get(id=ct_qs.id).get_descendants(include_self=True) ]
                 prods.append(self.queryset.filter(category_id__in=descendants).order_by("?")[0])
 
-            # Если в списке меньше черырёх, дозабиваем, что бы на фронте было что показать.
-            all_categories = []
+            # Добиваем до 4х товаров или 2х
+            if len(cts) == 2 and len(prods) < 2 and cts[0] == cts[1]:
+                prods.append(self.queryset.filter(category_id__in=descendants).order_by("?")[0])
 
-            if len(self.queryset.filter(category_id__in=cts['ct'])) < 4:
-                # Если в категории меньше 4 товаров, то пропускаем WHILE
-                return Response([])
+            elif len(prods) < 4:
+                qs = self.queryset.filter(category_id__in=descendants).order_by("?")[0: 4 - len(prods)]
+                print(qs)
+                prods += qs
 
-            while len(prods) < 4:
 
-                for ct in cts['ct']:
-                    descendants = [ child.id for child in self.cat_qs.get(id=ct).get_descendants(include_self=True) ]
-                    all_categories += descendants
-                    prod = self.queryset.filter(category_id__in=descendants).order_by("?")[0]
-                    
-                    if prod not in prods:
-                        prods.append(prod)
-
-            # Продвигаемые товары из запрошенных категорий
-            show_more = [ qs for qs in self.queryset.filter(category_id__in=all_categories, show_more=True).order_by("?") ]
-
-            random.shuffle(prods)
-
-            probability = 0.7
-            if random.random() < probability:
-                prods = show_more + [ x for x in prods if x not in show_more ]
-                start, end = prods[:2], prods[2:]
-                random.shuffle(start)
-                prods = start + end
-
+            print(f'PRODS: {len(prods)} {prods}')
             serializer = self.serializer_class(prods[0:4], many=True, context={'request': request})
 
-            return Response(serializer.data)
-        
-        except KeyError:
+        else:
             return Response([])
+
+        print(len(serializer.data))
+
+        return Response(serializer.data)
+    
+
+
+
+class AnalogsProductView(APIView):
+    """ Поиск аналогов 2-x """
+
+    serializer_class = ProductSerializer
+    queryset = ProductModel.objects.filter(activated=True)
+
+    def get(self, request):
+        ct = request.query_params.get('ct')
         
-        except ObjectDoesNotExist:
+        if ct:
+            prods_qs = self.queryset.filter(category_id=ct).order_by("?")
+
+            if len(prods_qs) > 2:
+                data_qs = prods_qs[0:2]
+
+            serializer = self.serializer_class(data_qs, many=True, context={'request':request})
+        
+        else:
             return Response([])
+
+
+        return Response(serializer.data)
+
+
+
+class RelatedProductView(APIView):
+    """ Связанные товары 4-x """
+
+    serializer_class = ProductSerializer
+    queryset = ProductModel.objects.filter(activated=True)
+
+    def get(self, request):
+        cts = dict(self.request.query_params).get('ct')
+        
+        try:
+            cts_qs = CategoryModel.objects.filter(activated=True).filter(id__in=cts)
+            prods = []
+
+            counter = 8
+
+            while len(prods) < 4 and counter > 0:
+                random_ct = random.choice(cts_qs)
+
+                descendants = [ child.id for child in cts_qs.get(id=random_ct.id).get_descendants(include_self=True) ]
+                qs = self.queryset.filter(category_id__in=descendants).order_by("?")
+
+                if len(qs) > 0:
+                    prods.append(qs[0])
+                
+                counter -= 1
+
+            serializer = self.serializer_class(prods, many=True, context={'request': request})
+
+        except:
+            return Response([])
+
+        return Response(serializer.data)
+
 
 
 class RecommendView(APIView):
