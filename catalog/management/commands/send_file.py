@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
 
 
-target = "@AoLG-JRaQb24KBu3ZwI"
+target = "@AoLIusoO9K_QaPoKnkM"
 
 # f = {'file data': open('./img.jpg', 'rb')}
 # h = { "token": mailagent_bot_token, "chatId": target, }
@@ -29,4 +29,4 @@ def image_cb(file_path):
         file = open(file_path, 'rb')
     )
 
-image_cb(file_path='./img.jpg')
+image_cb(file_path='/home/anon/Загрузки/1333456049.jpg')

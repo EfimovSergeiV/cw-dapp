@@ -44,6 +44,8 @@ def send_alert_to_agent(
     """ Отправка активностей в агент """
 
     if order:
+        """ Уведомление о заказе """
+
         chats_to_send_notifications = mail_contacts['admins']
         text_to_send = render_to_string('magent.html', {
             'uuid': order['uuid'],
@@ -95,6 +97,8 @@ def send_alert_to_agent(
         text_to_send = f"{ logs }"
 
     if pricerequest:
+        """ Запрос на стоимость товара """
+
         chats_to_send_notifications = mail_contacts['admins']
         text_to_send = f"""
 <pre>
@@ -103,8 +107,8 @@ def send_alert_to_agent(
 Город клиента: { pricerequest['city'] }
 </pre>
 
-Товар: 
-{ pricerequest['product'] }
+Товар:
+<a href="https://glsvar.ru/product/{ str(pricerequest['product']).split()[1] }">{ pricerequest['product'] }</a>
 
 ---
 <a href="https://api.glsvar.ru/o/pricerequest_close/{ pricerequest['uuid'] }">Ответил</a>

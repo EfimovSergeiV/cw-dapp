@@ -44,4 +44,5 @@ class ExtendedProductDocument(Document):
         fields = [
             'id',
             'name',
+            'shop_id',
         ]

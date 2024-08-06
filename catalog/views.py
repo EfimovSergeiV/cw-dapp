@@ -552,6 +552,19 @@ class ListCitiesView(APIView):
 
 
 
+"""
+    SHOPS = 
+        {
+            '1': 'ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)',
+            '2': 'ул.Шоссейная д.3а',
+            '3': 'пос. Неёлово, ул.Юбилейная д. 5ж',
+            '4': 'проспект Ленина д.57',
+            '5': 'ул. Посёлок Тихвинка 69, ТК "Город Мастеров" павильон №73',
+            '6': 'ул. Заводская, д. 2'
+        },
+"""
+
+
 class ExtendedProductView(APIView):
     """ Расширенный каталог товаров """
 
@@ -569,31 +582,42 @@ class ExtendedProductView(APIView):
     
 
     def post(self, request):
+        qs = ExtendedProductModel.objects.all()
         name = request.data.get('name')
 
-        if name:
-            query = Q('multi_match', query=name,
-                    fields=[
-                        'name',
-                    ], fuzziness='auto')
+        print('name = ', name)
 
-            search = self.document_class.search().query(query)[0:30]
-            response = search.execute()
 
-            prods = [prod.id for prod in response ]
-            preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(prods)])
-            qs = ExtendedProductModel.objects.filter(id__in=prods).order_by(preserved)
-        else:
-            qs = ExtendedProductModel.objects.all()
-
-        
         if request.data.get('city') != "all":
             qs = qs.filter(city=request.data.get('city'))
 
         if request.data.get('shop') != "all":
+            print('Shop:', request.data.get('shop'))
             qs = qs.filter(shop=request.data.get('shop'))
 
-        
+
+        shop_ids = [3,2,1]
+
+
+        if name:
+            # query = Q('multi_match', query=name, fields=['name',], fuzziness='auto') ,
+            query = Q('bool', 
+                must=[
+                    Q('multi_match', query=name, fields=['name'], fuzziness='auto')
+                ],
+                filter=[
+                    Q('terms', shop_id=shop_ids)
+                ]
+            )
+
+            search = self.document_class.search().query(query)
+            # search = search[:30]
+            response = search.execute()
+
+            prods = [prod.id for prod in response ]
+            preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(prods)])
+            qs = qs.filter(id__in=prods).order_by(preserved)
+
         serializer = self.serializer_class(qs, many=True, context={'request':request})
 
         return Response(serializer.data)
