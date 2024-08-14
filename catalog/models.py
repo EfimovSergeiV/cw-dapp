@@ -1,7 +1,27 @@
 from django.db import models
 from django.db.models.base import Model, ModelState
 from django_resized import ResizedImageField
+
 from easy_thumbnails.fields import ThumbnailerImageField  # Migrate to ResizedImageField
+"""
+Django==5.1
+
+    from catalog.models import ProductModel
+  File "/home/anon/glsvar-ru/cw-dapp/catalog/models.py", line 4, in <module>
+    from easy_thumbnails.fields import ThumbnailerImageField  # Migrate to ResizedImageField
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/anon/glsvar-ru/cw-dapp/venv/lib/python3.11/site-packages/easy_thumbnails/fields.py", line 2, in <module>
+    from easy_thumbnails import files
+  File "/home/anon/glsvar-ru/cw-dapp/venv/lib/python3.11/site-packages/easy_thumbnails/files.py", line 13, in <module>
+    from easy_thumbnails import engine, exceptions, models, utils, signals, storage
+  File "/home/anon/glsvar-ru/cw-dapp/venv/lib/python3.11/site-packages/easy_thumbnails/storage.py", line 1, in <module>
+    from django.core.files.storage import FileSystemStorage, get_storage_class
+ImportError: cannot import name 'get_storage_class' from 'django.core.files.storage' (/home/anon/glsvar-ru/cw-dapp/venv/lib/python3.11/site-packages/django/core/files/storage/__init__.py)
+^C% 
+"""
+
+
+
 from main.models import AbsDateModel, AbsActivatedModel, AbsProductModel
 from mptt.models import MPTTModel, TreeForeignKey
 from content.models import *

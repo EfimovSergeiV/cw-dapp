@@ -222,10 +222,12 @@ class OneSPriceSerializer(serializers.ModelSerializer):
 class RecommendSerializer(serializers.ModelSerializer):
     """ Рекомендованные товары"""
     propstrmodel = PropStrSerializer(many=True)
+    category = CategorySerializer()
+    brand = BrandProductSerializer()
 
     class Meta:
         model = ProductModel
-        fields = ('id', 'vcode', 'description' ,'name', 'rating', 'preview_image', 'only_price', 'only_price_status', 'currency', 'propstrmodel')
+        fields = ('id', 'vcode', 'description' ,'name', 'brand', 'category', 'rating', 'preview_image', 'only_price', 'only_price_status', 'currency', 'propstrmodel')
 
 
 # class GetZIPCitySerializer(serializers.ModelSerializer):
@@ -277,7 +279,8 @@ class ProductKeywordSerializer(serializers.ModelSerializer):
 
 class SearchSerializer(serializers.ModelSerializer):
     """ Поиск по каталогу товаров """
-    # keyword = ProductKeywordSerializer(many=True)
+    category = CategorySerializer()
+    brand = BrandProductSerializer()
 
     class Meta:
         model = ProductModel
@@ -286,5 +289,7 @@ class SearchSerializer(serializers.ModelSerializer):
             'name',
             'only_price',
             'status',
+            'brand',
+            'category',
             'preview_image',
             )
