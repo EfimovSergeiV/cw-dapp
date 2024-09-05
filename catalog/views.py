@@ -500,21 +500,17 @@ class ShopAdressView(APIView):
         return Response(serializer.data)
 
 
+
+
 class SearchView(APIView):
     serializer_class = SearchSerializer
     document_class = ProductDocument
 
     def post(self, request):
         search_query = request.data['name']
-        query = Q('multi_match', query=search_query,
-                fields=[
-                    'vcode',
-                    'name',
-                    'keywords',
-                ], fuzziness='auto')
 
-        search = self.document_class.search().query(query)[0:30]
-        response = search.execute()
+        s = ProductDocument.search().query('multi_match', query=search_query, fields=['name', 'vcode', 'keywords'], fuzziness='auto')
+        response = s.execute()
 
         prods = [prod.id for prod in response ]
         preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(prods)])
@@ -580,12 +576,9 @@ class ExtendedProductView(APIView):
         return Response(serializer.data)
     
 
-    def post(self, request):
+    def post(self, request, method='match'):
         qs = ExtendedProductModel.objects.all()
         name = request.data.get('name')
-
-        print('name = ', name)
-
 
         if request.data.get('city') != "all":
             qs = qs.filter(city=request.data.get('city'))
@@ -594,24 +587,10 @@ class ExtendedProductView(APIView):
             print('Shop:', request.data.get('shop'))
             qs = qs.filter(shop=request.data.get('shop'))
 
-
-        shop_ids = [3,2,1]
-
-
         if name:
-            # query = Q('multi_match', query=name, fields=['name',], fuzziness='auto') ,
-            query = Q('bool', 
-                must=[
-                    Q('multi_match', query=name, fields=['name'], fuzziness='auto')
-                ],
-                filter=[
-                    Q('terms', shop_id=shop_ids)
-                ]
-            )
 
-            search = self.document_class.search().query(query)
-            # search = search[:30]
-            response = search.execute()
+            s = ExtendedProductDocument.search().query(method, name=name)
+            response = s.execute()
 
             prods = [prod.id for prod in response ]
             preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(prods)])

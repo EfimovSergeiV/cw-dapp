@@ -511,7 +511,7 @@ class CatalogFileModel(models.Model):
         return self.name
     
 
-
+# from django.contrib.gis.db import models as gis_models
 class ExtendedProductModel(models.Model):
     """ Товары для расширенного поиска (каталога) """
 
@@ -541,6 +541,7 @@ class ImportExtendedProductsModel(models.Model):
     """ SHOPS
         Псков, ул.Леона Поземского, 92, Павильон 28 (рынок на Алмазной)
         Псков, ул.Шоссейная д.3а
+        Псков, пос. Неёлово,
         Великие Луки, проспект Ленина д.57    
         Смоленск, ул. Посёлок Тихвинка 69, ТК "Город Мастеров" павильон №73
         Петрозаводск, ул. Заводская, д. 2

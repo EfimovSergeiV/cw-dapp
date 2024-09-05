@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ckeditor',
-    'django_elasticsearch_dsl',
+    'django_opensearch_dsl',
     'debug_toolbar',
     'corsheaders',
     'mptt',
@@ -150,9 +150,19 @@ USE_TZ = False
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'http://localhost:9200'
+        # 'hosts': 'http://localhost:9200',
+        # 'hosts': 'http://192.168.60.137:80',
+
+        'hosts': 'https://127.0.0.1:9200',
+        'verify_certs': False
     },
 }
+
+
+# OpenSearch
+# https://django-opensearch-dsl.readthedocs.io/en/latest/#installation-and-configuration
+
+OPENSEARCH_DSL = OPENSEARCH_DSL
 
 
 # Static files (CSS, JavaScript, Images)

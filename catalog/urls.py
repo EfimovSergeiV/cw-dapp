@@ -15,8 +15,9 @@ urlpatterns = [
     path('brands/', BrandProductView.as_view()),
     path('prod/<int:pk>/', ProductView.as_view()),
 
-
+    # Поиск по "расширенным" товарам
     path('ext/<int:id>/', ExtendedProductView.as_view()),
+    path('ext/search/<slug:method>/', ExtendedProductView.as_view()),
     re_path('ext/search/', ExtendedProductView.as_view()),
 
     
