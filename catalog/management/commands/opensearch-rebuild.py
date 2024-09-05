@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
 
 opensearch_client = OpenSearch(
-    hosts = [{'host': 'opensearch.glsvar.ru', 'port': 443}],
+    hosts = [{'host': 'search.glsvar.ru', 'port': 443}],
     http_auth = OPENSEARCH_DSL['default']['http_auth'],
     use_ssl = True,
     verify_certs = True
