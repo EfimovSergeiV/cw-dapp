@@ -566,7 +566,7 @@ class ExtendedProductView(APIView):
     serializer_class = ExtendedProductSerializer
     document_class = ExtendedProductDocument
 
-    def get(self, request, id=None):
+    def get(self, request, id=None, method=None):
 
         if id is None:
             return Response(status=status.HTTP_200_OK)
