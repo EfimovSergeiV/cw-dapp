@@ -51,11 +51,13 @@ class ExtendedProductDocument(Document):
         model = ExtendedProductModel
         fields = [
             'id',
-            'name',
             'city',
             'shop',
+            'shop_id',
+            'name',
             'price',
             'quantity',
+            'last_update',
         ]
 
     geo_point = GeoPointField()

@@ -534,6 +534,7 @@ class ExtendedProductModel(models.Model):
 
 
 import pandas as pd
+from django.db.models import Q
 
 class ImportExtendedProductsModel(models.Model):
     """ Импорт товаров xls из экспорта 1С """
@@ -594,7 +595,12 @@ class ImportExtendedProductsModel(models.Model):
 
             if price and quantity:
 
-                prod = prods_qs.filter(name=str(index).replace("  ", ""))
+                tokens = str(index).replace("  ", "").split()
+                conditions = Q()
+                for token in tokens:
+                    conditions &= Q(name__icontains=token)
+
+                prod = prods_qs.filter(conditions)
 
                 if prod.exists() and len(prod) == 1:
                     prod.update(
