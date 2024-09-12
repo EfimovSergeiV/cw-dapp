@@ -1,5 +1,6 @@
 from django.db import models
-from django.db.models.base import Model, ModelState
+# from django.db.models.base import Model, ModelState
+from django.utils import timezone
 from django_resized import ResizedImageField
 
 from easy_thumbnails.fields import ThumbnailerImageField  # Migrate to ResizedImageField
@@ -606,6 +607,7 @@ class ImportExtendedProductsModel(models.Model):
                     prod.update(
                         price=price,
                         quantity=quantity,
+                        last_update=timezone.now()
                     )
                     prods_updated.append(prod[0].id)
 
