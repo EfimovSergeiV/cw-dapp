@@ -274,9 +274,10 @@ class CatalogFileAdmin(admin.ModelAdmin):
 
 class ExtendedProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'price', 'quantity', 'shop',)
-    list_display_links = ('id', 'name', 'price', 'quantity', 'shop',)
+    list_display_links = ('id', 'price', 'quantity', 'shop',)
     search_fields = ('id', 'name')
     list_filter = ('city', 'shop', 'last_update')
+    list_editable = ('name', )
     readonly_fields = ('last_update', )
     fieldsets = (
         (' ', {'fields': (('last_update', 'name', 'city', ('shop_id', 'shop',), 'card_link', ('price', 'quantity',), ))}),
