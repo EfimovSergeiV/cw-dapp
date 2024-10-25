@@ -169,6 +169,7 @@ class ProductModel(AbsProductModel):
     )
     related = models.ManyToManyField(CategoryModel, blank=True, verbose_name="Категории", related_name="related_ct")
 
+    ozon = models.URLField(verbose_name="Ссылка на Ozon", null=True, blank=True)
     promo = models.BooleanField(default=False, verbose_name="Скидка")
     promo_code = models.CharField(verbose_name="Промокод", null=True, blank=True, max_length=100)
     discount = models.PositiveIntegerField(

@@ -183,6 +183,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'promo',
             'discount',
             'related',
+            'ozon',
             'only_price_status',
             'only_price',
             'currency',
