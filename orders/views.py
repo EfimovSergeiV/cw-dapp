@@ -21,6 +21,8 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
 from main.agent import send_alert_to_agent, one_click_order_to_agent
+from main.mattermost import mattermost_notification
+
 from django.shortcuts import render
 
 from orders.utils import *
@@ -249,6 +251,7 @@ class OrderViews(APIView):
 
             # Логика оповещений
             send_alert_to_agent(order=serializer.data)
+            mattermost_notification(template="order_template", data=serializer.data)
 
             mail_list = [
                 # 'shop@glsvar.ru',
@@ -293,7 +296,10 @@ class RequestPriceViews(APIView):
         serializer = RequestPriceSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            
             send_alert_to_agent(pricerequest=serializer.data)
+            mattermost_notification(template="request_template", data=serializer.data)
+
             return Response(serializer.data)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -384,23 +390,6 @@ def send_payment_email(request, uuid):
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
 
-# def mail_template(request):
-#     """ DEV VERSION """
-#     # order = CustomerModel.objects.filter(delivery=True)[0]
-    
-#     order = CustomerModel.objects.get(uuid='5b4867d4-1862-400a-8e7c-baf8607347d7')
-#     products = OrderedProductModel.objects.filter(customer=order)
-
-#     return render(request, 'permission_payment.html', {
-#             'order_number': order.order_number,
-#             'seller_comm': order.seller_comm,
-#             'delivery': order.delivery,
-#             'delivery_summ': order.delivery_summ,
-#             'payment_link': f'https://3dsec.sberbank.ru/payment/merchants/sbersafe_sberid/payment_ru.html?mdOrder={ order.uuid }/',
-#             'total': order.total,
-#             'client_product': products,
-#         })
-
 
 # Сумма заказа (OneClick)
 def get_tolal(products):
@@ -438,5 +427,6 @@ class OneClickOrderView(APIView):
         }
 
         one_click_order_to_agent(order)
+        mattermost_notification(template="one_click_order_template", data=order)
 
         return Response({ "order": order_number})

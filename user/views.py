@@ -5,6 +5,7 @@ from rest_framework import permissions
 from rest_framework import status
 
 from django.conf import settings
+from main.mattermost import mattermost_notification
 from main.agent import send_alert_to_agent
 
 from user import serializers
@@ -152,7 +153,10 @@ class FeedbackView(APIView):
 
         if serializer.is_valid():
             serializer.save()
+            
             send_alert_to_agent(message=serializer.data)
+            mattermost_notification(template='message_template', data=serializer.data)
+
         else:
             resp = { "danger": "Что то пошло не так( Попробуте позже." }
 
