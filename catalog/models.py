@@ -586,9 +586,13 @@ class ImportExtendedProductsModel(models.Model):
 
         prods_qs = ExtendedProductModel.objects.filter(shop=self.get_shop_display())
         prods_updated = []
+
+        # HotFix: узнаём какие название таблиц в xls
+        xl = pd.ExcelFile(self.file.path)
+        first_sheet = xl.sheet_names[0]    
         
         # печатаем полный путь к файлу self.file.path
-        df = pd.read_excel(f'{self.file.path}', sheet_name='TDSheet', header=None, index_col=0)
+        df = pd.read_excel(f'{self.file.path}', sheet_name=first_sheet, header=None, index_col=0)
         for index, row in df.iterrows():
 
             # Обновляем или создаём товар
