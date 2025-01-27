@@ -250,8 +250,11 @@ class OrderViews(APIView):
             serializer.save()
 
             # Логика оповещений
-            send_alert_to_agent(order=serializer.data)
-            mattermost_notification(template="order_template", data=serializer.data)
+            try:
+                send_alert_to_agent(order=serializer.data)
+                mattermost_notification(template="order_template", data=serializer.data)
+            except:
+                pass
 
             mail_list = [
                 # 'shop@glsvar.ru',

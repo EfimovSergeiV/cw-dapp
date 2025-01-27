@@ -86,6 +86,8 @@ templates = {
 Магазин: **{{ adress }}**
 Клиент: **{{ person }}**
 Контакты: **{{ phone }}**    **{{ email }}**
+Доставка: **{% if delivery %}Да{% else %}Нет{% endif %}**
+Адрес доставки: **{{ delivery_adress }}**
 {% if comment %}
 Комментарий к заказу:
 > {{ comment }}
@@ -133,7 +135,7 @@ order_data = {
     'total': 47490, 
     'promocode': None, 
     'delivery': False, 
-    'delivery_adress': 'Самовывоз', 
+    'delivery_adress': None, 
     'delivery_summ': None, 
     'person': 'Сергей Ефимов', 
     'phone': 'WhatsApp +79116965424', 
