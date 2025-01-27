@@ -242,15 +242,20 @@ class OrderViews(APIView):
 
         data['client_product'] = products
 
-        serializer = self.serializer_class(data=data)
+        # HotFix: Удаляем ключь если он не заполнен
+        if data['delivery_adress'] == None:
+            data.pop('delivery_adress')
 
+        print(data)
+
+        serializer = self.serializer_class(data=data)
 
         if serializer.is_valid():
 
             serializer.save()
 
             # Логика оповещений
-            try:
+            try: # 
                 send_alert_to_agent(order=serializer.data)
                 mattermost_notification(template="order_template", data=serializer.data)
             except:
@@ -269,6 +274,7 @@ class OrderViews(APIView):
             # return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             return Response({ 'order': data['order_number'] })
         else:
+            print(serializer.errors)
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
