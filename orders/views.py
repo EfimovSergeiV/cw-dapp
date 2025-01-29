@@ -199,7 +199,7 @@ class OrderListViews(APIView):
         return Response(serializer.data)
 
 
-
+from django.core.files.storage import FileSystemStorage
 from serializers.catalog import ListProductsSerializer
 from catalog.utils import CustomUtils, ChangeCurrency
 from rest_framework.utils.serializer_helpers import ReturnDict
@@ -211,71 +211,90 @@ class OrderViews(APIView):
     def post(self, request, format=None):
         """ Извлечение данных и структурирование заказа """
 
-        data=request.data
+        print('CONTENT-TYPE: ', request.content_type)
 
-        print(data)
 
-        region_code = data.pop('region_code')
         
-        prods_id = [product['id'] for product in data['client_product']]
-        products_qs = ProductModel.objects.filter(id__in=prods_id)#.values()
+        if request.content_type == 'application/json':
 
-        # Присвоение кода и вычисление суммы по позициям заказа
-        data['order_number'] = region_code + str(random.randrange(1000000, 1999999))
-        data['position_total'] = get_position_summ(data['client_product'])
-        data['total'] = get_position_summ(data['client_product']) # прибавить сюда ещё суммму доставки
+            data=request.data
+            print(f'{request.content_type}/ Прилетел JSON, обрабатываем...')
 
-        print(data['promocode'])
 
-        # Перерасчёт стоимостей товаров
-        products = data.pop('client_product')
-        for product in products:
-            try:
-                price_from_db = products_qs.get(id = product['id'])
-                product['product_id'] = product['id']
-                product["price"] = int(price_from_db.only_price)
-                product["only_price"] = int(price_from_db.only_price)
+            region_code = data.pop('region_code')
             
-            except ObjectDoesNotExist:
-                product["price"] = "ERROR DETECT"
-                pass
+            prods_id = [product['id'] for product in data['client_product']]
+            products_qs = ProductModel.objects.filter(id__in=prods_id)#.values()
 
-        data['client_product'] = products
+            # Присвоение кода и вычисление суммы по позициям заказа
+            data['order_number'] = region_code + str(random.randrange(1000000, 1999999))
+            data['position_total'] = get_position_summ(data['client_product'])
+            data['total'] = get_position_summ(data['client_product']) # прибавить сюда ещё суммму доставки
 
-        # HotFix: Удаляем ключь если он не заполнен
-        if data['delivery_adress'] == None:
-            data.pop('delivery_adress')
+            print(data['promocode'])
 
-        print(data)
+            # Перерасчёт стоимостей товаров
+            products = data.pop('client_product')
+            for product in products:
+                try:
+                    price_from_db = products_qs.get(id = product['id'])
+                    product['product_id'] = product['id']
+                    product["price"] = int(price_from_db.only_price)
+                    product["only_price"] = int(price_from_db.only_price)
+                
+                except ObjectDoesNotExist:
+                    product["price"] = "ERROR DETECT"
+                    pass
 
-        serializer = self.serializer_class(data=data)
+            data['client_product'] = products
 
-        if serializer.is_valid():
+            # HotFix: Удаляем ключь если он не заполнен
+            if data['delivery_adress'] == None:
+                data.pop('delivery_adress')
 
-            serializer.save()
+            print(data)
 
-            # Логика оповещений
-            try: # 
-                send_alert_to_agent(order=serializer.data)
-                mattermost_notification(template="order_template", data=serializer.data)
-            except:
-                pass
+            serializer = self.serializer_class(data=data)
 
-            mail_list = [
-                # 'shop@glsvar.ru',
-                ]
+            if serializer.is_valid():
 
-            if serializer.data['email']:
-                mail_list.append(serializer.data['email'])
+                serializer.save()
 
-            OrderMails.send_notice(email=mail_list, data=serializer.data)
-            
-            
-            # return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            return Response({ 'order': data['order_number'] })
+                # Логика оповещений
+                try: # 
+                    send_alert_to_agent(order=serializer.data)
+                    mattermost_notification(template="order_template", data=serializer.data)
+                except:
+                    pass
+
+                mail_list = [
+                    # 'shop@glsvar.ru',
+                    ]
+
+                if serializer.data['email']:
+                    mail_list.append(serializer.data['email'])
+
+                OrderMails.send_notice(email=mail_list, data=serializer.data)
+                
+                
+                # return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({ 'order': data['order_number'] })
+            else:
+                print(serializer.errors)
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
-            print(serializer.errors)
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            print(f'НАВЕРНО Прилетел файл, сохраняем... {request.data}')
+            fs = FileSystemStorage()
+            filename = fs.save(f'orders/{request.FILES["file"].name}', request.FILES["file"])
+
+            # проверить заказ на дату
+            CustomerModel.objects.filter(order_number=request.data['order_number']).update(file=filename)
+
+
+            mattermost_notification(template="order_file_template", data={"url": f"https://api.glsvar.ru/files/{filename}"})
+            return Response(status=status.HTTP_200_OK)
+        
 
 
 class OrderStatusViews(APIView):

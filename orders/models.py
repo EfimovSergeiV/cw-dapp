@@ -24,13 +24,17 @@ class CustomerModel(models.Model):
 
     # Информация о доставке
     delivery = models.BooleanField(verbose_name="Доставка", default=False,)
-    delivery_adress = models.CharField(verbose_name="Адрес доставки", default="Самовывоз", max_length=150)
+    delivery_adress = models.CharField(verbose_name="Адрес доставки", default="Самовывоз", null=True, blank=True, max_length=150)
     delivery_summ  = models.PositiveIntegerField(verbose_name="Расчитанная сумма доставки", null=True, blank=True)
 
+    # Файлы клиентов ИП
+    file = models.FileField(verbose_name="Файл с реквизитами", upload_to="orders/", null=True, blank=True)
+
+    # легаси для ИП: Позже удалить, т.к. теперь файлик с данными прикрепляется к заказу
     person = models.CharField(verbose_name="Клиент", max_length=150, null=True, blank=True)
     phone = models.CharField(verbose_name="Телефон клиента", null=True, blank=True, max_length=40)
     email = models.EmailField(verbose_name="Электронная почта", null=True, blank=True)
-    comment = models.TextField(verbose_name="Комментарий к заказу", null=True, max_length=2500)
+    comment = models.TextField(verbose_name="Комментарий к заказу", null=True, blank=True, max_length=2500)
 
     company = models.CharField(verbose_name="Название компании", max_length=150, null=True)
     legaladress = models.CharField(verbose_name="Юридический адрес", max_length=150, null=True)

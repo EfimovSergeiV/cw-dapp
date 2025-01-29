@@ -84,10 +84,10 @@ templates = {
 "order_template" : """
 ### Заказ {{ order_number }}
 Магазин: **{{ adress }}**
-Клиент: **{{ person }}**
-Контакты: **{{ phone }}**    **{{ email }}**
+Клиент: {% if person %}**{{ person }}**{% else %}не представился{% endif %}
+Контакты: **{{ phone }}**    **{% if email %}{{ email }}{% endif %} **
 Доставка: **{% if delivery %}Да{% else %}Нет{% endif %}**
-Адрес доставки: **{{ delivery_adress }}**
+{% if delivery %}Адрес доставки: **{{ delivery_adress }}**{% endif %}
 {% if comment %}
 Комментарий к заказу:
 > {{ comment }}
@@ -99,6 +99,10 @@ templates = {
 Итог заказа: **{{ position_total }}** руб.
 
 ---
+""",
+
+"order_file_template" : """
+[Скачать файл с реквизитами]({{url}})
 """,
 }
 
