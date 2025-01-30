@@ -325,8 +325,17 @@ class RequestPriceViews(APIView):
         if serializer.is_valid():
             serializer.save()
             
+            print(serializer.data)
             send_alert_to_agent(pricerequest=serializer.data)
-            mattermost_notification(template="request_template", data=serializer.data)
+
+            # HotFix:
+            mm_data = {
+                "contact": serializer.data['contact'],
+                "city": serializer.data['city'],
+                "id": str(serializer.data['product']).split()[1],
+                "product": serializer.data['product'],
+            }
+            mattermost_notification(template="request_template", data=mm_data)
 
             return Response(serializer.data)
 
