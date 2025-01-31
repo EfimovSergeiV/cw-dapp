@@ -194,6 +194,11 @@ class ProductModel(AbsProductModel):
     only_price_status = models.BooleanField(verbose_name="Общая стоимость", default=False)
     only_price = models.IntegerField(verbose_name="Стоимость", default=0, null=True, blank=True)
     currency = models.CharField(verbose_name="Валюта", max_length=10, choices=CCY_VAL, default="RUB")
+
+    # Оптовые цены и количество
+    opt_price = models.IntegerField(verbose_name="Оптовая цена", null=True, blank=True)
+    opt_quantity = models.IntegerField(verbose_name="Оптовое кол-во", null=True, blank=True)
+
     status = models.CharField(verbose_name="Наличие на складе", max_length=100, choices=EXISTENCE, default="order")
 
     class Meta:

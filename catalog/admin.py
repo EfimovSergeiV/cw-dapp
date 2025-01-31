@@ -187,7 +187,7 @@ class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Отображение на сайте", {'fields': (('activated', 'show_more', 'recommend',), ('category', 'brand'), ( 'preview', 'preview_image',))}),
         ("Информация о товаре", {'fields': (('name', 'vcode', 'UID', 'rating', 'ozon',), 'description', 'keywords',)}),
-        ("Стоимость и наличие", {'fields': (('only_price_status', 'promo'), ('only_price', 'currency', 'status', ), ('discount',),)}),
+        ("Стоимость и наличие", {'fields': (('only_price_status', 'promo'), ('only_price', 'currency', 'status', ), ('opt_price', 'opt_quantity',), ('discount',),)}),
         # ("Сопутствующие категории", {'fields': (('related',),)}),
         )
 

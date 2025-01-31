@@ -44,7 +44,8 @@ fields_prices = {
 
 prices = {}
 
-file_path = f'{BASE_DIR}/files/xlsx/Telwin-03-2023.xlsx'
+# file_path = f'{BASE_DIR}/files/xlsx/Telwin-03-2023.xlsx'
+file_path = f'/home/anon/Документы/GLSVAR-RU/UPLOADS/20-01-2025/Алм.xlsx'
 
 
 products_qs = ProductModel.objects.filter(activated = True)
@@ -57,45 +58,49 @@ brand = 'telwin'
 xl = pd.ExcelFile(file_path)    # read_only=True if openpyxl > 3.1.0 
 sheet_list = xl.sheet_names     # print(sheet_list)        
 
-for sheet_name in sheet_list[ fields_prices[brand]["if"] : fields_prices[brand]["of"] ]:
-    df = pd.read_excel(file_path, sheet_name=sheet_name, header=None, index_col=0)
 
-    for index, row in df.iterrows():
+print(f'sheet_list: { sheet_list[0] }')
 
-        if type(row[fields_prices[brand]["price"]]) == int:
-            vcode = clean_word(index)
 
-            product = products_qs.filter(vcode = vcode).order_by('-id')
+# for sheet_name in sheet_list[ fields_prices[brand]["if"] : fields_prices[brand]["of"] ]:
+#     df = pd.read_excel(file_path, sheet_name=sheet_name, header=None, index_col=0)
 
-            print(f'\n\nSEARCH REQUEST: { vcode } { product }')
+    # for index, row in df.iterrows():
 
-            if len(product) == 1:
-                print(f"{ vcode }\t{ product[0].only_price } => { beautiful_price(row[fields_prices[brand]['price']]) }\t{ clean_word(row[fields_prices[brand]['name']]) }")
+    #     if type(row[fields_prices[brand]["price"]]) == int:
+    #         vcode = clean_word(index)
+
+    #         product = products_qs.filter(vcode = vcode).order_by('-id')
+
+    #         print(f'\n\nSEARCH REQUEST: { vcode } { product }')
+
+    #         if len(product) == 1:
+    #             print(f"{ vcode }\t{ product[0].only_price } => { beautiful_price(row[fields_prices[brand]['price']]) }\t{ clean_word(row[fields_prices[brand]['name']]) }")
                 
-                id = product[0].id
+    #             id = product[0].id
 
-                product.filter(id = id).update(
-                    only_price = beautiful_price(row[fields_prices[brand]['price']]),
-                    only_price_status = True,
-                    name = clean_word(row[fields_prices[brand]['name']])
-                )
-                print(f'Rewrited: {id} {product[0]}')
+    #             product.filter(id = id).update(
+    #                 only_price = beautiful_price(row[fields_prices[brand]['price']]),
+    #                 only_price_status = True,
+    #                 name = clean_word(row[fields_prices[brand]['name']])
+    #             )
+    #             print(f'Rewrited: {id} {product[0]}')
 
-            elif len(product) > 1:
-                id = product[0].id
-                product.filter(id = id).update(
-                    only_price = beautiful_price(row[fields_prices[brand]['price']]),
-                    only_price_status = True,
-                    name = clean_word(row[fields_prices[brand]['name']])
-                )
-                ids = [ prod.id for prod in product[1:] ]
-                product.filter(id__in = ids).update(
-                    activated = False
-                )
+    #         elif len(product) > 1:
+    #             id = product[0].id
+    #             product.filter(id = id).update(
+    #                 only_price = beautiful_price(row[fields_prices[brand]['price']]),
+    #                 only_price_status = True,
+    #                 name = clean_word(row[fields_prices[brand]['name']])
+    #             )
+    #             ids = [ prod.id for prod in product[1:] ]
+    #             product.filter(id__in = ids).update(
+    #                 activated = False
+    #             )
 
-                print(f"{ vcode }\t{ product[0].only_price } => { beautiful_price(row[fields_prices[brand]['price']]) }\t{ clean_word(row[fields_prices[brand]['name']]) }")
-                print(f'Rewrited: { id } {product[0]}')
-                print(f'Dissable: { ids } { product[ 1 : ]}')
-            else:
-                print(f"NOT FOUND: { vcode }")
+    #             print(f"{ vcode }\t{ product[0].only_price } => { beautiful_price(row[fields_prices[brand]['price']]) }\t{ clean_word(row[fields_prices[brand]['name']]) }")
+    #             print(f'Rewrited: { id } {product[0]}')
+    #             print(f'Dissable: { ids } { product[ 1 : ]}')
+    #         else:
+    #             print(f"NOT FOUND: { vcode }")
                 
