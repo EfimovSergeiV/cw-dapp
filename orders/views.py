@@ -210,87 +210,65 @@ class OrderViews(APIView):
 
     def post(self, request, format=None):
         """ Извлечение данных и структурирование заказа """
-
-        print('CONTENT-TYPE: ', request.content_type)
-
-
-        
         if request.content_type == 'application/json':
-
             data=request.data
-            print(f'{request.content_type}/ Прилетел JSON, обрабатываем...')
 
-
-            region_code = data.pop('region_code')
-            
             prods_id = [product['id'] for product in data['client_product']]
             products_qs = ProductModel.objects.filter(id__in=prods_id)#.values()
 
             # Присвоение кода и вычисление суммы по позициям заказа
+            region_code = data.pop('region_code')            
             data['order_number'] = region_code + str(random.randrange(1000000, 1999999))
-            data['position_total'] = get_position_summ(data['client_product'])
-            data['total'] = get_position_summ(data['client_product']) # прибавить сюда ещё суммму доставки
 
-            print(data['promocode'])
-
-            # Перерасчёт стоимостей товаров
+            # Проверка стоимости товаров
             products = data.pop('client_product')
             for product in products:
                 try:
                     price_from_db = products_qs.get(id = product['id'])
                     product['product_id'] = product['id']
-                    product["price"] = int(price_from_db.only_price)
-                    product["only_price"] = int(price_from_db.only_price)
-                
+                    product["price"] = price_from_db.opt_price if product.get('opt') else price_from_db.only_price
                 except ObjectDoesNotExist:
-                    product["price"] = "ERROR DETECT"
                     pass
 
             data['client_product'] = products
+            data['position_total'] = get_position_summ(data['client_product'])
+            data['total'] = get_position_summ(data['client_product'])
 
             # HotFix: Удаляем ключь если он не заполнен
             if data['delivery_adress'] == None:
                 data.pop('delivery_adress')
 
-            print(data)
-
             serializer = self.serializer_class(data=data)
 
             if serializer.is_valid():
-
                 serializer.save()
 
                 # Логика оповещений
-                try: # 
+                try:
                     send_alert_to_agent(order=serializer.data)
                     mattermost_notification(template="order_template", data=serializer.data)
                 except:
                     pass
 
                 mail_list = [
-                    # 'shop@glsvar.ru',
+                    # 'efimovsergeiv@gmail.com',
                     ]
-
                 if serializer.data['email']:
                     mail_list.append(serializer.data['email'])
-
                 OrderMails.send_notice(email=mail_list, data=serializer.data)
-                
-                
-                # return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
                 return Response({ 'order': data['order_number'] })
+
             else:
                 print(serializer.errors)
-                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)   
+        
         else:
-
-            print(f'НАВЕРНО Прилетел файл, сохраняем... {request.data}')
             fs = FileSystemStorage()
             filename = fs.save(f'orders/{request.FILES["file"].name}', request.FILES["file"])
 
             # проверить заказ на дату
             CustomerModel.objects.filter(order_number=request.data['order_number']).update(file=filename)
-
 
             mattermost_notification(template="order_file_template", data={"url": f"https://api.glsvar.ru/files/{filename}"})
             return Response(status=status.HTTP_200_OK)

@@ -10,7 +10,7 @@ class CustomerModel(models.Model):
 
     uuid = models.UUIDField(verbose_name="Идентифиактор", default=uuid.uuid4, unique=True, editable=False)
     date_created = models.DateTimeField(verbose_name="Дата создания заказа", default=timezone.now)
-    order_number = models.CharField(verbose_name="Номер заказа", unique=True, max_length=15)
+    order_number = models.CharField(verbose_name="Номер заказа", null=True, blank=True, max_length=15)
     
     adress = models.CharField(verbose_name="Адрес магазина", max_length=150)
     position_total = models.PositiveIntegerField(verbose_name="Сумма по позициям", default=0)
