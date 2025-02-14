@@ -14,6 +14,7 @@ urlpatterns = [
     path('orderinfo/<slug:order>/', OrderInfoView.as_view()),
     path('check-promo/', PromocodeView.as_view()),
     path('sendmail/', MailsView.as_view()),
+    path('reviews/<int:id>/', ReviewView.as_view()),
 
     # Предоставление данных в 1С
     path('list-orders/', OneSotfOrderView.as_view()),

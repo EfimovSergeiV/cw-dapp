@@ -110,4 +110,5 @@ class PromocodeAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomerModel, CustomerAdmin)
 admin.site.register(RequestPriceModel, RequestPriceAdmin)
+admin.site.register(ReviewModel,)
 # admin.site.register(PromocodeModel, PromocodeAdmin)

@@ -134,3 +134,12 @@ class PromocodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PromocodeModel
         fields = '__all__'
+
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    """ Сериализатор отзывов """
+
+    class Meta:
+        model = ReviewModel
+        fields = '__all__'

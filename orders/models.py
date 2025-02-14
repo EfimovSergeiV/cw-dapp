@@ -196,3 +196,23 @@ class PromocodeModel(models.Model):
 
     def __str__(self) -> str:
         return str(self.promocode)
+
+
+
+class ReviewModel(models.Model):
+    """ Отзывы пользователей """
+
+    activated = models.BooleanField(verbose_name="Активирован", default=True)
+    product_id = models.PositiveIntegerField(verbose_name="ID товара", default=0)
+    user_name = models.CharField(verbose_name="Имя", default="Пользователь", null=True, blank=True, max_length=100)
+    r_text = models.TextField(verbose_name="Отзыв", null=True, blank=True, max_length=1000)
+    rating = models.PositiveIntegerField(verbose_name="Оценка", default=5)
+    date = models.DateField(verbose_name="Дата", default=timezone.now )
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
+        ordering = ["-date",]
+
+    def __str__(self):
+        return self.user_name

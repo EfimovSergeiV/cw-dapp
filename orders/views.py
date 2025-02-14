@@ -445,3 +445,26 @@ class OneClickOrderView(APIView):
         mattermost_notification(template="one_click_order_template", data=order)
 
         return Response({ "order": order_number})
+
+
+
+from orders.serializers import ReviewSerializer
+class ReviewView(APIView):
+    """ Отзывы к товарам """
+
+    def get(self, request, id):
+        reviews = ReviewModel.objects.filter(product_id=id)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, id):
+        data = request.data
+        data['product_id'] = id
+        print(data)
+        serializer = ReviewSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
