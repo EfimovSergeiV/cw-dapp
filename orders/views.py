@@ -453,15 +453,16 @@ class ReviewView(APIView):
     """ Отзывы к товарам """
 
     def get(self, request, id):
-        reviews = ReviewModel.objects.filter(product_id=id)
+        reviews = ReviewModel.objects.filter(product_id=id, activated=True)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
     def post(self, request, id):
         data = request.data
         data['product_id'] = id
-        print(data)
+        data["user_name"] = data.get('user_name') if data.get('user_name') else 'Пользователь'
         serializer = ReviewSerializer(data=data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)

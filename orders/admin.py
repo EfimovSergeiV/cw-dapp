@@ -107,8 +107,15 @@ class PromocodeAdmin(admin.ModelAdmin):
     )
 
 
+class ReviewAdmin(admin.ModelAdmin):
+    """ Отзывы """
+
+    list_display = ('id', 'user_name', 'r_text', 'created_date', 'activated')
+    list_display_links = ('id', 'user_name', 'created_date')
+    list_editable = ('activated',)
+
 
 admin.site.register(CustomerModel, CustomerAdmin)
 admin.site.register(RequestPriceModel, RequestPriceAdmin)
-admin.site.register(ReviewModel,)
+admin.site.register(ReviewModel, ReviewAdmin)
 # admin.site.register(PromocodeModel, PromocodeAdmin)
