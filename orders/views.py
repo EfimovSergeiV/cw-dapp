@@ -463,7 +463,7 @@ class ReviewView(APIView):
         data["user_name"] = data.get('user_name') if data.get('user_name') else 'Пользователь'
         serializer = ReviewSerializer(data=data)
 
-        if serializer.is_valid():
+        if serializer.is_valid() and data.get('rating') in range(1, 6):
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
         else:
