@@ -193,3 +193,19 @@ class ArticleModel(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class WorkingShopsModel(models.Model):
+    """ Изменения в графике работы магазинов """
+
+    activated = models.BooleanField(verbose_name="Активирован", default=True)
+    google_table_url = models.URLField(verbose_name="Ссылка на таблицу", help_text="Ссылка на таблицу Google", null=True, blank=True)
+    created_at = models.DateField(verbose_name="Дата создания", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "График работы"
+        verbose_name_plural = "График работы"
+        ordering = ['-created_at',]
+
+    def __str__(self):
+        return str(self.created_at)

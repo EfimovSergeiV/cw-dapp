@@ -7,6 +7,7 @@ from content.views import *
 urlpatterns = [
     path('widebanners/', WideBannersView.as_view()),
     path('mainbanner/', MainBannerView.as_view()),
+    path('ws/', WorkingShopsView.as_view()),
     path('mpromob/', MainPromoBannerView.as_view()),
     path('certificate/', FooterFileView.as_view()),
     path('votes/', VotesView.as_view()),

@@ -41,3 +41,11 @@ class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = ArticleModel
         fields = ('id', 'title', 'text',)
+
+
+class WorkingShopsSerializer(serializers.ModelSerializer):
+    """ Изменения в работе магазинов """
+
+    class Meta:
+        model = WorkingShopsModel
+        fields = '__all__'

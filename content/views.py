@@ -131,3 +131,18 @@ class ArticleView(APIView):
         serializer = ArticleSerializer(qs, context={'request': request})
 
         return Response(serializer.data)
+    
+
+class WorkingShopsView(APIView):
+    """ Изменения в работе магазинов """
+
+    def get(self, request):
+
+        try:
+            qs = WorkingShopsModel.objects.filter(activated=True).latest('created_at')
+            serializer = WorkingShopsSerializer(qs, context={'request': request})
+            return Response(serializer.data)        
+        
+        except ObjectDoesNotExist:
+            return Response(False, status=status.HTTP_404_NOT_FOUND)
+
