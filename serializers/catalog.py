@@ -186,6 +186,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'discount',
             'related',
             'ozon',
+            'wildberries',
             'only_price_status',
             'only_price',
             'opt_price',
