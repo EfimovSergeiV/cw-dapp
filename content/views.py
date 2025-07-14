@@ -144,5 +144,5 @@ class WorkingShopsView(APIView):
             return Response(serializer.data)        
         
         except ObjectDoesNotExist:
-            return Response(False, status=status.HTTP_404_NOT_FOUND)
+            return Response(False, status=status.HTTP_200_OK)
 

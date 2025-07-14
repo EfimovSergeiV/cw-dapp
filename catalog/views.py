@@ -21,7 +21,6 @@ from django.db.models import Case, When
 from main.models import CourceCurrency
 from catalog.utils import *
 
-from elasticsearch_dsl import Q
 from catalog.documents import ProductDocument, ExtendedProductDocument
 
 CharField.register_lookup(Lower)
