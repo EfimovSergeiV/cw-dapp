@@ -178,7 +178,9 @@ class ListProductsView(ListAPIView):
         # BUGFIX для UTM-меток поисковиков
         # Удаляем все ключи, длина которых больше 4
         for key, val in list(props.items()):
-            if len(key) > 4 or len(val[0]) > 12:
+            if any(len(str(i)) > 14 for i in list(val)):
+                return ProductModel.objects.none()
+            if len(key) > 4:
                 del props[key]
 
         queryset = ProductModel.objects.filter(activated=True).order_by('brand__priority')
