@@ -177,8 +177,8 @@ class ListProductsView(ListAPIView):
 
         # BUGFIX для UTM-меток поисковиков
         # Удаляем все ключи, длина которых больше 4
-        for key in list(props.keys()):
-            if len(key) > 4:
+        for key, val in list(props.items()):
+            if len(key) > 4 or len(val[0]) > 12:
                 del props[key]
 
         queryset = ProductModel.objects.filter(activated=True).order_by('brand__priority')
@@ -217,9 +217,6 @@ class ListProductsView(ListAPIView):
         # По требованию яндекса, если не валидный фильтр, то возвращаем 404 Not Found
         # Удаляем из props ct, brnd, page
         filter_props = { key: value for key, value in props.items() if key not in ['ct', 'brnd', 'page', 'by'] }
-
-
-
 
 
         # Проверяем наличие filter_props в validated_props
@@ -298,6 +295,7 @@ class ProdRandomView(ListAPIView):
         end_list = start_list + 12
 
         return queryset[start_list:end_list]
+
 
 import random
 # def shuffle_with_probability(list1, list2, probability=0.8):
