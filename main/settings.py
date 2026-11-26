@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ckeditor',
-    'django_opensearch_dsl',
+    # 'django_opensearch_dsl',
     'debug_toolbar',
     'corsheaders',
     'mptt',

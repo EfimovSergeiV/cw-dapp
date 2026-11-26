@@ -20,7 +20,6 @@ from orders.models import *
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
-from main.agent import send_alert_to_agent, one_click_order_to_agent
 from main.mattermost import mattermost_notification
 
 from django.shortcuts import render
@@ -107,7 +106,6 @@ class CheckOrderPaymentView(APIView):
 
                     # Отправляем уведомлнеие в агент
                     payment = { "order_number": order[0].order_number, "total": order[0].total, "payment_uuid": order_id }
-                    # send_alert_to_agent(payment=payment)
                     
                 else:
                     pass
@@ -121,7 +119,6 @@ class CheckOrderPaymentView(APIView):
 
 """ Изменение статуса заказа отработанный или не отработанный """
 def edit_order_status(request, uuid, status):
-    # send_alert_to_agent(order=serializer.data)
 
     ORDER_STATUS = {
         "notprocessed": "не обработан",
@@ -144,7 +141,6 @@ def edit_order_status(request, uuid, status):
 
             else:
                 qs.update(status=status)
-                send_alert_to_agent(status = { "order": qs[0].order_number, "status": ORDER_STATUS[status] })
                 post = f"Статус заказа {qs[0].order_number} сменён на: {ORDER_STATUS[status]}"
 
         else:
@@ -170,7 +166,6 @@ def price_request_status(request, uuid):
             else:
                 qs.update(completed=True)
                 post = f"Вопрос клиента { qs[0].contact } помечен как закрытый"
-                send_alert_to_agent(oth_status = { "client": qs[0].contact })
     
         else:
             post = "Вопрос не найден в системе"
@@ -245,7 +240,7 @@ class OrderViews(APIView):
 
                 # Логика оповещений
                 try:
-                    send_alert_to_agent(order=serializer.data)
+
                     mattermost_notification(template="order_template", data=serializer.data)
                 except:
                     pass

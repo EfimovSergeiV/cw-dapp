@@ -6,7 +6,6 @@ from rest_framework import status
 
 from django.conf import settings
 from main.mattermost import mattermost_notification
-from main.agent import send_alert_to_agent
 
 from user import serializers
 from user.models import *

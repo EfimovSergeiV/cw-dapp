@@ -25,8 +25,7 @@ from catalog.documents import ProductDocument, ExtendedProductDocument
 
 CharField.register_lookup(Lower)
 
-#Logs send
-# from main.agent import send_alert_to_agent
+
 
 
 class ResultsSetPagination(PageNumberPagination):
